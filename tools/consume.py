@@ -224,13 +224,20 @@ The output is a JSON file with the following structure, although additional data
 If you provide splits, the ``timeline`` key is replaced with a list of timelines, ordered to correspond to the splits.
 
 
-The full list of accepted arguments:
+The following arguments are the most basic ones to build timelines:
 
     - ``-e --event``                *<Required>* The event file or a list of event files to consume; can be JSON files or ``.tar.gz`` archives with `sample.json` or `event.json` files inside.
     - ``-c --consumer``             *<Required>* The consumer to use: :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`, :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer` (or :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`), :class:`~queues.consumers.print_consumer.PrintConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer`, :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`.
     - ``-u --understanding``        *<Optional>* The understanding file used to understand the event.
     - ``-o --output``               *<Required>* The output file where to save the timeline, defaults to the ``.out`` directory relative to the event file.
     - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used, but new understanding is generated.
+    - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if an `--understanding` corpus is provided; otherwise, a scheme can be created using the :mod:`~tools.idf` tool.
+    - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
+    - ``--window-size``             *<Optional>* The size in seconds of the time window, used by real-time algorithms, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer` and :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer``).
+
+The following arguments let you control how to handle the timeline of events such as by sampling, speeding up or skipping ahead with the data.
+You can also filter the data (``--filters``) and generate multiple timelines by focusing on different streams (``--splits``):
+
     - ``--sample``                  *<Optional>* The systematic sampling rate when reading the corpus [0–1]; defaults to 1, which reads all tweets.
     - ``--speed``                   *<Optional>* The speed at which the file is consumed, defaults to 1, which is real-time speed.
     - ``--skip``                    *<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
@@ -242,20 +249,26 @@ The full list of accepted arguments:
     - ``--filters-keep``            *<Optional>* The number of filter keywords to retain, most useful when reading keywords from the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools, defaults to all keywords.
     - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split, or a JSON file created by the :mod:`~tools.concepts` tool.
     - ``--with-default-split``      *<Optional>* A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given).
-    - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
-    - ``--window-size``             *<Optional>* The size in seconds of the time window, used by real-time algorithms, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer` and :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer``).
-    - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if an `--understanding` corpus is provided; otherwise, a scheme can be created using the :mod:`~tools.idf` tool.
-    - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer`); defaults to 10.
+
+The following parameters tweak the :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`:
+
+    - ``--post-rate``               *<Optional>* The minimum increase in posting rate to accept a sliding time-window as representing a breaking topic, defaults to 1.7.
+
+The following parameters tweak the :class:`~queues.consumers.algorithms.fuego_consumer.FIREConsumer` and :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`:
+
+    - ``--freeze-period``           *<Optional>* The freeze period of clusters, defaults to 20 seconds.
     - ``--min-size``                *<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
-    - ``--min-burst``               *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
     - ``--threshold``               *<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
-    - ``--threshold-type``          *<Optional>* The type of dynamic volume threshold to use with the :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer`: `MEAN` (default), `MOVING_MEAN` or `MEAN_STDEV`.
-    - ``--post-rate``               *<Optional>* The minimum increase in posting rate to accept a sliding time-window as representing a breaking topic, defaults to 1.7 (used by the :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
-    - ``--max-intra-similarity``    *<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
-    - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer`).
-    - ``--burst-end``               *<Optional>* The maximum burst to stop considering a term to be breaking, defaults to 0.2 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer`).
-    - ``--freeze-period``           *<Optional>* The freeze period of clusters, defaults to 20 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
-    - ``--log-nutrition``           *<Optional>* Take the logarithm of nutrition (used by the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
+    - ``--min-burst``               *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5.
+    - ``--max-intra-similarity``    *<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8 (used only by the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
+    - ``--log-nutrition``           *<Optional>* Take the logarithm of nutrition (used only by the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
+
+The following parameters tweak the :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer`:
+
+    - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms defaults to 10.
+    - ``--threshold-type``          *<Optional>* The type of dynamic volume threshold to use: `MEAN` (default), `MOVING_MEAN` or `MEAN_STDEV`.
+    - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5.
+    - ``--burst-end``               *<Optional>* The maximum burst to stop considering a term to be breaking, defaults to 0.2.
 """
 
 import argparse
@@ -287,39 +300,7 @@ from twitter.file import SimulatedFileReader
 def setup_args():
     """
     Set up and get the list of command-line arguments.
-
-    Accepted arguments:
-
-        - ``-e --event``                *<Required>* The event file or a list of event files to consume; can be JSON files or ``.tar.gz`` archives with `sample.json` or `event.json` files inside.
-        - ``-c --consumer``             *<Required>* The consumer to use: :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`, :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer` (or :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`), :class:`~queues.consumers.print_consumer.PrintConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer`, :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`.
-        - ``-u --understanding``        *<Optional>* The understanding file used to understand the event.
-        - ``-o --output``               *<Required>* The output file where to save the timeline, defaults to the ``.out`` directory relative to the event file.
-        - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used, but new understanding is generated.
-        - ``--sample``                  *<Optional>* The systematic sampling rate when reading the corpus [0–1]; defaults to 1, which reads all tweets.
-        - ``--speed``                   *<Optional>* The speed at which the file is consumed, defaults to 1, which is real-time speed.
-        - ``--skip``                    *<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
-        - ``--max-inactivity``          *<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
-        - ``--max-time``                *<Optional>* The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
-        - ``--skip-retweets``           *<Optional>* Skip retweets when reading tweets from a file, defaults to False.
-        - ``--skip-unverified``         *<Optional>* Skip tweets from unverified authors when reading tweets from a file, defaults to False.
-        - ``--filters``                 *<Optional>* The path to a file containing filters for the consumer, filtering the stream based on the tokens in tweets. If given, the tool expects a CSV file, where each line contains one token.
-        - ``--filters-keep``            *<Optional>* The number of filter keywords to retain, most useful when reading keywords from the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools, defaults to all keywords.
-        - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split, or a JSON file created by the :mod:`~tools.concepts` tool.
-        - ``--with-default-split``      *<Optional>* A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given).
-        - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
-        - ``--window-size``             *<Optional>* The size in seconds of the time window, used by real-time algorithms, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer` and :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer``).
-        - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if an `--understanding` corpus is provided; otherwise, a scheme can be created using the :mod:`~tools.idf` tool.
-        - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer`); defaults to 10.
-        - ``--min-size``                *<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
-        - ``--min-burst``               *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
-        - ``--threshold``               *<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
-        - ``--threshold-type``          *<Optional>* The type of dynamic volume threshold to use with the :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer`: `MEAN` (default), `MOVING_MEAN` or `MEAN_STDEV`.
-        - ``--post-rate``               *<Optional>* The minimum increase in posting rate to accept a sliding time-window as representing a breaking topic, defaults to 1.7 (used by the :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
-        - ``--max-intra-similarity``    *<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
-        - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer`).
-        - ``--burst-end``               *<Optional>* The maximum burst to stop considering a term to be breaking, defaults to 0.2 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer`).
-        - ``--freeze-period``           *<Optional>* The freeze period of clusters in seconds, defaults to 20 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the `ELDConsumer`).
-        - ``--log-nutrition``           *<Optional>* Take the logarithm of nutrition (used by the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
+    The full list of arguments is document alongside the tool.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -331,66 +312,75 @@ def setup_args():
     Parameters that define how the corpus should be collected.
     """
 
-    parser.add_argument('-e', '--event', nargs='+', required=True,
-                        help='<Required> The event file or a list of event files to consume; can be JSON files or `.tar.gz` archives with `sample.json` or `event.json` files inside.')
-    parser.add_argument('-c', '--consumer', type=consumer, required=True,
-                        help='<Required> The consumer to use: `ELDConsumer`, `FIREConsumer`, `SEERConsumer` (or `FUEGOConsumer`), `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.')
-    parser.add_argument('-u', '--understanding', type=str, required=False,
-                        help='<Optional> The understanding file used to understand the event.')
-    parser.add_argument('-o', '--output', type=str, required=True,
-                        help='<Required> The output file where to save the timeline, defaults to the `.out` directory relative to the event file.')
-    parser.add_argument('--no-cache', action="store_true",
-                        help='<Optional> If specified, the cached understanding is not used, but new understanding is generated.')
-    parser.add_argument('--sample', type=float, required=False, default=1,
-                        help='<Optional> The systematic sampling rate when reading the corpus [0–1]; defaults to 1, which reads all tweets.')
-    parser.add_argument('--speed', type=float, required=False, default=1,
-                        help='<Optional> The speed at which the file is consumed, defaults to 1, which is real-time speed.')
-    parser.add_argument('--skip', type=int, required=False, default=0,
-                        help='<Optional> The amount of time to skip from the beginning of the file in minutes, defaults to 0.')
-    parser.add_argument('--max-inactivity', type=int, required=False, default=60,
-                        help='<Optional> The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.')
-    parser.add_argument('--max-time', type=int, required=False, default=-1,
-                        help='<Optional> The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.')
-    parser.add_argument('--skip-retweets', action="store_true",
-                        help='<Optional> Skip retweets when reading tweets from a file, defaults to False.')
-    parser.add_argument('--skip-unverified', action="store_true",
-                        help='<Optional> Skip tweets from unverified authors when reading tweets from a file, defaults to False.')
-    parser.add_argument('--filters', required=False, default=None,
-                        help='<Optional> The path to a file containing filters for the consumer, filtering the stream based on the tokens in tweets. If given, the tool expects a CSV file, where each line contains one token.')
-    parser.add_argument('--filters-keep', type=int, required=False, default=None,
-                        help='<Optional> The number of filter keywords to retain, most useful when reading keywords from the output of the `terms` or `bootstrap` tools, defaults to all keywords.')
-    parser.add_argument('--splits', required=False, default=None,
-                        help='<Optional> The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split, or a JSON file created by the :mod:`~tools.concepts` tool.')
-    parser.add_argument('--with-default-split', required=False, action='store_true',
-                        help='<Optional> A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given.')
-    parser.add_argument('--periodicity', type=int, required=False, default=60,
-                        help='<Optional> The periodicity in seconds of the consumer, defaults to 60 seconds (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`).')
-    parser.add_argument('--window-size', type=int, required=False, default=60,
-                        help='<Optional> The size in seconds of the time window, used by real-time algorithms, defaults to 60 seconds (used by the `FUEGOConsumer` and `SEERConsumer`.')
-    parser.add_argument('--scheme', type=scheme, required=False, default=None,
-                        help="""<Optional> If specified, the path to the term-weighting scheme file. If it is not specified, the term frequency scheme is used instead. This can be overwritten if an `--understanding` corpus is provided; otherwise, a scheme can be created using the `idf` tool.""")
-    parser.add_argument('--min-volume', type=float, required=False, default=10,
-                        help='<Optional> The minimum volume to consider the stream to be active and look for breaking terms (used by the `SEERConsumer`); defaults to 10.')
-    parser.add_argument('--min-size', type=int, required=False, default=3,
-                        help='<Optional> The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.')
-    parser.add_argument('--min-burst', type=float, required=False, default=0.5,
-                        help='<Optional> The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the `FIREConsumer` and the `ELDConsumer`).')
-    parser.add_argument('--threshold', type=float, required=False, default=0.5,
-                        help='<Optional> The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.')
-    parser.add_argument('--threshold-type', type=threshold, required=False, default='mean',
-                        help='<Optional> The type of dynamic volume threshold to use with the `SEERConsumer`: `MEAN` (default), `MOVING_MEAN` or `MEAN_STDEV`.')
-    parser.add_argument('--post-rate', type=float, required=False, default=1.7,
-                        help='<Optional> The minimum increase in posting rate to accept a sliding time-window as representing a breaking topic, defaults to 1.7 (used by the `ZhaoConsumer`).')
-    parser.add_argument('--max-intra-similarity', type=float, required=False, default=0.8,
-                        help='<Optional> The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.')
-    parser.add_argument('--burst-start', type=float, required=False, default=0.5,
-                        help='<Optional> The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the `SEERConsumer`).')
-    parser.add_argument('--burst-end', type=float, required=False, default=0.2,
-                        help='<Optional> The maximum burst to stop considering a term to be breaking, defaults to 0.2 (used by the `SEERConsumer`).')
-    parser.add_argument('--freeze-period', type=int, required=False, default=20,
-                        help='<Optional> The freeze period of clusters, defaults to 20 seconds (used by the `FIREConsumer` and the `ELDConsumer`).')
-    parser.add_argument('--log-nutrition', action='store_true',
-                        help='<Optional> Take the logarithm of nutrition (used by the `ELDConsumer`).')
+    group = parser.add_argument_group('Core arguments', 'The following arguments are necessary or often need tweaking to create a timeline of an event:')
+    group.add_argument('-e', '--event', nargs='+', required=True,
+                       help='<Required> The event file or a list of event files to consume; can be JSON files or `.tar.gz` archives with `sample.json` or `event.json` files inside.')
+    group.add_argument('-c', '--consumer', type=consumer, required=True,
+                       help='<Required> The consumer to use: `ELDConsumer`, `FIREConsumer`, `SEERConsumer` (or `FUEGOConsumer`), `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.')
+    group.add_argument('-u', '--understanding', type=str, required=False,
+                       help='<Optional> The understanding file used to understand the event.')
+    group.add_argument('-o', '--output', type=str, required=True,
+                       help='<Required> The output file where to save the timeline, defaults to the `.out` directory relative to the event file.')
+    group.add_argument('--no-cache', action="store_true",
+                       help='<Optional> If specified, the cached understanding is not used, but new understanding is generated.')
+    group.add_argument('--scheme', type=scheme, required=False, default=None,
+                       help="""<Optional> If specified, the path to the term-weighting scheme file. If it is not specified, the term frequency scheme is used instead. This can be overwritten if an `--understanding` corpus is provided; otherwise, a scheme can be created using the `idf` tool.""")
+    group.add_argument('--periodicity', type=int, required=False, default=60,
+                       help='<Optional> The periodicity in seconds of the consumer, defaults to 60 seconds (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`).')
+    group.add_argument('--window-size', type=int, required=False, default=60,
+                       help='<Optional> The size in seconds of the time window, used by real-time algorithms, defaults to 60 seconds (used by the `FUEGOConsumer` and `SEERConsumer`.')
+
+    group = parser.add_argument_group('Data arguments', 'The following arguments let you control how to handle the data:')
+    group.add_argument('--sample', type=float, required=False, default=1,
+                       help='<Optional> The systematic sampling rate when reading the corpus [0–1]; defaults to 1, which reads all tweets.')
+    group.add_argument('--speed', type=float, required=False, default=1,
+                       help='<Optional> The speed at which the file is consumed, defaults to 1, which is real-time speed.')
+    group.add_argument('--skip', type=int, required=False, default=0,
+                       help='<Optional> The amount of time to skip from the beginning of the file in minutes, defaults to 0.')
+    group.add_argument('--max-inactivity', type=int, required=False, default=60,
+                       help='<Optional> The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.')
+    group.add_argument('--max-time', type=int, required=False, default=-1,
+                       help='<Optional> The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.')
+    group.add_argument('--skip-retweets', action="store_true",
+                       help='<Optional> Skip retweets when reading tweets from a file, defaults to False.')
+    group.add_argument('--skip-unverified', action="store_true",
+                       help='<Optional> Skip tweets from unverified authors when reading tweets from a file, defaults to False.')
+    group.add_argument('--filters', required=False, default=None,
+                       help='<Optional> The path to a file containing filters for the consumer, filtering the stream based on the tokens in tweets. If given, the tool expects a CSV file, where each line contains one token.')
+    group.add_argument('--filters-keep', type=int, required=False, default=None,
+                       help='<Optional> The number of filter keywords to retain, most useful when reading keywords from the output of the `terms` or `bootstrap` tools, defaults to all keywords.')
+    group.add_argument('--splits', required=False, default=None,
+                       help='<Optional> The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split, or a JSON file created by the :mod:`~tools.concepts` tool.')
+    group.add_argument('--with-default-split', required=False, action='store_true',
+                       help='<Optional> A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given.')
+
+    group = parser.add_argument_group('Zhao et al. (2011)', 'The following arguments let you tweak how the algorithm by Zhao et al. (2011) works:')
+    group.add_argument('--post-rate', type=float, required=False, default=1.7,
+                       help='<Optional> The minimum increase in posting rate to accept a sliding time-window as representing a breaking topic, defaults to 1.7.')
+
+    group = parser.add_argument_group('FIRE (Mamo et al., 2017) and ELD (Mamo et al., 2021)', 'The following arguments let you tweak how FIRE (Mamo et al., 2017) and ELD (Mamo et al., 2021) work:')
+    group.add_argument('--freeze-period', type=int, required=False, default=20,
+                       help='<Optional> The freeze period of clusters, defaults to 20 seconds.')
+    group.add_argument('--min-size', type=int, required=False, default=3,
+                       help='<Optional> The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.')
+    group.add_argument('--threshold', type=float, required=False, default=0.5,
+                       help='<Optional> The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.')
+    group.add_argument('--min-burst', type=float, required=False, default=0.5,
+                       help='<Optional> The minimum burst to accept a term to be breaking, defaults to 0.5.')
+    group.add_argument('--max-intra-similarity', type=float, required=False, default=0.8,
+                       help='<Optional> The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8 (used only by the `ELDConsumer`).')
+    group.add_argument('--log-nutrition', action='store_true',
+                       help='<Optional> Take the logarithm of nutrition (used only by the `ELDConsumer`).')
+
+    group = parser.add_argument_group('SEER', 'The following arguments let you tweak how SEER works:')
+    group.add_argument('--min-volume', type=float, required=False, default=10,
+                       help='<Optional> The minimum volume to consider the stream to be active and look for breaking terms; defaults to 10.')
+    group.add_argument('--threshold-type', type=threshold, required=False, default='mean',
+                       help='<Optional> The type of dynamic volume threshold to use: `MEAN` (default), `MOVING_MEAN` or `MEAN_STDEV`.')
+    group.add_argument('--burst-start', type=float, required=False, default=0.5,
+                       help='<Optional> The minimum burst to accept a term to be breaking, defaults to 0.5.')
+    group.add_argument('--burst-end', type=float, required=False, default=0.2,
+                       help='<Optional> The maximum burst to stop considering a term to be breaking, defaults to 0.2.')
 
     args = parser.parse_args()
     return args
