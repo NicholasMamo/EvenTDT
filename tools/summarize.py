@@ -160,11 +160,13 @@ sys.path.insert(-1, lib)
 from logger import logger
 from nlp.cleaners import TweetCleaner
 from objects.exportable import Exportable
+from queues.consumers.algorithms import ReportingLevel
 from summarization.algorithms import DGS, MMR
 from summarization.scorers import DomainScorer, TweetScorer
 from summarization.timeline.nodes import TopicalClusterNode
 import tools
 from tools import consume, terms, bootstrap
+import twitter
 from vsm.clustering import Cluster
 
 def setup_args():
@@ -596,7 +598,7 @@ def construct_query(nodes):
     else:
         return Cluster(vectors=nodes.topics).centroid
 
-def filter_documents(documents, max_documents=None, terms=None):
+def filter_documents(documents, max_documents=None, terms=None, reporting=ReportingLevel.ALL):
     """
     Filter the given list of documents.
     This function removes duplicates.
@@ -611,6 +613,8 @@ def filter_documents(documents, max_documents=None, terms=None):
     :param terms: A list of domain terms.
                   If given, the function scores documents using the :class:`~summarization.scorers.domain_scorer.DomainScorer` instead of the :class:`~summarization.scorers.tweet_scorer.TweetScorer`.
     :type terms: list of str
+    :param reporting: The reporting level, whether to use all tweets or only verified tweets.
+    :type reporting: :class:`~queues.consumers.algorithms.ReportingLevel`
 
     :return: The filtered list of documents without duplicates.
     :rtype documents: list of :class:`~nlp.document.Document`
@@ -621,10 +625,22 @@ def filter_documents(documents, max_documents=None, terms=None):
     documents = [ document for document in documents
                            if document in filtered.values() ]
 
+    # add attributes to check if the documents are retweets if they are missing
+    for document in documents:
+        if document.is_verified is None and document.tweet:
+            document.attributes['is_verified'] = twitter.is_verified(document.tweet)
+            document.attributes['is_retwee'] = twitter.is_retwee(document.tweet)
+
+    # in the 'ORIGINAL' reporting strategy, remove retweets unless all documents are retweets
+    if reporting == ReportingLevel.ORIGINAL and any( not document.is_retweet for document in documents ):
+        documents = [ document for document in documents if not document.is_retweet ]
+
+    # in the 'VERIFIED' reporting strategy, remove tweets by unverified authors unless all documents are by them
+    if reporting == ReportingLevel.VERIFIED and any( document.is_verified for document in documents ):
+        documents = [ document for document in documents if document.is_verified ]
+
     # if the number of documents is given, sort them in ascending order of score and retain only the top ones
-    scorers = [ ]
-    if terms:
-        scorers.append(DomainScorer(terms))
+    scorers = [ DomainScorer(terms) ] if terms else [ ]
     scorers.append(TweetScorer())
 
     # pre-process the terms for the tweet scorer if need be

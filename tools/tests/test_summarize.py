@@ -17,6 +17,7 @@ for path in paths:
         sys.path.append(path)
 
 from nlp import Document
+from queues.consumers.algorithms import ReportingLevel
 from summarization.algorithms import MMR, DGS
 from summarization import Summary
 from summarization.timeline import Timeline
@@ -592,6 +593,82 @@ class TestSummarize(unittest.TestCase):
 
         terms = [ 'cigar' ]
         self.assertEqual(documents[2], summarize.filter_documents(documents, max_documents=1, terms=terms)[0])
+
+    def test_filter_documents_reporting_all(self):
+        """
+        Test that when filtering documents with the 'ALL' reporting strategy, all documents are returned.
+        """
+
+        documents = [ Document('a'), Document('b'), Document('c') ]
+        self.assertEqual(documents, summarize.filter_documents(documents, reporting=ReportingLevel.ALL))
+
+    def test_filter_documents_reporting_original_no_retweets(self):
+        """
+        Test that when filtering documents with the 'ORIGINAL' reporting strategy, if no documents are retweets, they are all returned.
+        """
+
+        documents = [ Document('a', attributes={ 'is_retweet': False }),
+                      Document('b', attributes={ 'is_retweet': False }),
+                      Document('c', attributes={ 'is_retweet': False }) ]
+        self.assertEqual(documents, summarize.filter_documents(documents, reporting=ReportingLevel.ORIGINAL))
+
+    def test_filter_documents_reporting_original_only(self):
+        """
+        Test that when filtering documents with the 'ORIGINAL' reporting strategy, original tweets are returned.
+        """
+
+        documents = [ Document('a', attributes={ 'is_retweet': True }),
+                      Document('b', attributes={ 'is_retweet': False }),
+                      Document('c', attributes={ 'is_retweet': True }) ]
+        filtered = summarize.filter_documents(documents, reporting=ReportingLevel.ORIGINAL)
+        self.assertFalse(documents[0] in filtered)
+        self.assertTrue(documents[1] in filtered)
+        self.assertFalse(documents[0] in filtered)
+        self.assertTrue(all( not document.is_retweet for document in filtered ))
+
+    def test_filter_documents_reporting_original_all_retweets(self):
+        """
+        Test that when filtering documents with the 'ORIGINAL' reporting strategy, all tweets are returned if they are all retweets.
+        """
+
+        documents = [ Document('a', attributes={ 'is_retweet': True }),
+                      Document('b', attributes={ 'is_retweet': True }),
+                      Document('c', attributes={ 'is_retweet': True }) ]
+        self.assertEqual(documents, summarize.filter_documents(documents, reporting=ReportingLevel.ORIGINAL))
+
+    def test_filter_documents_reporting_verified_no_retweets(self):
+        """
+        Test that when filtering documents with the 'VERIFIED' reporting strategy, if no documents are verified, they are all returned.
+        """
+
+        documents = [ Document('a', attributes={ 'is_verified': False }),
+                      Document('b', attributes={ 'is_verified': False }),
+                      Document('c', attributes={ 'is_verified': False }) ]
+        self.assertEqual(documents, summarize.filter_documents(documents, reporting=ReportingLevel.VERIFIED))
+
+    def test_filter_documents_reporting_verified_only(self):
+        """
+        Test that when filtering documents with the 'VERIFIED' reporting strategy, verified tweets are returned.
+        """
+
+        documents = [ Document('a', attributes={ 'is_verified': True }),
+                      Document('b', attributes={ 'is_verified': False }),
+                      Document('c', attributes={ 'is_verified': True }) ]
+        filtered = summarize.filter_documents(documents, reporting=ReportingLevel.VERIFIED)
+        self.assertTrue(documents[0] in filtered)
+        self.assertFalse(documents[1] in filtered)
+        self.assertTrue(documents[0] in filtered)
+        self.assertTrue(all( document.is_verified for document in filtered ))
+
+    def test_filter_documents_reporting_verified_all_retweets(self):
+        """
+        Test that when filtering documents with the 'VERIFIED' reporting strategy, all tweets are returned if they are all verified.
+        """
+
+        documents = [ Document('a', attributes={ 'is_verified': True }),
+                      Document('b', attributes={ 'is_verified': True }),
+                      Document('c', attributes={ 'is_verified': True }) ]
+        self.assertEqual(documents, summarize.filter_documents(documents, reporting=ReportingLevel.VERIFIED))
 
     def test_load_splits_old_file(self):
         """

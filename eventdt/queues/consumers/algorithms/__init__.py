@@ -51,10 +51,12 @@ class ReportingLevel(Enum):
 
         - ALL:      Return all relevant tweets.
         - ORIGINAL: Return all relevant tweets except retweets.
+        - VERIFIED: Return only original, verified tweets.
     """
 
     ALL = 1
     ORIGINAL = 2
+    VERIFIED = 3
 
 class StorageLevel(Enum):
     """
