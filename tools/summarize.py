@@ -395,9 +395,8 @@ def summarize(summarizer, timeline, splits, merge=False, verbose=False, max_docu
         if merge:
             # get all documents in all nodes
             documents = [ document for node in nodes for document in node.get_all_documents() ]
-            if clean:
-                for document in documents:
-                    document.text = cleaner.clean(document.text)
+            for document in documents:
+                document.text = cleaner.clean(document.text) if clean else document.text
             documents = filter_documents(documents, max_documents, terms=terms)
 
             # create the query by getting the centroid from all nodes
@@ -426,9 +425,8 @@ def summarize(summarizer, timeline, splits, merge=False, verbose=False, max_docu
                 Cleaning happens before selecting the documents so that the clean text is considered.
                 """
                 documents = node.get_all_documents()
-                if clean:
-                    for document in documents:
-                        document.text = cleaner.clean(document.text)
+                for document in documents:
+                    document.text = cleaner.clean(document.text) if clean else document.text
                 documents = filter_documents(documents, max_documents, terms=terms)
 
                 """
