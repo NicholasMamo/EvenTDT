@@ -22,28 +22,43 @@ class TestClusterNode(unittest.TestCase):
     Test the cluster node.
     """
 
-    def test_create_empty(self):
+    def test_init_empty(self):
         """
         Test that the cluster node is created empty.
         """
 
         self.assertEqual([ ], ClusterNode(0).clusters)
 
-    def test_create_empty_attributes(self):
+    def test_init_empty_attributes(self):
         """
         Test that the cluster node is created with no attributes.
         """
 
         self.assertEqual({ }, ClusterNode(0).attributes)
 
-    def test_create_with_timestamp_zero(self):
+    def test_init_with_id(self):
+        """
+        Test that creating a cluster node automatically creates a unique ID.
+        """
+
+        self.assertTrue(ClusterNode(0).id)
+
+    def test_init_unique_id(self):
+        """
+        Test that creating a cluster node automatically creates a unique ID.
+        """
+
+        ids = [ ClusterNode(0).id for i in range(100) ]
+        self.assertTrue(len(ids), len(set(ids)))
+
+    def test_init_with_timestamp_zero(self):
         """
         Test that the cluster node saves the timestamp correctly even if it is zero.
         """
 
         self.assertEqual(0, ClusterNode(0).created_at)
 
-    def test_create_with_timestamp(self):
+    def test_init_with_timestamp(self):
         """
         Test that the cluster node saves the timestamp correctly.
         """
@@ -51,7 +66,7 @@ class TestClusterNode(unittest.TestCase):
         self.assertEqual(1000, ClusterNode(1000).created_at)
 
 
-    def test_create_with_no_clusters(self):
+    def test_init_with_no_clusters(self):
         """
         Test that when creating the cluster node with no clusters, an empty list is initialized.
         """
@@ -59,7 +74,7 @@ class TestClusterNode(unittest.TestCase):
         node = ClusterNode(0)
         self.assertEqual([ ], node.clusters)
 
-    def test_create_with_clusters(self):
+    def test_init_with_clusters(self):
         """
         Test that when creating the cluster node with a list of clusters, it is saved.
         """
@@ -327,7 +342,7 @@ class TestClusterNode(unittest.TestCase):
         """
 
         clusters = [ Cluster(Document('', { 'a': 1 }), attributes={ 'b': 2 }),
-                      Cluster(Vector({ 'c': 3 }), attributes={ 'd': 4 }) ]
+                     Cluster(Vector({ 'c': 3 }), attributes={ 'd': 4 }) ]
         node = ClusterNode(0, clusters=clusters)
         e = node.to_array()
         self.assertEqual(node.created_at, ClusterNode.from_array(e).created_at)
