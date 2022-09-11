@@ -11,6 +11,7 @@ from abc import ABC, abstractmethod
 import os
 import sys
 import time
+import uuid
 
 path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
@@ -40,18 +41,25 @@ class Node(Exportable, Attributable):
 
     :ivar created_at: The timestamp when the node was created.
     :vartype created_at: float
+    :ivar id: A unique ID representing the node.
+              The ID, a UUID-4 string, helps link summaries and models to nodes.
+    :vartype id: str
     """
 
-    def __init__(self, created_at):
+    def __init__(self, created_at, id=None):
         """
         Create the node with the given timestamp.
 
         :param created_at: The timestamp when the node was created.
         :type created_at: float
+        :param id: A unique ID representing the node.
+                   If a value is not given, the node automatically assigns a UUID-4 ID.
+        :type id: str
         """
 
         super(Node, self).__init__()
         self.created_at = created_at
+        self.id = id or str(uuid.uuid4())
 
     @abstractmethod
     def add(self, *args, **kwargs):
@@ -106,6 +114,20 @@ class Node(Exportable, Attributable):
             raise ValueError(f"The expiry cannot be negative: received {expiry}")
 
         return timestamp - self.created_at >= expiry
+
+    def to_array(self):
+        """
+        Export the node as an associative array.
+
+        :return: The node as an associative array.
+        :rtype: dict
+        """
+
+        return {
+            'class': str(Node),
+            'created_at': self.created_at,
+            'id': self.id,
+        }
 
     @staticmethod
     @abstractmethod
