@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"filt",
+				"filtered"
+			],
+			[
 				"assertL",
 				"assertLess"
 			],
@@ -60,536 +64,276 @@
 	"buffers":
 	[
 		{
-			"file": "tools/consume.py",
+			"file": "eventdt/queues/consumers/algorithms/eld_consumer.py",
 			"settings":
 			{
-				"buffer_size": 48787,
+				"buffer_size": 43599,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			},
 			"undo_stack":
 			[
 				[
-					96,
+					44,
+					1,
+					"run_macro_file",
+					{
+						"file": "res://Packages/Default/Add Line Before.sublime-macro"
+					},
+					"AgAAAOOpAAAAAAAA5KkAAAAAAAAAAAAA46kAAAAAAADvqQAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA76kAAAAAAADvqQAAAAAAAAAAAAAAAFVA"
+				],
+				[
+					45,
 					1,
 					"insert",
 					{
-						"characters": " #"
+						"characters": "filtered"
 					},
-					"AgAAAGd8AAAAAAAAaHwAAAAAAAAAAAAAaHwAAAAAAABpfAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAZ3wAAAAAAABnfAAAAAAAAAAAAAAAAPC/"
+					"CAAAAO+pAAAAAAAA8KkAAAAAAAAAAAAA8KkAAAAAAADxqQAAAAAAAAAAAADxqQAAAAAAAPKpAAAAAAAAAAAAAPKpAAAAAAAA86kAAAAAAAAAAAAA86kAAAAAAAD0qQAAAAAAAAAAAAD0qQAAAAAAAPWpAAAAAAAAAAAAAPWpAAAAAAAA9qkAAAAAAAAAAAAA9qkAAAAAAAD3qQAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA76kAAAAAAADvqQAAAAAAAAAAAAAAAPC/"
 				],
 				[
-					97,
+					46,
 					1,
 					"insert",
 					{
-						"characters": " do"
+						"characters": " ="
 					},
-					"AwAAAGl8AAAAAAAAanwAAAAAAAAAAAAAanwAAAAAAABrfAAAAAAAAAAAAABrfAAAAAAAAGx8AAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAaXwAAAAAAABpfAAAAAAAAAAAAAAAAPC/"
+					"AgAAAPepAAAAAAAA+KkAAAAAAAAAAAAA+KkAAAAAAAD5qQAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA96kAAAAAAAD3qQAAAAAAAAAAAAAAAPC/"
 				],
 				[
-					98,
+					47,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAAPmpAAAAAAAA+qkAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA+akAAAAAAAD5qQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					55,
+					1,
+					"cut",
+					null,
+					"AQAAAA6qAAAAAAAADqoAAAAAAABfAAAAWyBkb2N1bWVudCBmb3IgZG9jdW1lbnQgaW4gZG9jdW1lbnRzCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmIG5vdCBkb2N1bWVudC5pc19yZXR3ZWV0IF0",
+					"AQAAAAAAAAABAAAADqoAAAAAAABtqgAAAAAAAP///////+9/"
+				],
+				[
+					58,
+					1,
+					"paste",
+					null,
+					"AQAAAPqpAAAAAAAAWaoAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA+qkAAAAAAAD6qQAAAAAAAP///////+9/"
+				],
+				[
+					62,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AgAAAB6qAAAAAAAAH6oAAAAAAAAAAAAAH6oAAAAAAAAfqgAAAAAAAB8AAAAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg",
+					"AQAAAAAAAAABAAAAPaoAAAAAAAAeqgAAAAAAAP///////+9/"
+				],
+				[
+					64,
+					1,
+					"delete_word",
+					{
+						"forward": false
+					},
+					"AQAAAEiqAAAAAAAASKoAAAAAAAAHAAAAcmV0dXJuIA",
+					"AQAAAAAAAAABAAAAT6oAAAAAAABPqgAAAAAAAAAAAAAAQHpA"
+				],
+				[
+					65,
+					1,
+					"insert",
+					{
+						"characters": "if"
+					},
+					"AgAAAEiqAAAAAAAASaoAAAAAAAAAAAAASaoAAAAAAABKqgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAASKoAAAAAAABIqgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					66,
+					1,
+					"insert",
+					{
+						"characters": " filtered"
+					},
+					"CQAAAEqqAAAAAAAAS6oAAAAAAAAAAAAAS6oAAAAAAABMqgAAAAAAAAAAAABMqgAAAAAAAE2qAAAAAAAAAAAAAE2qAAAAAAAATqoAAAAAAAAAAAAATqoAAAAAAABPqgAAAAAAAAAAAABPqgAAAAAAAFCqAAAAAAAAAAAAAFCqAAAAAAAAUaoAAAAAAAAAAAAAUaoAAAAAAABSqgAAAAAAAAAAAABSqgAAAAAAAFOqAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAASqoAAAAAAABKqgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					67,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAAFOqAAAAAAAAVKoAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAU6oAAAAAAABTqgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					69,
+					1,
+					"run_macro_file",
+					{
+						"file": "res://Packages/Default/Delete Line.sublime-macro"
+					},
+					"AQAAADyqAAAAAAAAPKoAAAAAAAAZAAAAICAgICAgICAgICAgaWYgZmlsdGVyZWQgCg",
+					"AQAAAAAAAAABAAAASKoAAAAAAABIqgAAAAAAAAAAAAAAAFVA"
+				],
+				[
+					71,
+					2,
+					"run_macro_file",
+					{
+						"file": "res://Packages/Default/Add Line Before.sublime-macro"
+					},
+					"BAAAAHCpAAAAAAAAcakAAAAAAAAAAAAAcKkAAAAAAAB4qQAAAAAAAAAAAABwqQAAAAAAAHGpAAAAAAAAAAAAAHCpAAAAAAAAeKkAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAcKkAAAAAAABwqQAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					72,
+					1,
+					"insert",
+					{
+						"characters": "filtered"
+					},
+					"CQAAAHipAAAAAAAAeakAAAAAAAAAAAAAeqkAAAAAAAB6qQAAAAAAAAgAAAAgICAgICAgIHmpAAAAAAAAeqkAAAAAAAAAAAAAeqkAAAAAAAB7qQAAAAAAAAAAAAB7qQAAAAAAAHypAAAAAAAAAAAAAHypAAAAAAAAfakAAAAAAAAAAAAAfakAAAAAAAB+qQAAAAAAAAAAAAB+qQAAAAAAAH+pAAAAAAAAAAAAAH+pAAAAAAAAgKkAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAeKkAAAAAAAB4qQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					73,
+					1,
+					"insert",
+					{
+						"characters": " ="
+					},
+					"AgAAAICpAAAAAAAAgakAAAAAAAAAAAAAgakAAAAAAACCqQAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAgKkAAAAAAACAqQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					74,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAAIKpAAAAAAAAg6kAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAgqkAAAAAAACCqQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					75,
+					1,
+					"insert_snippet",
+					{
+						"contents": "[$0]"
+					},
+					"AQAAAIOpAAAAAAAAhakAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAg6kAAAAAAACDqQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					76,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAAISpAAAAAAAAhakAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAhKkAAAAAAACEqQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					80,
+					1,
+					"insert",
+					{
+						"characters": " if"
+					},
+					"AwAAAG2qAAAAAAAAbqoAAAAAAAAAAAAAbqoAAAAAAABvqgAAAAAAAAAAAABvqgAAAAAAAHCqAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAbaoAAAAAAABtqgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					81,
 					1,
 					"insert",
 					{
 						"characters": " not"
 					},
-					"BAAAAGx8AAAAAAAAbXwAAAAAAAAAAAAAbXwAAAAAAABufAAAAAAAAAAAAABufAAAAAAAAG98AAAAAAAAAAAAAG98AAAAAAAAcHwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAbHwAAAAAAABsfAAAAAAAAAAAAAAAAPC/"
+					"BAAAAHCqAAAAAAAAcaoAAAAAAAAAAAAAcaoAAAAAAAByqgAAAAAAAAAAAAByqgAAAAAAAHOqAAAAAAAAAAAAAHOqAAAAAAAAdKoAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAcKoAAAAAAABwqgAAAAAAAAAAAAAAAPC/"
 				],
 				[
-					99,
+					82,
 					1,
 					"insert",
 					{
-						"characters": " create"
+						"characters": " filtered"
 					},
-					"BwAAAHB8AAAAAAAAcXwAAAAAAAAAAAAAcXwAAAAAAAByfAAAAAAAAAAAAAByfAAAAAAAAHN8AAAAAAAAAAAAAHN8AAAAAAAAdHwAAAAAAAAAAAAAdHwAAAAAAAB1fAAAAAAAAAAAAAB1fAAAAAAAAHZ8AAAAAAAAAAAAAHZ8AAAAAAAAd3wAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAcHwAAAAAAABwfAAAAAAAAAAAAAAAAPC/"
+					"CQAAAHSqAAAAAAAAdaoAAAAAAAAAAAAAdaoAAAAAAAB2qgAAAAAAAAAAAAB2qgAAAAAAAHeqAAAAAAAAAAAAAHeqAAAAAAAAeKoAAAAAAAAAAAAAeKoAAAAAAAB5qgAAAAAAAAAAAAB5qgAAAAAAAHqqAAAAAAAAAAAAAHqqAAAAAAAAe6oAAAAAAAAAAAAAe6oAAAAAAAB8qgAAAAAAAAAAAAB8qgAAAAAAAH2qAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAdKoAAAAAAAB0qgAAAAAAAAAAAAAAAPC/"
 				],
 				[
-					100,
+					83,
 					1,
 					"insert",
 					{
-						"characters": " filters"
+						"characters": " else"
 					},
-					"CAAAAHd8AAAAAAAAeHwAAAAAAAAAAAAAeHwAAAAAAAB5fAAAAAAAAAAAAAB5fAAAAAAAAHp8AAAAAAAAAAAAAHp8AAAAAAAAe3wAAAAAAAAAAAAAe3wAAAAAAAB8fAAAAAAAAAAAAAB8fAAAAAAAAH18AAAAAAAAAAAAAH18AAAAAAAAfnwAAAAAAAAAAAAAfnwAAAAAAAB/fAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAd3wAAAAAAAB3fAAAAAAAAAAAAAAAAPC/"
+					"BQAAAH2qAAAAAAAAfqoAAAAAAAAAAAAAfqoAAAAAAAB/qgAAAAAAAAAAAAB/qgAAAAAAAICqAAAAAAAAAAAAAICqAAAAAAAAgaoAAAAAAAAAAAAAgaoAAAAAAACCqgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAfaoAAAAAAAB9qgAAAAAAAAAAAAAAAPC/"
 				],
 				[
-					101,
+					84,
 					1,
 					"insert",
 					{
-						"characters": " "
+						"characters": " filtered"
 					},
-					"AQAAAH98AAAAAAAAgHwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAf3wAAAAAAAB/fAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					103,
-					1,
-					"insert",
-					{
-						"characters": "or"
-					},
-					"AgAAAIB8AAAAAAAAgXwAAAAAAAAAAAAAgXwAAAAAAACCfAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAgHwAAAAAAACAfAAAAAAAAAAAAAAAAPC/"
+					"CQAAAIKqAAAAAAAAg6oAAAAAAAAAAAAAg6oAAAAAAACEqgAAAAAAAAAAAACEqgAAAAAAAIWqAAAAAAAAAAAAAIWqAAAAAAAAhqoAAAAAAAAAAAAAhqoAAAAAAACHqgAAAAAAAAAAAACHqgAAAAAAAIiqAAAAAAAAAAAAAIiqAAAAAAAAiaoAAAAAAAAAAAAAiaoAAAAAAACKqgAAAAAAAAAAAACKqgAAAAAAAIuqAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAgqoAAAAAAACCqgAAAAAAAAAAAAAAAPC/"
 				],
 				[
 					104,
 					1,
-					"insert",
-					{
-						"characters": " splits"
-					},
-					"BwAAAIJ8AAAAAAAAg3wAAAAAAAAAAAAAg3wAAAAAAACEfAAAAAAAAAAAAACEfAAAAAAAAIV8AAAAAAAAAAAAAIV8AAAAAAAAhnwAAAAAAAAAAAAAhnwAAAAAAACHfAAAAAAAAAAAAACHfAAAAAAAAIh8AAAAAAAAAAAAAIh8AAAAAAAAiXwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAgnwAAAAAAACCfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					106,
-					1,
-					"insert",
-					{
-						"characters": "a"
-					},
-					"AQAAAHh8AAAAAAAAeXwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAeHwAAAAAAAB4fAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					107,
-					1,
-					"insert",
-					{
-						"characters": " "
-					},
-					"AQAAAHl8AAAAAAAAenwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAeXwAAAAAAAB5fAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					109,
-					1,
 					"left_delete",
 					null,
-					"AQAAAIB8AAAAAAAAgHwAAAAAAAABAAAAcw",
-					"AQAAAAAAAAABAAAAgXwAAAAAAACBfAAAAAAAAAAAAAAAAPC/"
-				],
+					"AQAAALypAAAAAAAAvKkAAAAAAAA9AAAAIGFuZCBub3QgYWxsKCBkb2N1bWVudC5pc19yZXR3ZWV0IGZvciBkb2N1bWVudCBpbiBkb2N1bWVudHMgKQ",
+					"AQAAAAAAAAABAAAAvKkAAAAAAAD5qQAAAAAAAAAAAAAAAPC/"
+				]
+			]
+		},
+		{
+			"file": "eventdt/queues/consumers/algorithms/fuego_consumer.py",
+			"settings":
+			{
+				"buffer_size": 46863,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
 				[
-					110,
-					1,
-					"insert",
-					{
-						"characters": "ed"
-					},
-					"AgAAAIB8AAAAAAAAgXwAAAAAAAAAAAAAgXwAAAAAAACCfAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAgHwAAAAAAACAfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					112,
-					1,
-					"left_delete",
-					null,
-					"AQAAAIt8AAAAAAAAi3wAAAAAAAABAAAAcw",
-					"AQAAAAAAAAABAAAAjHwAAAAAAACMfAAAAAAAAP///////+9/"
-				],
-				[
-					113,
-					1,
-					"insert",
-					{
-						"characters": " consumer"
-					},
-					"CQAAAIt8AAAAAAAAjHwAAAAAAAAAAAAAjHwAAAAAAACNfAAAAAAAAAAAAACNfAAAAAAAAI58AAAAAAAAAAAAAI58AAAAAAAAj3wAAAAAAAAAAAAAj3wAAAAAAACQfAAAAAAAAAAAAACQfAAAAAAAAJF8AAAAAAAAAAAAAJF8AAAAAAAAknwAAAAAAAAAAAAAknwAAAAAAACTfAAAAAAAAAAAAACTfAAAAAAAAJR8AAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAi3wAAAAAAACLfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					114,
-					1,
-					"insert",
-					{
-						"characters": " for"
-					},
-					"BAAAAJR8AAAAAAAAlXwAAAAAAAAAAAAAlXwAAAAAAACWfAAAAAAAAAAAAACWfAAAAAAAAJd8AAAAAAAAAAAAAJd8AAAAAAAAmHwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAlHwAAAAAAACUfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					115,
-					1,
-					"insert",
-					{
-						"characters": " the"
-					},
-					"BAAAAJh8AAAAAAAAmXwAAAAAAAAAAAAAmXwAAAAAAACafAAAAAAAAAAAAACafAAAAAAAAJt8AAAAAAAAAAAAAJt8AAAAAAAAnHwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAmHwAAAAAAACYfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					116,
-					1,
-					"insert",
-					{
-						"characters": " understna"
-					},
-					"CgAAAJx8AAAAAAAAnXwAAAAAAAAAAAAAnXwAAAAAAACefAAAAAAAAAAAAACefAAAAAAAAJ98AAAAAAAAAAAAAJ98AAAAAAAAoHwAAAAAAAAAAAAAoHwAAAAAAAChfAAAAAAAAAAAAAChfAAAAAAAAKJ8AAAAAAAAAAAAAKJ8AAAAAAAAo3wAAAAAAAAAAAAAo3wAAAAAAACkfAAAAAAAAAAAAACkfAAAAAAAAKV8AAAAAAAAAAAAAKV8AAAAAAAApnwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAnHwAAAAAAACcfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					117,
-					2,
-					"left_delete",
-					null,
-					"AgAAAKV8AAAAAAAApXwAAAAAAAABAAAAYaR8AAAAAAAApHwAAAAAAAABAAAAbg",
-					"AQAAAAAAAAABAAAApnwAAAAAAACmfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					118,
-					1,
-					"insert",
-					{
-						"characters": "anding"
-					},
-					"BgAAAKR8AAAAAAAApXwAAAAAAAAAAAAApXwAAAAAAACmfAAAAAAAAAAAAACmfAAAAAAAAKd8AAAAAAAAAAAAAKd8AAAAAAAAqHwAAAAAAAAAAAAAqHwAAAAAAACpfAAAAAAAAAAAAACpfAAAAAAAAKp8AAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAApHwAAAAAAACkfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					122,
-					1,
-					"left_delete",
-					null,
-					"AQAAAOZ2AAAAAAAA5nYAAAAAAAABAAAALA",
-					"AQAAAAAAAAABAAAA53YAAAAAAADndgAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					134,
-					1,
-					"insert",
-					{
-						"characters": "\n"
-					},
-					"AgAAADh8AAAAAAAAOXwAAAAAAAAAAAAAOXwAAAAAAAA9fAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAOHwAAAAAAAA4fAAAAAAAAAAAAAAAUHZA"
-				],
-				[
-					139,
-					1,
-					"left_delete",
-					null,
-					"AgAAAGx8AAAAAAAAbHwAAAAAAAABAAAAIzl8AAAAAAAAOXwAAAAAAAAEAAAAICAgIA",
-					"AQAAAAAAAAABAAAAbHwAAAAAAABtfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					141,
-					1,
-					"cut",
-					null,
-					"AQAAAGh8AAAAAAAAaHwAAAAAAABBAAAAIGRvIG5vdCBjcmVhdGUgYSBmaWx0ZXJlZCBvciBzcGxpdCBjb25zdW1lciBmb3IgdGhlIHVuZGVyc3RhbmRpbmc",
-					"AQAAAAAAAAABAAAAaHwAAAAAAACpfAAAAAAAAP///////+9/"
-				],
-				[
-					142,
-					1,
-					"left_delete",
-					null,
-					"AQAAAGd8AAAAAAAAZ3wAAAAAAAABAAAAIA",
-					"AQAAAAAAAAABAAAAaHwAAAAAAABofAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					143,
-					1,
-					"run_macro_file",
-					{
-						"file": "res://Packages/Default/Add Line Before.sublime-macro"
-					},
-					"AgAAADp8AAAAAAAAO3wAAAAAAAAAAAAAOnwAAAAAAAA+fAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAZ3wAAAAAAABnfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					144,
-					1,
-					"insert_snippet",
-					{
-						"contents": "\"$0\""
-					},
-					"AQAAAD58AAAAAAAAQHwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAPnwAAAAAAAA+fAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					146,
-					1,
-					"insert",
-					{
-						"characters": "\""
-					},
-					"AQAAAEB8AAAAAAAAQXwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAQHwAAAAAAABAfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					147,
-					1,
-					"insert",
-					{
-						"characters": "\n"
-					},
-					"AgAAAEF8AAAAAAAAQnwAAAAAAAAAAAAAQnwAAAAAAABGfAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAQXwAAAAAAABBfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					148,
-					1,
-					"insert_snippet",
-					{
-						"contents": "\"$0\""
-					},
-					"AQAAAEZ8AAAAAAAASHwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAARnwAAAAAAABGfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					150,
-					1,
-					"insert",
-					{
-						"characters": "\""
-					},
-					"AQAAAEh8AAAAAAAASXwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAASHwAAAAAAABIfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					151,
-					1,
-					"run_macro_file",
-					{
-						"file": "res://Packages/Default/Add Line Before.sublime-macro"
-					},
-					"AQAAAEJ8AAAAAAAAQ3wAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAASXwAAAAAAABJfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					152,
+					24,
 					1,
 					"paste",
 					null,
-					"AQAAAEJ8AAAAAAAAg3wAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAQnwAAAAAAABCfAAAAAAAAAAAAAAAAAAA"
+					"AgAAAGiuAAAAAAAAe68AAAAAAAAAAAAAe68AAAAAAAB7rwAAAAAAAPcAAABpZiBzZWxmLnJlcG9ydGluZyA9PSBSZXBvcnRpbmdMZXZlbC5PUklHSU5BTCBhbmQgbm90IGFsbCggZG9jdW1lbnQuaXNfcmV0d2VldCBmb3IgZG9jdW1lbnQgaW4gZG9jdW1lbnRzICk6CiAgICAgICAgICAgIHJldHVybiBbIGRvY3VtZW50IGZvciBkb2N1bWVudCBpbiBkb2N1bWVudHMKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaWYgbm90IGRvY3VtZW50LmlzX3JldHdlZXQgXQoKICAgICAgICByZXR1cm4gZG9jdW1lbnRz",
+					"AQAAAAAAAAABAAAAaK4AAAAAAABfrwAAAAAAAAAAAAAAAPC/"
 				],
 				[
-					154,
+					44,
 					1,
-					"insert",
-					{
-						"characters": "\t"
-					},
-					"AQAAAEN8AAAAAAAARnwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAQ3wAAAAAAABDfAAAAAAAAAAAAAAAABxA"
-				],
-				[
-					156,
-					1,
-					"insert",
-					{
-						"characters": "D"
-					},
-					"AgAAAEZ8AAAAAAAAR3wAAAAAAAAAAAAAR3wAAAAAAABHfAAAAAAAAAEAAABk",
-					"AQAAAAAAAAABAAAARnwAAAAAAABHfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					158,
-					1,
-					"insert",
-					{
-						"characters": "."
-					},
-					"AQAAAIZ8AAAAAAAAh3wAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAhnwAAAAAAACGfAAAAAAAAP///////+9/"
-				],
-				[
-					159,
-					1,
-					"insert",
-					{
-						"characters": "\nI"
-					},
-					"AwAAAId8AAAAAAAAiHwAAAAAAAAAAAAAiHwAAAAAAACMfAAAAAAAAAAAAACMfAAAAAAAAI18AAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAh3wAAAAAAACHfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					162,
-					1,
-					"insert",
-					{
-						"characters": "n"
-					},
-					"AQAAAI18AAAAAAAAjnwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAjXwAAAAAAACNfAAAAAAAAAAAAAAAgEFA"
-				],
-				[
-					163,
-					1,
-					"insert",
-					{
-						"characters": " fact,"
-					},
-					"BgAAAI58AAAAAAAAj3wAAAAAAAAAAAAAj3wAAAAAAACQfAAAAAAAAAAAAACQfAAAAAAAAJF8AAAAAAAAAAAAAJF8AAAAAAAAknwAAAAAAAAAAAAAknwAAAAAAACTfAAAAAAAAAAAAACTfAAAAAAAAJR8AAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAjnwAAAAAAACOfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					164,
-					1,
-					"insert",
-					{
-						"characters": " the"
-					},
-					"BAAAAJR8AAAAAAAAlXwAAAAAAAAAAAAAlXwAAAAAAACWfAAAAAAAAAAAAACWfAAAAAAAAJd8AAAAAAAAAAAAAJd8AAAAAAAAmHwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAlHwAAAAAAACUfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					165,
-					1,
-					"insert",
-					{
-						"characters": " consumer"
-					},
-					"CQAAAJh8AAAAAAAAmXwAAAAAAAAAAAAAmXwAAAAAAACafAAAAAAAAAAAAACafAAAAAAAAJt8AAAAAAAAAAAAAJt8AAAAAAAAnHwAAAAAAAAAAAAAnHwAAAAAAACdfAAAAAAAAAAAAACdfAAAAAAAAJ58AAAAAAAAAAAAAJ58AAAAAAAAn3wAAAAAAAAAAAAAn3wAAAAAAACgfAAAAAAAAAAAAACgfAAAAAAAAKF8AAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAmHwAAAAAAACYfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					166,
-					1,
-					"insert",
-					{
-						"characters": " is"
-					},
-					"AwAAAKF8AAAAAAAAonwAAAAAAAAAAAAAonwAAAAAAACjfAAAAAAAAAAAAACjfAAAAAAAAKR8AAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAoXwAAAAAAAChfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					167,
-					1,
-					"insert",
-					{
-						"characters": " as"
-					},
-					"AwAAAKR8AAAAAAAApXwAAAAAAAAAAAAApXwAAAAAAACmfAAAAAAAAAAAAACmfAAAAAAAAKd8AAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAApHwAAAAAAACkfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					168,
-					1,
-					"insert",
-					{
-						"characters": " spl"
-					},
-					"BAAAAKd8AAAAAAAAqHwAAAAAAAAAAAAAqHwAAAAAAACpfAAAAAAAAAAAAACpfAAAAAAAAKp8AAAAAAAAAAAAAKp8AAAAAAAAq3wAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAp3wAAAAAAACnfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					169,
-					2,
 					"left_delete",
 					null,
-					"AgAAAKp8AAAAAAAAqnwAAAAAAAABAAAAbKl8AAAAAAAAqXwAAAAAAAABAAAAcA",
-					"AQAAAAAAAAABAAAAq3wAAAAAAACrfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					170,
-					1,
-					"insert",
-					{
-						"characters": "imple"
-					},
-					"BQAAAKl8AAAAAAAAqnwAAAAAAAAAAAAAqnwAAAAAAACrfAAAAAAAAAAAAACrfAAAAAAAAKx8AAAAAAAAAAAAAKx8AAAAAAAArXwAAAAAAAAAAAAArXwAAAAAAACufAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAqXwAAAAAAACpfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					171,
-					1,
-					"insert",
-					{
-						"characters": " as"
-					},
-					"AwAAAK58AAAAAAAAr3wAAAAAAAAAAAAAr3wAAAAAAACwfAAAAAAAAAAAAACwfAAAAAAAALF8AAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAArnwAAAAAAACufAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					172,
-					1,
-					"insert",
-					{
-						"characters": " it"
-					},
-					"AwAAALF8AAAAAAAAsnwAAAAAAAAAAAAAsnwAAAAAAACzfAAAAAAAAAAAAACzfAAAAAAAALR8AAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAsXwAAAAAAACxfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					173,
-					1,
-					"insert",
-					{
-						"characters": " can"
-					},
-					"BAAAALR8AAAAAAAAtXwAAAAAAAAAAAAAtXwAAAAAAAC2fAAAAAAAAAAAAAC2fAAAAAAAALd8AAAAAAAAAAAAALd8AAAAAAAAuHwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAtHwAAAAAAAC0fAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					174,
-					1,
-					"insert",
-					{
-						"characters": " be."
-					},
-					"BAAAALh8AAAAAAAAuXwAAAAAAAAAAAAAuXwAAAAAAAC6fAAAAAAAAAAAAAC6fAAAAAAAALt8AAAAAAAAAAAAALt8AAAAAAAAvHwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAuHwAAAAAAAC4fAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					178,
-					1,
-					"insert",
-					{
-						"characters": ","
-					},
-					"AQAAALt8AAAAAAAAvHwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAu3wAAAAAAAC7fAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					179,
-					1,
-					"insert",
-					{
-						"characters": " without"
-					},
-					"CAAAALx8AAAAAAAAvXwAAAAAAAAAAAAAvXwAAAAAAAC+fAAAAAAAAAAAAAC+fAAAAAAAAL98AAAAAAAAAAAAAL98AAAAAAAAwHwAAAAAAAAAAAAAwHwAAAAAAADBfAAAAAAAAAAAAADBfAAAAAAAAMJ8AAAAAAAAAAAAAMJ8AAAAAAAAw3wAAAAAAAAAAAAAw3wAAAAAAADEfAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAvHwAAAAAAAC8fAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					180,
-					1,
-					"insert",
-					{
-						"characters": " skipping"
-					},
-					"CQAAAMR8AAAAAAAAxXwAAAAAAAAAAAAAxXwAAAAAAADGfAAAAAAAAAAAAADGfAAAAAAAAMd8AAAAAAAAAAAAAMd8AAAAAAAAyHwAAAAAAAAAAAAAyHwAAAAAAADJfAAAAAAAAAAAAADJfAAAAAAAAMp8AAAAAAAAAAAAAMp8AAAAAAAAy3wAAAAAAAAAAAAAy3wAAAAAAADMfAAAAAAAAAAAAADMfAAAAAAAAM18AAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAxHwAAAAAAADEfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					181,
-					1,
-					"insert",
-					{
-						"characters": " any"
-					},
-					"BAAAAM18AAAAAAAAznwAAAAAAAAAAAAAznwAAAAAAADPfAAAAAAAAAAAAADPfAAAAAAAANB8AAAAAAAAAAAAANB8AAAAAAAA0XwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAzXwAAAAAAADNfAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					182,
-					1,
-					"insert",
-					{
-						"characters": " tweets"
-					},
-					"BwAAANF8AAAAAAAA0nwAAAAAAAAAAAAA0nwAAAAAAADTfAAAAAAAAAAAAADTfAAAAAAAANR8AAAAAAAAAAAAANR8AAAAAAAA1XwAAAAAAAAAAAAA1XwAAAAAAADWfAAAAAAAAAAAAADWfAAAAAAAANd8AAAAAAAAAAAAANd8AAAAAAAA2HwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAA0XwAAAAAAADRfAAAAAAAAAAAAAAAAPC/"
+					"AQAAAKyuAAAAAAAArK4AAAAAAAA9AAAAIGFuZCBub3QgYWxsKCBkb2N1bWVudC5pc19yZXR3ZWV0IGZvciBkb2N1bWVudCBpbiBkb2N1bWVudHMgKQ",
+					"AQAAAAAAAAABAAAArK4AAAAAAADprgAAAAAAAAAAAAAAAPC/"
 				]
 			]
 		}
@@ -754,35 +498,52 @@
 	"file_history":
 	[
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/tests/test_fuego_consumer.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/cluster.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/summarize.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_summarize.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/consume.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/document.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_participants.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_shareable.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_consume.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/eld_consumer.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/tests/test_package.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_model.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fuego_consumer.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/algorithms/mmr.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/tests/test_package.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/model.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/objects/exportable.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/tests/test_vector.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/vector.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/tests/test_cluster.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/tests/test_cluster_node.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/cluster_node.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/tests/test_document_node.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/tests/test_topical_cluster_node.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/document_node.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/topical_cluster_node.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/objects/attributable.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/tests/test_timeline.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/split_consumer.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/token_split_consumer.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/eld_consumer.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/consume.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_consume.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/zhao_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/document.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tdt/algorithms/__init__.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/summarize.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/model.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fire_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tdt/algorithms/zhao.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/cluster.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/tests/test_cluster.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/cluster_node.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/topical_cluster_node.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/algorithms/tests/test_no_k_means.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/algorithms/no_k_means.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/algorithms/temporal_no_k_means.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/__init__.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_model.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/understanding_modeler.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/tests/test_understanding_modeler.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/__init__.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/objects/exportable.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/attributes/profile.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tokenizer.py",
@@ -792,14 +553,10 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/ate/concepts.json",
 		"/home/nicholas/GitHub/EvenTDT/tools/filter_retweets.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/timelines/#ParmaMilan-simplified.json",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/__init__.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/document_node.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/timelines/#ParmaMilan-streams.json",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/timelines/LIVNAP.json",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/timelines/LIVMUN.json",
 		"/home/nicholas/GitHub/EvenTDT/tools/participants.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_participants.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/concepts.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/eld_participant_detector.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/participants.json",
@@ -821,7 +578,6 @@
 		"/home/nicholas/GitHub/EvenTDT/tools/correlation.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/evaluation/ate.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/ate/correlations.json",
-		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_summarize.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/ate/application/tests/test_event.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/ate/application/event.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/idf.py",
@@ -868,23 +624,11 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/ner_participant_detector.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/participant_detector.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/logger/logger.py",
-		"/home/nicholas/DATA/c3-apd/#BritishGP-2022/participants-annotations-extrapolated-baseline.json",
-		"/home/nicholas/DATA/c3-apd/#BritishGP-2022/participants-twitterner-extrapolated.json",
-		"/home/nicholas/DATA/c3-apd/#BritishGP-2022/participants-twitterner-extrapolated-baseline.json",
-		"/home/nicholas/DATA/c3-apd/#BritishGP-2022/participants-ner-extrapolated.json",
-		"/home/nicholas/DATA/c3-apd/#BritishGP-2022/participants-ner-extrapolated-baseline.json",
-		"/home/nicholas/DATA/c3-apd/#BritishGP-2022/participants-annotations-extrapolated.json",
-		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_shareable.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/__init__.py",
-		"/home/nicholas/GitHub/EvenTDT/venv/lib/python3.8/site-packages/urllib3/util/queue.py",
-		"/run/user/1000/gvfs/sftp:host=vps-storage,user=memonick/data/phd-data/fuego-sampled/meta/#HUNFRA-v3-b0.8-r0.08-grouped.csv.meta",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/file/simulated_reader.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/listeners/tweet_listener.py",
-		"/home/nicholas/GitHub/EvenTDT/.gitignore"
+		"/home/nicholas/DATA/c3-apd/#BritishGP-2022/participants-annotations-extrapolated-baseline.json"
 	],
 	"find":
 	{
-		"height": 44.0
+		"height": 23.0
 	},
 	"find_in_files":
 	{
@@ -901,6 +645,117 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			".get('id')",
+			"summaries",
+			"filter_documents",
+			"reporting",
+			"group",
+			"reporting",
+			"ORIGINAL",
+			"documents",
+			" ))",
+			"any",
+			"is_retweet",
+			"retweets",
+			"original",
+			"ORIGINAL",
+			"is_retwee",
+			"all",
+			"any",
+			"not",
+			"'..'",
+			"-500",
+			"max_intra",
+			"neither",
+			"assertFalse",
+			"assertTrue",
+			"'ORIGINAL'",
+			"ORIGINAL",
+			"test_filter_documents_reporting_original",
+			"is_retweet",
+			"ReportingLevel",
+			"ALL",
+			"ORIGINAL",
+			"ALL",
+			"ORIGINAL",
+			"original",
+			"ORIGINAL",
+			"original",
+			"ORIGINAL",
+			"original",
+			"ORIGINAL",
+			"original",
+			"False",
+			"True",
+			"filtered",
+			"True",
+			"ALL",
+			"Document",
+			"ALL",
+			"is_retweet",
+			"ORIGINAL",
+			"retweets",
+			"verified",
+			"is_verified",
+			"ReportingLevel",
+			"all",
+			"is_retweet",
+			"ORIGINAL",
+			" =",
+			"ReportingLevel",
+			"import",
+			"all",
+			"Exportable",
+			"exportable",
+			"objects",
+			"filter_documents",
+			"query = None\n            if with_query and all( type(node) is TopicalClusterNode for node in nodes ):",
+			"query",
+			"for document in documents:\n                    document.text = cleaner.clean(document.text) if clean else document.text",
+			"for document in documents:\n                    document.text = cleaner.clean(document.text) if clean else document.text\n                documents = filter_documents(documents, max_documents, terms=terms)",
+			"for document in documents:\n                    document.text = cleaner.clean(document.text) if clean else document.text",
+			"for document in documents:\n                document.text = cleaner.clean(document.text) if clean else document.text",
+			"for document in documents:",
+			"for document in documents:\n                    document.text = cleaner.clean(document.text) if clean else document.text\n                documents = filter_documents(documents, max_documents, terms=terms)",
+			"merge=",
+			"node_d",
+			"nodes",
+			"dimensions",
+			"hash",
+			"vector.hash()",
+			"print(len(documents), e1, e2)",
+			"1000",
+			"window_size",
+			"window",
+			"100",
+			"1000",
+			"10",
+			"100",
+			"cluster._last",
+			"c",
+			"e",
+			"ujson",
+			"FUEGOConsumer",
+			")\n",
+			"time",
+			"created_at",
+			"documents",
+			"created_at",
+			"attributes",
+			"4",
+			"one",
+			"ClusterNode",
+			"test_create",
+			"clusters",
+			"ClusterNode",
+			"test_create",
+			"id",
+			"ClusterNode",
+			"cluster",
+			"Vector",
+			"ivar",
+			".attributes['id']",
+			"test_create",
 			"twitter.is_retweet(document.tweet)",
 			"recency",
 			"original",
@@ -917,118 +772,7 @@
 			"reporting=ReportingLevel.ORIGINAL)",
 			"ReportingLevel",
 			"self.assertEqual(ReportingLevel.ORIGINAL, consumer.reporting)",
-			"ALL",
-			"reporting",
-			"ORIGINAL",
-			"ALL",
-			"reporting",
-			"FilteringLevel.LENIENT)",
-			"threshold_type=DynamicThreshold.MEAN_STDEV, filtering=FilteringLevel.LENIENT)",
-			"LENIENT",
-			"self.assertEqual(FilteringLevel.LENIENT, consumer.filtering)",
-			"freeze_period=10, log_nutrition=True, filtering=FilteringLevel.LENIENT)",
-			"FilteringLevel",
-			"self.assertTrue(all( FilteringLevel.LENIENT == _consumer.filtering for _consumer in consumer.consumers ))",
-			"log_nutrition=True, threshold_type=DynamicThreshold.MEAN_STDEV, filtering=FilteringLevel.LENIENT)",
-			"self.assertEqual(FilteringLevel.LENIENT, consumer.consumer.filtering)",
-			"filtering",
-			"STRICT",
-			"filtering",
-			"LENIENT",
-			"NONE",
-			"filtering",
-			"threshold",
-			"MEAN_STDEV",
-			"DynamicThreshold",
-			"threshold",
-			"MEAN_STDEV",
-			"DynamicThreshold",
-			"\n        ",
-			"FilteringLevel",
-			"threshold",
-			"MEAN_STDEV",
-			"DynamicThreshold",
-			"threshold_type",
-			"reporting",
-			"Reporting",
-			"f",
-			"filtering",
-			"threshold",
-			"Threshold",
-			"f",
-			"verbose",
-			"filtering",
-			"filterin",
-			"float",
-			"ELDConsumer",
-			"ReportingLevel",
-			"ORIGINAL",
-			"ALL",
-			", ",
-			"ORIGINAL",
-			"ReportingLevel",
-			"reporting",
-			"FilteringLevel",
-			"LENIENT",
-			"FilteringLevel",
-			"NONE",
-			"FilteringLevel",
-			"filtering",
-			"DynamicThreshold",
-			"threshold_type",
-			"filtering_level",
-			"level",
-			"MEAN_STDEV",
-			"MOVING_MEAN",
-			"MEAN",
-			"Filtering",
-			"FilteringLevel",
-			"DynamicThreshold",
-			"algorithms.fuego_consumer.DynamicThreshold",
-			"MEAN_STDEV",
-			"MOVING_MEAN",
-			"`, ",
-			"MEAN",
-			"threshold",
-			"threshold_type",
-			"filtering_level",
-			"threshold_type",
-			"name",
-			"FUEGOConsumer",
-			"tweet = json.loads(f.readline())\n            document = consumer._to_documents([ tweet ])[0]",
-			"from a tweet",
-			"dimensions",
-			"self.assertTrue(all( tweet == document.tweet for tweet, document in zip(tweets, documents) ))",
-			"TWEET",
-			"`TWEET`",
-			"TWEET",
-			"tweet",
-			"Test that when creating a document from a tweet",
-			"id_str",
-			"self.assertEqual(tweet, document.tweet)",
-			"tweet = json.loads(f.readline())\n            document = consumer._to_documents([ tweet ])[0]",
-			"ORIGINAL",
-			"ALL",
-			"ReportingLevel",
-			"reporting",
-			"StorageLevel",
-			"ORIGINAL",
-			"ALL",
-			"ReportingLevel",
-			"reporting",
-			"Reporting",
-			"reporting",
-			"ivar",
-			"ReportingLevel",
-			"all",
-			"reporting",
-			"StorageLevel",
-			"ORIGINAL",
-			"ALL",
-			"ORIGINAL",
-			"ALL",
-			"retweet",
-			"CRYCHE"
+			"ALL"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1080,20 +824,20 @@
 			[
 				{
 					"buffer": 0,
-					"file": "tools/consume.py",
+					"file": "eventdt/queues/consumers/algorithms/eld_consumer.py",
 					"selected": true,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 48787,
+						"buffer_size": 43599,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								31960,
-								31960
+								43452,
+								43452
 							]
 						],
 						"settings":
@@ -1103,10 +847,41 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 8012.0,
+						"translation.y": 12028.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "eventdt/queues/consumers/algorithms/fuego_consumer.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 46863,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								44716,
+								44716
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 12532.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
 					"stack_multiselect": false,
 					"type": "text"
 				}
@@ -1166,16 +941,232 @@
 		"selected_items":
 		[
 			[
-				"twitterinit",
-				"eventdt/twitter/__init__.py"
-			],
-			[
 				"testfuego",
 				"eventdt/queues/consumers/algorithms/tests/test_fuego_consumer.py"
 			],
 			[
+				"fuego",
+				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
+			],
+			[
+				"cluster",
+				"eventdt/vsm/clustering/cluster.py"
+			],
+			[
+				"eldcon",
+				"eventdt/queues/consumers/algorithms/eld_consumer.py"
+			],
+			[
+				"cosnume",
+				"tools/consume.py"
+			],
+			[
+				"test",
+				"tools/tests/test_participants.py"
+			],
+			[
+				"testsha",
+				"tools/tests/test_shareable.py"
+			],
+			[
+				"testconsume",
+				"tools/tests/test_consume.py"
+			],
+			[
+				"document",
+				"eventdt/nlp/document.py"
+			],
+			[
+				"eldcons",
+				"eventdt/queues/consumers/algorithms/eld_consumer.py"
+			],
+			[
+				"modelersini",
+				"eventdt/modeling/modelers/__init__.py"
+			],
+			[
+				"modeltestpackage",
+				"eventdt/modeling/modelers/tests/test_package.py"
+			],
+			[
+				"testmodel",
+				"tools/tests/test_model.py"
+			],
+			[
+				"fuegocon",
+				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
+			],
+			[
+				"queualgo",
+				"eventdt/queues/consumers/algorithms/__init__.py"
+			],
+			[
+				"mmr",
+				"eventdt/summarization/algorithms/mmr.py"
+			],
+			[
+				"testsummari",
+				"tools/tests/test_summarize.py"
+			],
+			[
+				"testsummar",
+				"tools/tests/test_summarize.py"
+			],
+			[
+				"timelineinit",
+				"eventdt/summarization/timeline/__init__.py"
+			],
+			[
+				"timelineini",
+				"eventdt/summarization/timeline/__init__.py"
+			],
+			[
+				"modelertestp",
+				"eventdt/modeling/modelers/tests/test_package.py"
+			],
+			[
+				"testpackage",
+				"eventdt/modeling/tests/test_package.py"
+			],
+			[
+				"summarize",
+				"tools/summarize.py"
+			],
+			[
+				"nodesini",
+				"eventdt/summarization/timeline/nodes/__init__.py"
+			],
+			[
+				"modelers/tes",
+				"eventdt/modeling/modelers/tests/test_package.py"
+			],
+			[
+				"modelingini",
+				"eventdt/modeling/__init__.py"
+			],
+			[
+				"modeling/",
+				"eventdt/modeling/modelers/__init__.py"
+			],
+			[
+				"model",
+				"tools/model.py"
+			],
+			[
+				"testvec",
+				"eventdt/vsm/tests/test_vector.py"
+			],
+			[
+				"vector",
+				"eventdt/vsm/vector.py"
+			],
+			[
+				"exportable",
+				"eventdt/objects/exportable.py"
+			],
+			[
+				"eldconsu",
+				"eventdt/queues/consumers/algorithms/eld_consumer.py"
+			],
+			[
+				"testclust",
+				"eventdt/vsm/clustering/tests/test_cluster.py"
+			],
+			[
 				"consume",
 				"tools/consume.py"
+			],
+			[
+				"testcluster",
+				"eventdt/vsm/clustering/tests/test_cluster.py"
+			],
+			[
+				"testdocume",
+				"eventdt/summarization/timeline/nodes/tests/test_document_node.py"
+			],
+			[
+				"testtopical",
+				"eventdt/summarization/timeline/nodes/tests/test_topical_cluster_node.py"
+			],
+			[
+				"documentno",
+				"eventdt/summarization/timeline/nodes/document_node.py"
+			],
+			[
+				"topicalcl",
+				"eventdt/summarization/timeline/nodes/topical_cluster_node.py"
+			],
+			[
+				"vecto",
+				"eventdt/vsm/vector.py"
+			],
+			[
+				"attribu",
+				"eventdt/objects/attributable.py"
+			],
+			[
+				"vec",
+				"eventdt/vsm/vector.py"
+			],
+			[
+				"exportab",
+				"eventdt/objects/exportable.py"
+			],
+			[
+				"attributable",
+				"eventdt/objects/attributable.py"
+			],
+			[
+				"documentnode",
+				"eventdt/summarization/timeline/nodes/document_node.py"
+			],
+			[
+				"timelini",
+				"eventdt/summarization/timeline/__init__.py"
+			],
+			[
+				"testtimeline",
+				"eventdt/summarization/timeline/tests/test_timeline.py"
+			],
+			[
+				"testdocu",
+				"eventdt/summarization/timeline/nodes/tests/test_document_node.py"
+			],
+			[
+				"docume",
+				"eventdt/nlp/document.py"
+			],
+			[
+				"testtopica",
+				"eventdt/summarization/timeline/nodes/tests/test_topical_cluster_node.py"
+			],
+			[
+				"fuegoc",
+				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
+			],
+			[
+				"dcu",
+				"eventdt/nlp/document.py"
+			],
+			[
+				"clusterno",
+				"eventdt/summarization/timeline/nodes/cluster_node.py"
+			],
+			[
+				"testnode",
+				"eventdt/summarization/timeline/nodes/tests/test_cluster_node.py"
+			],
+			[
+				"nodesinit",
+				"eventdt/summarization/timeline/nodes/__init__.py"
+			],
+			[
+				"node",
+				"eventdt/summarization/timeline/nodes/topical_cluster_node.py"
+			],
+			[
+				"twitterinit",
+				"eventdt/twitter/__init__.py"
 			],
 			[
 				"split",
@@ -1190,20 +1181,8 @@
 				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
 			],
 			[
-				"eldcons",
-				"eventdt/queues/consumers/algorithms/eld_consumer.py"
-			],
-			[
-				"testconsume",
-				"tools/tests/test_consume.py"
-			],
-			[
 				"zhacons",
 				"eventdt/queues/consumers/algorithms/zhao_consumer.py"
-			],
-			[
-				"fuegocon",
-				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
 			],
 			[
 				"eldconsumer",
@@ -1214,20 +1193,8 @@
 				"eventdt/queues/consumers/algorithms/__init__.py"
 			],
 			[
-				"docume",
-				"eventdt/nlp/document.py"
-			],
-			[
 				"testeld",
 				"eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py"
-			],
-			[
-				"fuego",
-				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
-			],
-			[
-				"eldcon",
-				"eventdt/queues/consumers/algorithms/eld_consumer.py"
 			],
 			[
 				"algorithmsini",
@@ -1258,18 +1225,6 @@
 				"eventdt/tdt/algorithms/zhao.py"
 			],
 			[
-				"testcluster",
-				"eventdt/vsm/clustering/tests/test_cluster.py"
-			],
-			[
-				"cluster",
-				"eventdt/vsm/clustering/cluster.py"
-			],
-			[
-				"clusterno",
-				"eventdt/summarization/timeline/nodes/cluster_node.py"
-			],
-			[
 				"clusternode",
 				"eventdt/summarization/timeline/nodes/topical_cluster_node.py"
 			],
@@ -1298,14 +1253,6 @@
 				"eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py"
 			],
 			[
-				"testmodel",
-				"tools/tests/test_model.py"
-			],
-			[
-				"model",
-				"tools/model.py"
-			],
-			[
 				"testund",
 				"eventdt/modeling/modelers/tests/test_understanding_modeler.py"
 			],
@@ -1322,16 +1269,8 @@
 				"tools/consume.py"
 			],
 			[
-				"modelingini",
-				"eventdt/modeling/__init__.py"
-			],
-			[
 				"profile",
 				"eventdt/attributes/profile.py"
-			],
-			[
-				"exportab",
-				"eventdt/objects/exportable.py"
 			],
 			[
 				"toolsinit",
@@ -1388,14 +1327,6 @@
 			[
 				"parmami",
 				"eventdt/tests/corpora/timelines/#ParmaMilan-streams.json"
-			],
-			[
-				"documentno",
-				"eventdt/summarization/timeline/nodes/document_node.py"
-			],
-			[
-				"node",
-				"eventdt/summarization/timeline/nodes/cluster_node.py"
 			],
 			[
 				"parmamilan",
@@ -1520,162 +1451,6 @@
 			[
 				"modelinit",
 				"eventdt/modeling/modelers/__init__.py"
-			],
-			[
-				"modeler",
-				"eventdt/modeling/modelers/understanding_modeler.py"
-			],
-			[
-				"consumersinit",
-				"eventdt/queues/consumers/__init__.py"
-			],
-			[
-				"collect",
-				"tools/collect.py"
-			],
-			[
-				"readme",
-				"README.md"
-			],
-			[
-				"collec",
-				"tools/collect.py"
-			],
-			[
-				"understandingmodel",
-				"eventdt/modeling/modelers/understanding_modeler.py"
-			],
-			[
-				"modeling",
-				"eventdt/modeling/__init__.py"
-			],
-			[
-				"tests.sh",
-				"tests.sh"
-			],
-			[
-				"toolsrst",
-				"docsource/tools.rst"
-			],
-			[
-				"correlat",
-				"tools/correlation.py"
-			],
-			[
-				"corerlations",
-				"eventdt/tests/corpora/ate/correlations.json"
-			],
-			[
-				"ate.py",
-				"tools/evaluation/ate.py"
-			],
-			[
-				"testsummar",
-				"tools/tests/test_summarize.py"
-			],
-			[
-				"summarize.",
-				"tools/summarize.py"
-			],
-			[
-				"testevent",
-				"eventdt/ate/application/tests/test_event.py"
-			],
-			[
-				"testidf",
-				"tools/tests/test_idf.py"
-			],
-			[
-				"idf",
-				"tools/idf.py"
-			],
-			[
-				"timelineinit",
-				"eventdt/summarization/timeline/__init__.py"
-			],
-			[
-				"idj",
-				"eventdt/tests/corpora/idf.json"
-			],
-			[
-				"testconsue",
-				"tools/tests/test_consume.py"
-			],
-			[
-				"testconce",
-				"tools/tests/test_concepts.py"
-			],
-			[
-				"bootstr",
-				"tools/bootstrap.py"
-			],
-			[
-				"testconcep",
-				"tools/tests/test_concepts.py"
-			],
-			[
-				"testboots",
-				"tools/tests/test_bootstrap.py"
-			],
-			[
-				"correlation",
-				"tools/correlation.py"
-			],
-			[
-				"ate/.txt",
-				"eventdt/tests/corpora/ate/gold.txt"
-			],
-			[
-				"ate/txt",
-				"eventdt/tests/corpora/ate/empty.txt"
-			],
-			[
-				"testterms",
-				"tools/tests/test_terms.py"
-			],
-			[
-				"terms",
-				"tools/terms.py"
-			],
-			[
-				"testboot",
-				"tools/tests/test_bootstrap.py"
-			],
-			[
-				"testpartici",
-				"tools/tests/test_participants.py"
-			],
-			[
-				"participant",
-				"tools/participants.py"
-			],
-			[
-				"corre",
-				"tools/correlation.py"
-			],
-			[
-				"testcorrela",
-				"tools/tests/test_correlation.py"
-			],
-			[
-				"concep",
-				"tools/concepts.py"
-			],
-			[
-				"testcorre",
-				"tools/tests/test_correlation.py"
-			],
-			[
-				"correla",
-				"tools/correlation.py"
-			],
-			[
-				"bootstrapped",
-				"eventdt/tests/corpora/bootstrapping/bootstrapped.json"
-			],
-			[
-				"testbootstr",
-				"tools/tests/test_bootstrap.py"
 			]
 		],
 		"width": 0.0

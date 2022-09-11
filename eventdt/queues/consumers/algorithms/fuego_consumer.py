@@ -941,11 +941,12 @@ class FUEGOConsumer(Consumer):
         :rtype: lsit of :class:`~nlp.document.Document`
         """
 
-        if self.reporting == ReportingLevel.ORIGINAL and not all( document.is_retweet for document in documents ):
-            return [ document for document in documents
-                              if not document.is_retweet ]
+        filtered = [ ]
 
-        return documents
+        if self.reporting == ReportingLevel.ORIGINAL:
+            filtered = [ document for document in documents if not document.is_retweet ]
+
+        return documents if not filtered else filtered
 
     def _summarize(self, node):
         """
