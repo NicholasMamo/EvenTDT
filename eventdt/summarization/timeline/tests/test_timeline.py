@@ -277,9 +277,9 @@ class TestTimeline(unittest.TestCase):
         timeline.add(0, documents[:1])
         self.assertEqual(1, len(timeline.nodes))
         self.assertEqual(documents[:1], timeline.nodes[0].get_all_documents())
-        timeline.add(61, documents[:1])
+        timeline.add(61, documents[:1]) # this document should be absorbed by the previous node
         self.assertEqual(1, len(timeline.nodes))
-        self.assertEqual(documents[:1] * 2, timeline.nodes[0].get_all_documents())
+        self.assertEqual(documents[:1], timeline.nodes[0].get_all_documents()) # no duplicate nodes are added
 
     def test_add_node_absorb_zero(self):
         """
