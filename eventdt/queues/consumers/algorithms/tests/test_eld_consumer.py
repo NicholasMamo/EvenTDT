@@ -1039,7 +1039,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             documents = consumer._to_documents(tweets)
             self.assertTrue(all( twitter.urls(tweet) == document.urls for tweet, document in zip(tweets, documents) ))
 
-    def test_to_documents_urls(self):
+    def test_to_documents_v2_urls(self):
         """
         Test that when creating a document from a tweet, an attribute stores its URLs.
         """
@@ -1061,7 +1061,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             documents = consumer._to_documents(tweets)
             self.assertTrue(all( twitter.hashtags(tweet) == document.hashtags for tweet, document in zip(tweets, documents) ))
 
-    def test_to_documents_hashtags(self):
+    def test_to_documents_v2_hashtags(self):
         """
         Test that when creating a document from a tweet, an attribute stores its hashtags.
         """
