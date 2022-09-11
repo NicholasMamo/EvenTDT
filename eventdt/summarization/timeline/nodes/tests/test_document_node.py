@@ -22,35 +22,50 @@ class TestDocumentNode(unittest.TestCase):
     Test the document node.
     """
 
-    def test_create_empty(self):
+    def test_init_empty(self):
         """
         Test that the document node is created empty.
         """
 
         self.assertEqual([ ], DocumentNode(0).documents)
 
-    def test_create_empty_attributes(self):
+    def test_init_empty_attributes(self):
         """
         Test that the document node is created with no attributes.
         """
 
         self.assertEqual({ }, DocumentNode(0).attributes)
 
-    def test_create_with_timestamp_zero(self):
+    def test_init_with_timestamp_zero(self):
         """
         Test that the document node saves the timestamp correctly even if it is zero.
         """
 
         self.assertEqual(0, DocumentNode(0).created_at)
 
-    def test_create_with_timestamp(self):
+    def test_init_with_timestamp(self):
         """
         Test that the document node saves the timestamp correctly.
         """
 
         self.assertEqual(1000, DocumentNode(1000).created_at)
 
-    def test_create_with_no_documents(self):
+    def test_init_with_id(self):
+        """
+        Test that creating a cluster node automatically creates a unique ID.
+        """
+
+        self.assertTrue(DocumentNode(0).id)
+
+    def test_init_unique_id(self):
+        """
+        Test that creating a cluster node automatically creates a unique ID.
+        """
+
+        ids = [ DocumentNode(0).id for i in range(100) ]
+        self.assertTrue(len(ids), len(set(ids)))
+
+    def test_init_with_no_documents(self):
         """
         Test that when creating the document node with no documents, an empty list is initialized.
         """
@@ -58,7 +73,7 @@ class TestDocumentNode(unittest.TestCase):
         node = DocumentNode(0)
         self.assertEqual([ ], node.documents)
 
-    def test_create_with_documents(self):
+    def test_init_with_documents(self):
         """
         Test that when creating the document node with a list of documents, it is saved.
         """

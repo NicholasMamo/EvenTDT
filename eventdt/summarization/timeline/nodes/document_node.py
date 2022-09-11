@@ -30,11 +30,14 @@ class DocumentNode(Node):
 
         :param created_at: The timestamp when the node was created.
         :type created_at: float
+        :param id: A unique ID representing the node.
+                   If a value is not given, the node automatically assigns a UUID-4 ID.
+        :type id: str
         :param documents: The initial list of documents in this node.
         :type documents: None or list of :class:`~nlp.document.Document`
         """
 
-        super(DocumentNode, self).__init__(created_at)
+        super(DocumentNode, self).__init__(created_at, id=id)
         self.documents = documents or [ ]
 
     def add(self, documents, *args, **kwargs):
@@ -90,11 +93,13 @@ class DocumentNode(Node):
         :rtype: dict
         """
 
-        return {
+        array = Node.to_array(self)
+        array.update({
             'class': str(DocumentNode),
             'created_at': self.created_at,
             'documents': [ document.to_array() for document in self.documents ],
-        }
+        })
+        return array
 
     @staticmethod
     def from_array(array):
