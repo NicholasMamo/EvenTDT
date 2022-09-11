@@ -612,6 +612,23 @@ class TestSummarize(unittest.TestCase):
                       Document('c', attributes={ 'is_retweet': False }) ]
         self.assertEqual(documents, summarize.filter_documents(documents, reporting=ReportingLevel.ORIGINAL))
 
+    def test_filter_documents_reporting_original_no_retweets_from_tweet(self):
+        """
+        Test that when filtering documents with the 'ORIGINAL' reporting strategy, if no documents are retweets, they are all returned.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', "CRYCHE-100.json")
+        with open(file) as f:
+            tweets = [ json.loads(line) for line in f ]
+            documents = [ Document.from_dict(tweet) for tweet in tweets ]
+            documents = [ document for document in documents if not document.is_retweet ]
+            for document in documents:
+                del document.attributes['is_retweet']
+
+        self.assertTrue(not any( document.is_retweet for document in documents ))
+        self.assertTrue(documents)
+        self.assertEqual(documents, summarize.filter_documents(documents, reporting=ReportingLevel.ORIGINAL))
+
     def test_filter_documents_reporting_original_only(self):
         """
         Test that when filtering documents with the 'ORIGINAL' reporting strategy, original tweets are returned.
@@ -626,6 +643,22 @@ class TestSummarize(unittest.TestCase):
         self.assertFalse(documents[0] in filtered)
         self.assertTrue(all( not document.is_retweet for document in filtered ))
 
+    def test_filter_documents_reporting_original_original_only_from_tweet(self):
+        """
+        Test that when filtering documents with the 'ORIGINAL' reporting strategy, original tweets are returned.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', "CRYCHE-100.json")
+        with open(file) as f:
+            tweets = [ json.loads(line) for line in f ]
+            documents = [ Document.from_dict(tweet) for tweet in tweets ]
+            for document in documents:
+                del document.attributes['is_retweet']
+
+        self.assertTrue(documents)
+        filtered = summarize.filter_documents(documents, reporting=ReportingLevel.ORIGINAL)
+        self.assertTrue(all( not document.is_retweet for document in filtered ))
+
     def test_filter_documents_reporting_original_all_retweets(self):
         """
         Test that when filtering documents with the 'ORIGINAL' reporting strategy, all tweets are returned if they are all retweets.
@@ -636,7 +669,28 @@ class TestSummarize(unittest.TestCase):
                       Document('c', attributes={ 'is_retweet': True }) ]
         self.assertEqual(documents, summarize.filter_documents(documents, reporting=ReportingLevel.ORIGINAL))
 
-    def test_filter_documents_reporting_verified_no_retweets(self):
+    def test_filter_documents_reporting_original_all_retweets_from_tweet(self):
+        """
+        Test that when filtering documents with the 'ORIGINAL' reporting strategy, all tweets are returned if they are all retweets.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', "CRYCHE-100.json")
+        with open(file) as f:
+            tweets = [ json.loads(line) for line in f ]
+            documents = [ Document.from_dict(tweet) for tweet in tweets ]
+            documents = [ document for document in documents if document.is_retweet ]
+            for document in documents:
+                del document.attributes['is_retweet']
+
+            # remove duplicates
+            filtered = { document.text.lower(): document for document in documents }
+            documents = [ document for document in documents
+                                   if document in filtered.values() ]
+
+        self.assertTrue(documents)
+        self.assertEqual(documents, summarize.filter_documents(documents, reporting=ReportingLevel.ORIGINAL))
+
+    def test_filter_documents_reporting_verified_no_verified(self):
         """
         Test that when filtering documents with the 'VERIFIED' reporting strategy, if no documents are verified, they are all returned.
         """
@@ -644,6 +698,28 @@ class TestSummarize(unittest.TestCase):
         documents = [ Document('a', attributes={ 'is_verified': False }),
                       Document('b', attributes={ 'is_verified': False }),
                       Document('c', attributes={ 'is_verified': False }) ]
+        self.assertEqual(documents, summarize.filter_documents(documents, reporting=ReportingLevel.VERIFIED))
+
+    def test_filter_documents_reporting_verified_no_verified_from_tweet(self):
+        """
+        Test that when filtering documents with the 'VERIFIED' reporting strategy, if no documents are verified, they are all returned.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', "CRYCHE-100.json")
+        with open(file) as f:
+            tweets = [ json.loads(line) for line in f ]
+            documents = [ Document.from_dict(tweet) for tweet in tweets ]
+            documents = [ document for document in documents if not document.is_verified ]
+            for document in documents:
+                del document.attributes['is_verified']
+
+            # remove duplicates
+            filtered = { document.text.lower(): document for document in documents }
+            documents = [ document for document in documents
+                                   if document in filtered.values() ]
+
+        self.assertTrue(not any( document.is_verified for document in documents ))
+        self.assertTrue(documents)
         self.assertEqual(documents, summarize.filter_documents(documents, reporting=ReportingLevel.VERIFIED))
 
     def test_filter_documents_reporting_verified_only(self):
@@ -660,7 +736,22 @@ class TestSummarize(unittest.TestCase):
         self.assertTrue(documents[0] in filtered)
         self.assertTrue(all( document.is_verified for document in filtered ))
 
-    def test_filter_documents_reporting_verified_all_retweets(self):
+    def test_filter_documents_reporting_verified_only_from_tweet(self):
+        """
+        Test that when filtering documents with the 'VERIFIED' reporting strategy, verified tweets are returned.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', "CRYCHE-500.json")
+        with open(file) as f:
+            tweets = [ json.loads(line) for line in f ]
+            documents = [ Document.from_dict(tweet) for tweet in tweets ]
+            for document in documents:
+                del document.attributes['is_verified']
+
+        self.assertTrue(not any( document.is_verified for document in documents ))
+        self.assertTrue(all( document.is_verified for document in summarize.filter_documents(documents, reporting=ReportingLevel.VERIFIED) ))
+
+    def test_filter_documents_reporting_verified_all_verified(self):
         """
         Test that when filtering documents with the 'VERIFIED' reporting strategy, all tweets are returned if they are all verified.
         """
@@ -668,6 +759,28 @@ class TestSummarize(unittest.TestCase):
         documents = [ Document('a', attributes={ 'is_verified': True }),
                       Document('b', attributes={ 'is_verified': True }),
                       Document('c', attributes={ 'is_verified': True }) ]
+        self.assertEqual(documents, summarize.filter_documents(documents, reporting=ReportingLevel.VERIFIED))
+
+    def test_filter_documents_reporting_verified_all_verified_from_tweet(self):
+        """
+        Test that when filtering documents with the 'VERIFIED' reporting strategy, all tweets are returned if they are all verified.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', "CRYCHE-100.json")
+        with open(file) as f:
+            tweets = [ json.loads(line) for line in f ]
+            documents = [ Document.from_dict(tweet) for tweet in tweets ]
+            documents = [ document for document in documents if document.is_verified ]
+            for document in documents:
+                del document.attributes['is_verified']
+
+            # remove duplicates
+            filtered = { document.text.lower(): document for document in documents }
+            documents = [ document for document in documents
+                                   if document in filtered.values() ]
+
+        self.assertTrue(not any( document.is_verified for document in documents ))
+        self.assertTrue(documents)
         self.assertEqual(documents, summarize.filter_documents(documents, reporting=ReportingLevel.VERIFIED))
 
     def test_load_splits_old_file(self):

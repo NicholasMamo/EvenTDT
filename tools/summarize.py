@@ -140,9 +140,10 @@ The full list of accepted arguments:
     - ``--documents``        *<Optional>* The maximum number of documents to use when summarizing. If no domain terms are given, preference is given for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer` or the :class:`~summarization.scorers.domain_scorer.DomainScorer`; defaults to all documents.
     - ``--length``           *<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
     - ``--clean``            *<Optional>* Clean the documents before summarizing.
-    - ``--lambda``           *<Optional>* The lambda parameter to balance between relevance and non-redundancy; used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5.
+    - ``--reporting``        *<Optional>* The reporting level, or the tweets retained by the summarizers algorithms: `ALL` (default), `ORIGINAL` (exclude retweets), `VERIFIED` (tweets by verified users).
     - ``--with-query``       *<Optional>* Use the centroid of each timeline node's topics as a query for summarization; used only with the :class:`~summarization.algorithms.mmr.MMR` and :class:`~summarization.algorithms.dgs.DGS` algorithms.
     - ``--query-only``       *<Optional>* Print only the query instead of summarizing; used only with the ``--with-query`` parameter.
+    - ``--lambda``           *<Optional>* The lambda parameter to balance between relevance and non-redundancy; used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5.
 """
 
 import argparse
@@ -187,9 +188,10 @@ def setup_args():
         - ``--documents``        *<Optional>* The maximum number of documents to use when summarizing. If no domain terms are given, preference is given for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer` or the :class:`~summarization.scorers.domain_scorer.DomainScorer`; defaults to all documents.
         - ``--length``           *<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
         - ``--clean``            *<Optional>* Clean the documents before summarizing.
-        - ``--lambda``           *<Optional>* The lambda parameter to balance between relevance and non-redundancy; used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5.
+        - ``--reporting``        *<Optional>* The reporting level, or the tweets retained by the summarizers algorithms: `ALL` (default), `ORIGINAL` (exclude retweets), `VERIFIED` (tweets by verified users).
         - ``--with-query``       *<Optional>* Use the centroid of each timeline node's topics as a query for summarization; used only with the :class:`~summarization.algorithms.dgs.DGS` algorithm.
         - ``--query-only``       *<Optional>* Print only the query instead of summarizing; used only with the ``--with-query`` parameter.
+        - ``--lambda``           *<Optional>* The lambda parameter to balance between relevance and non-redundancy; used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -221,13 +223,15 @@ def setup_args():
                         help='<Optional> The length of each generated summary (in terms of the number of characters); defaults to 140 characters.')
     parser.add_argument('--clean', action='store_true', required=False,
                         help="<Optional> Clean the documents before summarizing.")
-    parser.add_argument('--lambda', type=float, metavar='[0-1]', required=False, default=0.5,
-                        help='<Optional> The lambda parameter to balance between relevance and non-redundancy; used only with the `MMR` algorithm; defaults to 0.5).')
+    parser.add_argument('--reporting', type=reporting, required=False, default='ALL',
+                        help='<Optional> The reporting level, or the tweets retained by the summarizers algorithms: `ALL` (default), `ORIGINAL` (exclude retweets), `VERIFIED` (tweets by verified users).')
     parser.add_argument('--with-query', action='store_true', required=False,
                         help="<Optional> Use the centroid of each timeline node's topics as a query for summarization; used only with the `DGS` algorithm).")
     parser.add_argument('--query-only', action='store_true', required=False,
                         help='<Optional> Print only the query instead of summarizing; used only with the ``--with-query`` parameter.')
-
+    parser.add_argument('--lambda', type=float, metavar='[0-1]', required=False, default=0.5,
+                        help='<Optional> The lambda parameter to balance between relevance and non-redundancy; used only with the `MMR` algorithm; defaults to 0.5).')
+    
     args = parser.parse_args()
     return args
 
@@ -241,8 +245,8 @@ def main():
     """
     cmd = tools.meta(args)
     pcmd = tools.meta(args)
-    cmd['method'] = str(vars(args)['method'])
-    pcmd['method'] = str(vars(args)['method'])
+    cmd['method'], pcmd['method'] = str(vars(args)['method']), str(vars(args)['method'])
+    cmd['reporting'], pcmd['reporting'] = str(vars(args)['reporting']), str(vars(args)['reporting'])
 
     # summarize the timeline
     timeline = load_timeline(args.file)
@@ -252,7 +256,7 @@ def main():
     summaries = summarize(summarizer, timeline, streams, merge=args.merge, verbose=args.verbose,
                           max_documents=args.documents, length=args.length, clean=args.clean,
                           with_query=args.with_query, query_only=args.query_only,
-                          terms=terms)
+                          terms=terms, reporting=args.reporting)
 
     # if the file format is CSV, convert summaries to CSV
     if args.format == 'csv':
@@ -345,7 +349,7 @@ def create_summarizer(method, l=0.5):
     return method()
 
 def summarize(summarizer, timeline, splits, merge=False, verbose=False, max_documents=None, length=140,
-              clean=False, with_query=True, query_only=False, terms=None):
+              clean=False, with_query=True, query_only=False, terms=None, reporting=ReportingLevel.ALL):
     """
     Summarize the given timeline using the given algorithm.
     This function iterates over all of the timeline's nodes and summarizes them individually.
@@ -375,6 +379,8 @@ def summarize(summarizer, timeline, splits, merge=False, verbose=False, max_docu
     :param terms: A list of domain terms.
                   If given, the function scores documents using the :class:`~summarization.scorers.domain_scorer.DomainScorer` instead of the :class:`~summarization.scorers.tweet_scorer.TweetScorer`.
     :type terms: list of str
+    :param reporting: The reporting level, whether to use all tweets, original tweets (excluding retweets) or only verified tweets.
+    :type reporting: :class:`~queues.consumers.algorithms.ReportingLevel`
 
     :return: A list of list of summaries, corresponding to each node.
              Each list can have multiple summaries in case of split timelines.
@@ -399,7 +405,7 @@ def summarize(summarizer, timeline, splits, merge=False, verbose=False, max_docu
             documents = [ document for node in nodes for document in node.get_all_documents() ]
             for document in documents:
                 document.text = cleaner.clean(document.text) if clean else document.text
-            documents = filter_documents(documents, max_documents, terms=terms)
+            documents = filter_documents(documents, max_documents, terms=terms, reporting=reporting)
 
             # create the query by getting the centroid from all nodes
             query = None
@@ -429,16 +435,9 @@ def summarize(summarizer, timeline, splits, merge=False, verbose=False, max_docu
                 documents = node.get_all_documents()
                 for document in documents:
                     document.text = cleaner.clean(document.text) if clean else document.text
-                documents = filter_documents(documents, max_documents, terms=terms)
+                documents = filter_documents(documents, max_documents, terms=terms, reporting=reporting)
 
-                """
-                Construct the query if need be.
-                Queries can only be used if:
-
-                1. The appropriate flag is given,
-                2. The summarizer is :class:`~summarization.algorithms.dgs.DGS`, and
-                3. The node is topical (it stores a topic).
-                """
+                # create the query from the node's centroid
                 query = None
                 if with_query and type(node) is TopicalClusterNode:
                     query = construct_query(node)
@@ -613,7 +612,7 @@ def filter_documents(documents, max_documents=None, terms=None, reporting=Report
     :param terms: A list of domain terms.
                   If given, the function scores documents using the :class:`~summarization.scorers.domain_scorer.DomainScorer` instead of the :class:`~summarization.scorers.tweet_scorer.TweetScorer`.
     :type terms: list of str
-    :param reporting: The reporting level, whether to use all tweets or only verified tweets.
+    :param reporting: The reporting level, whether to use all tweets, original tweets (excluding retweets) or only verified tweets.
     :type reporting: :class:`~queues.consumers.algorithms.ReportingLevel`
 
     :return: The filtered list of documents without duplicates.
@@ -627,9 +626,9 @@ def filter_documents(documents, max_documents=None, terms=None, reporting=Report
 
     # add attributes to check if the documents are retweets if they are missing
     for document in documents:
-        if document.is_verified is None and document.tweet:
+        if (document.is_verified is None or document.is_retweet is None) and document.tweet:
             document.attributes['is_verified'] = twitter.is_verified(document.tweet)
-            document.attributes['is_retwee'] = twitter.is_retwee(document.tweet)
+            document.attributes['is_retweet'] = twitter.is_retweet(document.tweet)
 
     # in the 'ORIGINAL' reporting strategy, remove retweets unless all documents are retweets
     if reporting == ReportingLevel.ORIGINAL and any( not document.is_retweet for document in documents ):
@@ -658,6 +657,23 @@ def filter_documents(documents, max_documents=None, terms=None, reporting=Report
         return documents[:max_documents]
 
     return documents
+
+def reporting(level):
+    """
+    Convert the given reporting level to an actual enumerable.
+
+    :param level: The name of the reporting level to use: `ALL`, `ORIGINAL` or `VERIFIED`.
+    :type level: str
+
+    :return: A reporting level enumerable.
+    :rtype: :class:`~queues.consumers.algorithms.ReportingLevel`
+    """
+
+    return {
+        'ALL': ReportingLevel.ALL,
+        'ORIGINAL': ReportingLevel.ORIGINAL,
+        'VERIFIED': ReportingLevel.VERIFIED,
+    }[level.upper()]
 
 if __name__ == "__main__":
     main()
