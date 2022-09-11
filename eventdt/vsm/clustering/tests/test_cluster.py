@@ -2,20 +2,27 @@
 Run unit tests on the Cluster class
 """
 
+import json
 import math
 import os
 import sys
+import time
 import unittest
 
 path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
+from logger import logger
 from nlp.document import Document
 from nlp.weighting.tf import TF
+from queues import Queue
+from queues.consumers.algorithms import FUEGOConsumer
 from vsm import Vector, VectorSpace
 from vsm import vector_math
 from vsm.clustering.cluster import Cluster
+
+logger.set_logging_level(logger.LogLevel.WARNING)
 
 class TestCluster(unittest.TestCase):
     """
@@ -205,40 +212,53 @@ class TestCluster(unittest.TestCase):
         self.assertEqual(round(0.5/math.sqrt(1 ** 2 + 0.5 ** 2), 10), round(c.centroid.dimensions['b'], 10))
         self.assertEqual(1, round(vector_math.magnitude(c.centroid), 10))
 
-    def test_recalculate_centroid_unchanged_cluster(self):
+    def test_recalculate_centroid_small_cluster_timing(self):
         """
-        Test that when recalculating the centroid without changing the cluster, the '_last' instance variable does not change.
+        Test that recalculating the centroid of a small cluster without changing the cluster takes less time than after the cluster changes.
         """
 
-        v = [ Document("", dimensions={ 'a': 10, 'b': 20 }), Document("", { 'c': 30, 'd': 40 }) ]
-        c = Cluster(v)
-        self.assertFalse(c._last)
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets[:9])
 
-        c.centroid
-        self.assertTrue(c._last)
-
+        cluster = Cluster(documents)
+        centroid = cluster.centroid
+        start = time.time()
         for i in range(1000):
-            last = c._last
-            c.centroid
-            self.assertEqual(c._last, last)
+            cluster.centroid
+        e1 = time.time() - start
 
-    def test_recalculate_centroid_changed_cluster(self):
+        start = time.time()
+        for i in range(1000):
+            documents[0].attributes['a'] = documents[0].attributes.get('a', 0) + 1
+            cluster.centroid
+        e2 = time.time() - start
+        self.assertLess(e1, e2)
+
+    def test_recalculate_centroid_large_cluster_timing(self):
         """
-        Test that when recalculating the centroid after changing the cluster, the '_last' instance variable changes.
+        Test that recalculating the centroid of a large cluster without changing the cluster does not take significantly more time.
         """
 
-        v = [ Document("", [ ]), Document("", [ ]) ]
-        c = Cluster(v)
-        self.assertFalse(c._last)
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets[:100])
 
-        c.centroid
-        self.assertTrue(c._last)
-        last = c._last
+        cluster = Cluster(documents)
+        centroid = cluster.centroid
+        start = time.time()
+        for i in range(100):
+            cluster.centroid
+        e1 = time.time() - start
 
-        v[0].dimensions = { 'a': 1 }
-
-        c.centroid
-        self.assertNotEqual(c._last, last)
+        start = time.time()
+        for i in range(100):
+            documents[0].attributes['a'] = documents[0].attributes.get('a', 0) + 1
+            cluster.centroid
+        e2 = time.time() - start
+        self.assertLess(abs(e1 - e2), 0.05)
 
     def test_set_vectors_none(self):
         """
