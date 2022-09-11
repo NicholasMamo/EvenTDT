@@ -212,3 +212,14 @@ class Exportable(ABC):
 
         path = Exportable.CLASS_PATTERN.findall(cls)[0].split('.')
         return path[-1]
+
+    def __hash__(self):
+        """
+        Create an immutable hash of the Exportable instance.
+        The function 
+
+        :return: An intenger representation of the Exportable instance.
+        :rtype: int
+        """
+
+        return hash(json.dumps(self.to_array()))

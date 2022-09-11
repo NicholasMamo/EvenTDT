@@ -241,3 +241,33 @@ class TestVector(unittest.TestCase):
         e = vector.to_array()
         self.assertEqual(vector.attributes, Vector.from_array(e).attributes)
         self.assertEqual(vector.__dict__, Vector.from_array(e).__dict__)
+
+    def test_hash_unchanged(self):
+        """
+        Test that when the vector does not change, the hash does not either.
+        """
+
+        vector = Vector({ 'x': 3 }, { "y": True })
+        self.assertEqual(hash(vector), hash(vector))
+
+    def test_hash_changed_dimension(self):
+        """
+        Test that when the vector's dimensions change, the hash changes too.
+        """
+
+        vector = Vector({ 'x': 3 }, { "y": True })
+        h1 = hash(vector)
+        vector.dimensions['x'] = vector.dimensions['x'] - 1
+        h2 = hash(vector)
+        self.assertNotEqual(h1, h2)
+
+    def test_hash_changed_attribute(self):
+        """
+        Test that when the vector's attributess change, the hash changes too.
+        """
+
+        vector = Vector({ 'x': 3 }, { "y": True })
+        h1 = hash(vector)
+        vector.attributes['y'] = not vector.attributes['y']
+        h2 = hash(vector)
+        self.assertNotEqual(h1, h2)
