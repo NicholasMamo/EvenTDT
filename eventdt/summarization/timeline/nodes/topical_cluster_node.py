@@ -35,12 +35,15 @@ class TopicalClusterNode(ClusterNode):
     :type topics: list of :class:`~vsm.vector.Vector`
     """
 
-    def __init__(self, created_at, clusters=None, topics=None):
+    def __init__(self, created_at, id=None, clusters=None, topics=None):
         """
         Create the node with, optionally, an initial list of :class:`~vsm.clustering.cluster.Cluster` instances and topics.
 
         :param created_at: The timestamp when the node was created.
         :type created_at: float
+        :param id: A unique ID representing the node.
+                   If a value is not given, the node automatically assigns a UUID-4 ID.
+        :type id: str
         :param clusters: The initial list of clusters in this node.
         :type clusters: list of :class:`~vsm.clustering.cluster.Cluster`
         :param topics: The initial listo f topics in this node.
@@ -59,7 +62,7 @@ class TopicalClusterNode(ClusterNode):
             topics = topics or [ ]
             raise ValueError(f"The number of clusters and topics must be the same, received { len(clusters) } and { len(topics) } respectively")
 
-        super(TopicalClusterNode, self).__init__(created_at, clusters=clusters)
+        super(TopicalClusterNode, self).__init__(created_at, id=id, clusters=clusters)
         self.topics = topics or [ ]
 
     def add(self, cluster, topic, *args, **kwargs):
@@ -103,12 +106,13 @@ class TopicalClusterNode(ClusterNode):
         :rtype: dict
         """
 
-        return {
+        array = Node.to_array(self)
+        array.update({
             'class': str(TopicalClusterNode),
-            'created_at': self.created_at,
             'clusters': [ cluster.to_array() for cluster in self.clusters ],
             'topics': [ topic.to_array() for topic in self.topics ],
-        }
+        })
+        return array
 
     @staticmethod
     def from_array(array):
@@ -134,7 +138,7 @@ class TopicalClusterNode(ClusterNode):
             cls = getattr(module, Exportable.get_class(topic.get('class')))
             topics.append(cls.from_array(topic))
 
-        return TopicalClusterNode(created_at=array.get('created_at'), clusters=clusters, topics=topics)
+        return TopicalClusterNode(created_at=array.get('created_at'), id=array.get('id'), clusters=clusters, topics=topics)
 
     @staticmethod
     def merge(created_at, *args):

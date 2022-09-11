@@ -23,7 +23,7 @@ class TestClusterNode(unittest.TestCase):
     Test the cluster node.
     """
 
-    def test_create_empty(self):
+    def test_init_empty(self):
         """
         Test that the cluster node is created empty.
         """
@@ -31,28 +31,43 @@ class TestClusterNode(unittest.TestCase):
         self.assertEqual([ ], TopicalClusterNode(0).clusters)
         self.assertEqual([ ], TopicalClusterNode(0).topics)
 
-    def test_create_empty_attributes(self):
+    def test_init_empty_attributes(self):
         """
         Test that the topical cluster node is created with no attributes.
         """
 
         self.assertEqual({ }, TopicalClusterNode(0).attributes)
 
-    def test_create_with_timestamp_zero(self):
+    def test_init_with_timestamp_zero(self):
         """
         Test that the cluster node saves the timestamp correctly even if it is zero.
         """
 
         self.assertEqual(0, TopicalClusterNode(0).created_at)
 
-    def test_create_with_timestamp(self):
+    def test_init_with_timestamp(self):
         """
         Test that the cluster node saves the timestamp correctly.
         """
 
         self.assertEqual(1000, TopicalClusterNode(1000).created_at)
 
-    def test_create_with_no_clusters(self):
+    def test_init_with_id(self):
+        """
+        Test that creating a cluster node automatically creates a unique ID.
+        """
+
+        self.assertTrue(TopicalClusterNode(0).id)
+
+    def test_init_unique_id(self):
+        """
+        Test that creating a cluster node automatically creates a unique ID.
+        """
+
+        ids = [ TopicalClusterNode(0).id for i in range(100) ]
+        self.assertTrue(len(ids), len(set(ids)))
+
+    def test_init_with_no_clusters(self):
         """
         Test that when creating the topical cluster node with no clusters, an empty list is initialized.
         """
@@ -60,7 +75,7 @@ class TestClusterNode(unittest.TestCase):
         node = TopicalClusterNode(0)
         self.assertEqual([ ], node.clusters)
 
-    def test_create_with_clusters(self):
+    def test_init_with_clusters(self):
         """
         Test that when creating the topical cluster node with a list of clusters and topics, they are saved.
         """
@@ -77,7 +92,7 @@ class TestClusterNode(unittest.TestCase):
         self.assertEqual(clusters[1:], n2.clusters)
         self.assertEqual(topics[1:], n2.topics)
 
-    def test_create_with_unequal_clusters_topics(self):
+    def test_init_with_unequal_clusters_topics(self):
         """
         Test that when creating the topical cluster node with an unequal number of clusters and topics, a ValueError is raised.
         """
