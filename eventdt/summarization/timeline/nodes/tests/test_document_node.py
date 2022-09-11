@@ -378,6 +378,23 @@ class TestDocumentNode(unittest.TestCase):
         self.assertEqual({ 'c': 3 }, e['documents'][1]['dimensions'])
         self.assertEqual({ 'd': 4 }, e['documents'][1]['attributes'])
 
+    def test_export_with_attributes(self):
+        """
+        Test exporting document nodes that have attributes.
+        """
+
+        documents = [ Document('', { 'a': 1 }, attributes={ 'b': 2 }),
+                      Document('', { 'c': 3 }, attributes={ 'd': 4 }) ]
+        node = DocumentNode(created_at=0, documents=documents, attributes={ 'attr': 'val' })
+        e = node.to_array()
+        self.assertEqual(node.created_at, DocumentNode.from_array(e).created_at)
+        self.assertEqual(node.attributes, DocumentNode.from_array(e).attributes)
+        self.assertTrue(all(document['class'] == "<class 'nlp.document.Document'>" for document in e['documents']))
+        self.assertEqual({ 'a': 1 }, e['documents'][0]['dimensions'])
+        self.assertEqual({ 'b': 2 }, e['documents'][0]['attributes'])
+        self.assertEqual({ 'c': 3 }, e['documents'][1]['dimensions'])
+        self.assertEqual({ 'd': 4 }, e['documents'][1]['attributes'])
+
     def test_import(self):
         """
         Test importing document nodes that have documents.

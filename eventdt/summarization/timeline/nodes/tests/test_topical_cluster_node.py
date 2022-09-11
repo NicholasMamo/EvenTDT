@@ -340,6 +340,28 @@ class TestClusterNode(unittest.TestCase):
         self.assertEqual(topics[0].attributes, e['topics'][0]['attributes'])
         self.assertEqual(topics[1].attributes, e['topics'][1]['attributes'])
 
+    def test_export_with_attributes(self):
+        """
+        Test exporting topical cluster nodes that have attributes.
+        """
+
+        clusters = [ Cluster(Document('', { 'a': 1 }), attributes={ 'b': 2 }),
+                     Cluster(Vector({ 'c': 3 }), attributes={ 'd': 4 }) ]
+        topics = [ Vector({ 'p': 1 }, { 'y': 2 }), Vector({ 'q': 2 }, { 'x': 1}) ]
+        node = TopicalClusterNode(0, clusters=clusters, topics=topics, attributes={ 'attr': 'val' })
+        e = node.to_array()
+        self.assertEqual(node.created_at, TopicalClusterNode.from_array(e).created_at)
+        self.assertEqual(node.attributes, TopicalClusterNode.from_array(e).attributes)
+        self.assertTrue(all(cluster['class'] == "<class 'vsm.clustering.cluster.Cluster'>" for cluster in e['clusters']))
+        self.assertEqual(clusters[0].vectors[0].dimensions, e['clusters'][0]['vectors'][0]['dimensions'])
+        self.assertEqual({ 'b': 2 }, e['clusters'][0]['attributes'])
+        self.assertEqual(clusters[1].vectors[0].dimensions, e['clusters'][1]['vectors'][0]['dimensions'])
+        self.assertEqual({ 'd': 4 }, e['clusters'][1]['attributes'])
+        self.assertEqual(topics[0].dimensions, e['topics'][0]['dimensions'])
+        self.assertEqual(topics[1].dimensions, e['topics'][1]['dimensions'])
+        self.assertEqual(topics[0].attributes, e['topics'][0]['attributes'])
+        self.assertEqual(topics[1].attributes, e['topics'][1]['attributes'])
+
     def test_import(self):
         """
         Test importing topical cluster nodes that have clusters.

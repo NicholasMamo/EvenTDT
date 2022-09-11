@@ -8,6 +8,7 @@ This is different from the :class:`~summarization.timeline.nodes.document_node.D
 Therefore the :class:`~summarization.timeline.nodes.cluster_node.ClusterNode` can overcome fragmentation.
 """
 
+import copy
 import importlib
 import os
 import sys
@@ -30,7 +31,7 @@ class ClusterNode(Node):
     :vartype clusters: list of :class:`~vsm.clustering.cluster.Cluster`
     """
 
-    def __init__(self, created_at, id=None, clusters=None):
+    def __init__(self, created_at, id=None, clusters=None, *args, **kwargs):
         """
         Create the node with an optional initial list of :class:`~vsm.clustering.cluster.Cluster` instances.
 
@@ -43,7 +44,7 @@ class ClusterNode(Node):
         :type clusters: None or list of :class:`~vsm.clustering.cluster.Cluster`
         """
 
-        super(ClusterNode, self).__init__(created_at, id=id)
+        super(ClusterNode, self).__init__(created_at, id=id, *args, **kwargs)
         self.clusters = clusters or [ ]
 
     def add(self, cluster, *args, **kwargs):
@@ -98,6 +99,7 @@ class ClusterNode(Node):
         array = Node.to_array(self)
         array.update({
             'class': str(ClusterNode),
+            'attributes': copy.deepcopy(self.attributes),
             'clusters': [ cluster.to_array() for cluster in self.clusters ],
         })
         return array
@@ -120,7 +122,7 @@ class ClusterNode(Node):
             cls = getattr(module, Exportable.get_class(cluster.get('class')))
             clusters.append(cls.from_array(cluster))
 
-        return ClusterNode(created_at=array.get('created_at'), id=array.get('id'), clusters=clusters)
+        return ClusterNode(created_at=array.get('created_at'), id=array.get('id'), clusters=clusters, attributes=copy.deepcopy(array.get('attributes')))
 
     @staticmethod
     def merge(created_at, *args):

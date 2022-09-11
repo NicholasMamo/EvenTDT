@@ -352,6 +352,23 @@ class TestClusterNode(unittest.TestCase):
         self.assertEqual(clusters[1].vectors[0].dimensions, e['clusters'][1]['vectors'][0]['dimensions'])
         self.assertEqual({ 'd': 4 }, e['clusters'][1]['attributes'])
 
+    def test_export_with_attributes(self):
+        """
+        Test exporting cluster nodes that have attributes.
+        """
+
+        clusters = [ Cluster(Document('', { 'a': 1 }), attributes={ 'b': 2 }),
+                     Cluster(Vector({ 'c': 3 }), attributes={ 'd': 4 }) ]
+        node = ClusterNode(0, clusters=clusters, attributes={ 'attr': 'val' })
+        e = node.to_array()
+        self.assertEqual(node.created_at, ClusterNode.from_array(e).created_at)
+        self.assertEqual(node.attributes, ClusterNode.from_array(e).attributes)
+        self.assertTrue(all(cluster['class'] == "<class 'vsm.clustering.cluster.Cluster'>" for cluster in e['clusters']))
+        self.assertEqual(clusters[0].vectors[0].dimensions, e['clusters'][0]['vectors'][0]['dimensions'])
+        self.assertEqual({ 'b': 2 }, e['clusters'][0]['attributes'])
+        self.assertEqual(clusters[1].vectors[0].dimensions, e['clusters'][1]['vectors'][0]['dimensions'])
+        self.assertEqual({ 'd': 4 }, e['clusters'][1]['attributes'])
+
     def test_import(self):
         """
         Test importing cluster nodes that have clusters.

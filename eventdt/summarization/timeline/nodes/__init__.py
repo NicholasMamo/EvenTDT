@@ -46,9 +46,10 @@ class Node(Exportable, Attributable):
     :vartype id: str
     """
 
-    def __init__(self, created_at, id=None):
+    def __init__(self, created_at, id=None, *args, **kwargs):
         """
         Create the node with the given timestamp.
+        Attributes can be provided as keyword arguments.
 
         :param created_at: The timestamp when the node was created.
         :type created_at: float
@@ -57,7 +58,7 @@ class Node(Exportable, Attributable):
         :type id: str
         """
 
-        super(Node, self).__init__()
+        super(Node, self).__init__(*args, **kwargs)
         self.created_at = created_at
         self.id = id or str(uuid.uuid4())
 

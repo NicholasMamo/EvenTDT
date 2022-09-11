@@ -2,6 +2,7 @@
 The :class:`~summarization.timeline.nodes.document_node.DocumentNode` is a simple :class:`~summarization.timeline.nodes.Node` that only stores :class:`~nlp.document.Document` instances.
 """
 
+import copy
 import importlib
 import os
 import sys
@@ -24,7 +25,7 @@ class DocumentNode(Node):
     :vartype ~.documents: list of :class:`~nlp.document.Document`
     """
 
-    def __init__(self, created_at, documents=None):
+    def __init__(self, created_at, documents=None, *args, **kwargs):
         """
         Create the node with an optional initial list of :class:`~nlp.document.Document` instances.
 
@@ -37,7 +38,7 @@ class DocumentNode(Node):
         :type documents: None or list of :class:`~nlp.document.Document`
         """
 
-        super(DocumentNode, self).__init__(created_at, id=id)
+        super(DocumentNode, self).__init__(created_at, id=id, *args, **kwargs)
         self.documents = documents or [ ]
 
     def add(self, documents, *args, **kwargs):
@@ -96,6 +97,7 @@ class DocumentNode(Node):
         array = Node.to_array(self)
         array.update({
             'class': str(DocumentNode),
+            'attributes': copy.deepcopy(self.attributes),
             'created_at': self.created_at,
             'documents': [ document.to_array() for document in self.documents ],
         })
@@ -119,7 +121,7 @@ class DocumentNode(Node):
             cls = getattr(module, Exportable.get_class(document.get('class')))
             documents.append(cls.from_array(document))
 
-        return DocumentNode(created_at=array.get('created_at'), documents=documents)
+        return DocumentNode(created_at=array.get('created_at'), documents=documents, attributes=copy.deepcopy(array.get('attributes')))
 
     @staticmethod
     def merge(created_at, *args):
