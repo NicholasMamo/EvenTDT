@@ -10,10 +10,6 @@ Although you can create a :class:`~vsm.clustering.cluster.Cluster` instance your
 """
 
 import importlib
-try:
-    import ujson as json
-except ImportError:
-    import json
 import os
 import sys
 
