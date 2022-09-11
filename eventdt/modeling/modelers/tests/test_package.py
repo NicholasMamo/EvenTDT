@@ -52,7 +52,10 @@ class TestPackage(unittest.TestCase):
             data = json.loads(''.join(f.readlines()))['timeline']
             timelines = [ Timeline.from_array(datum) for datum in data ]
             for timeline in timelines:
-                ids = [ node.attributes.get('id') for node in timeline.nodes ]
+                if not timeline.nodes:
+                    continue
+
+                ids = [ node.id for node in timeline.nodes ]
                 modeler = DummyEventModeler()
                 node_ids = [ model.attributes.get('node_id') for model in modeler.model(timeline) ]
                 self.assertTrue(any( ids ))
