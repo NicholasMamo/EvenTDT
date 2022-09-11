@@ -39,9 +39,7 @@ class Cluster(Attributable, Exportable):
     :ivar ~.centroid: The centroid of the cluster, representing the average vector in the cluster.
     :vartype ~.centroid: :class:`~vsm.vector.Vector`
     :ivar _last: A snapshot of the cluster the last time that its centroid was re-calculated.
-                 This variable stores the hash of the cluster so that the centroid is not re-calculated needlessly if the cluster's vector has not changed.
-                 The hash is stored instead of a copy of the cluster to minimize memory usage.
-    :vartype _last: int
+    :vartype _last: dict
     """
 
     def __init__(self, vectors=None, *args, **kwargs):
