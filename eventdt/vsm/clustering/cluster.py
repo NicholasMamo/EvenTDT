@@ -111,13 +111,14 @@ class Cluster(Attributable, Exportable):
         :rtype: :class:`~vsm.vector.Vector`
         """
 
-        # convert the cluster to an array representation to detect whether the cluster has changed
-        current = self.to_array() if self.size() < 10 else None
-
-        if (not self._last              # if the centroid has never been calculated (or the cluster is too large to calculate it)
-            or self._last != current):  # or the cluster has changed since the last time the centroid was calculated
-            self._last = current        # record the current hash
-            self.recalculate_centroid() # and recalculate the centroid
+        if self.size() < 10:
+            current = self.to_array()       # if the cluster is small, convert it to an array to detect any changes
+            if (not self._last              # if the centroid has never been calculated
+                or self._last != current):  # or the cluster has changed since the last time the centroid was calculated
+                self._last = current        # record the current representation
+                self.recalculate_centroid() # and recalculate the centroid
+        else:
+            self.recalculate_centroid()
 
         return self.__centroid
 
