@@ -412,12 +412,12 @@ class ELDConsumer(Consumer):
                 That is, the implementation skips all of those that are late.
                 """
                 overdue = [ document for document in documents
-                                     if latest_timestamp - document.attributes['timestamp'] >= self.window_size ]
+                                     if latest_timestamp - document.timestamp >= self.window_size ]
                 skipped += len(overdue)
                 if len(overdue) > 10:
                     logger.warning(f"""{ datetime.fromtimestamp(latest_timestamp - self.window_size).ctime() }: Skipping { len(overdue) } tweets""")
                 documents = [ document for document in documents
-                                       if latest_timestamp - document.attributes['timestamp'] < self.window_size ]
+                                       if latest_timestamp - document.timestamp < self.window_size ]
 
                 """
                 Cluster the documents that remain and filter the clusters.
