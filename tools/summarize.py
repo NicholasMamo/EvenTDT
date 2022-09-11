@@ -421,6 +421,7 @@ def summarize(summarizer, timeline, splits, merge=False, verbose=False, max_docu
             # generate the summary
             summary = summarizer.summarize(documents, length, query=query)
             summary.attributes['timestamp'] = nodes[0].created_at
+            summary.attributes['node_id'] = [ node.id for node in nodes ]
             if query:
                 summary.attributes['query'] = query.dimensions
             if verbose:
@@ -451,6 +452,7 @@ def summarize(summarizer, timeline, splits, merge=False, verbose=False, max_docu
                 # generate the summary
                 summary = summarizer.summarize(documents, length, query=query)
                 summary.attributes['timestamp'] = node.created_at
+                summary.attributes['node_id'] = [ node.id ]
                 if splits:
                     summary.attributes['split'] = str(node.attributes['split'])
                 if query:

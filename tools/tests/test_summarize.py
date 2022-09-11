@@ -181,6 +181,38 @@ class TestSummarize(unittest.TestCase):
         combined = summarize.summarize(summarizer, timelines, splits)
         self.assertTrue(all( summary.attributes['split'] for summaries in combined for summary in summaries ))
 
+    def test_summarize_with_node_id(self):
+        """
+        Test that when summarizing a split timeline, each summary has a node ID.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-attributes.json')
+        timelines, splits = summarize.load_timeline(file), summarize.load_splits(file)
+        summarizer = summarize.create_summarizer(MMR)
+        combined = summarize.combine(timelines, splits)
+        summarized = summarize.summarize(summarizer, timelines, splits)
+        self.assertTrue(all( node.id for nodes in combined for node in nodes ))
+        self.assertTrue(all( summary.node_id for summaries in summarized for summary in summaries ))
+        self.assertTrue(all( list == type(summary.node_id) for summaries in summarized for summary in summaries ))
+        self.assertEqual([ [ node.id ] for nodes in combined for node in nodes ],
+                         [ summary.node_id for summaries in summarized for summary in summaries ])
+
+    def test_summarize_with_node_id_merged(self):
+        """
+        Test that when summarizing a merge timeline, each summary has a list of node IDs.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-attributes.json')
+        timelines, splits = summarize.load_timeline(file), summarize.load_splits(file)
+        summarizer = summarize.create_summarizer(MMR)
+        combined = summarize.combine(timelines, splits)
+        summarized = summarize.summarize(summarizer, timelines, splits, merge=True)
+        self.assertTrue(all( node.id for nodes in combined for node in nodes ))
+        self.assertTrue(all( summary.node_id for summaries in summarized for summary in summaries ))
+        self.assertTrue(all( list == type(summary.node_id) for summaries in summarized for summary in summaries ))
+        self.assertEqual([ [ node.id for node in nodes ] for nodes in combined ],
+                         [ summary.node_id for summaries in summarized for summary in summaries ])
+
     def test_tabulate_empty(self):
         """
         Test that when tabulating an empty list of summaries, another empty list is created.
