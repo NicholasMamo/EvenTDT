@@ -161,3 +161,15 @@ class Document(Vector):
         tokens = tokenizer.tokenize(text)
         document = Document(text, tokens, scheme=scheme, **kwargs)
         return document
+
+    def __hash__(self):
+        """
+        Create an immutable hash of the Exportable instance.
+        To facilitate hashing documents, which are often hashed, the function returns the document's ID if it exists.
+
+        :return: An intenger representation of the Exportable instance.
+        :rtype: int
+        """
+
+        return self.id if self.id else super().__hash__()
+

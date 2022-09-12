@@ -4,6 +4,7 @@ Run unit tests on the :class:`~nlp.document.Document` class.
 
 import json
 import os
+import random
 import sys
 import time
 import unittest
@@ -570,3 +571,19 @@ class TestDocument(unittest.TestCase):
         copy.attributes = { 'original': False }
         self.assertEqual({ 'original': False }, copy.attributes)
         self.assertEqual({ 'original': True }, document.attributes)
+
+    def test_hash_without_id(self):
+        """
+        Test that hashing a document without an ID returns the hash of its array representation.
+        """
+
+        document = Document('this is a pipe', { 'pipe': 1 }, attributes={ 'original': True })
+        self.assertEqual(hash(json.dumps(document.to_array())), hash(document))
+
+    def test_hash_with_id(self):
+        """
+        Test that hashing a document with an ID returns the ID.
+        """
+
+        document = Document('this is a pipe', { 'pipe': 1 }, attributes={ 'id': random.randint(0, 1e6), 'original': True })
+        self.assertEqual(document.id, hash(document))
