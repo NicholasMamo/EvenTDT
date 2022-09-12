@@ -171,5 +171,5 @@ class Document(Vector):
         :rtype: int
         """
 
-        return self.id if self.id else super().__hash__()
+        return int(self.id) if self.id else super().__hash__()
 
