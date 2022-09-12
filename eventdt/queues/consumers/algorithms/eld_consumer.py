@@ -827,12 +827,13 @@ class ELDConsumer(Consumer):
         Score each document.
         """
         scores = { }
-        for document in documents:
+        for i, document in enumerate(documents):
             brevity = self._brevity_score(document.text, *args, **kwargs)
             emotion = self._emotion_score(document.text, *args, **kwargs)
-            scores[document] = brevity * emotion
+            scores[i] = brevity * emotion
 
-        return sorted(scores, key=scores.get, reverse=True)
+        scores = sorted(scores, key=scores.get, reverse=True)
+        return [ documents[i] for i in scores ]
 
     def _brevity_score(self, text, r=10, *args, **kwargs):
         """
