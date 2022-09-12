@@ -823,19 +823,16 @@ class ELDConsumer(Consumer):
         :rtype: list of :class:`~nlp.document.Document`
         """
 
-        documents = { document.text: document for document in documents }
-
         """
         Score each document.
         """
         scores = { }
-        for i, document in enumerate(documents):
+        for document in documents:
             brevity = self._brevity_score(document.text, *args, **kwargs)
             emotion = self._emotion_score(document.text, *args, **kwargs)
-            scores[i] = brevity * emotion
+            scores[document] = brevity * emotion
 
-        scores = sorted(scores, key=scores.get, reverse=True)
-        return [ documents[i] for i in scores ]
+        return sorted(scores, key=scores.get, reverse=True)
 
     def _brevity_score(self, text, r=10, *args, **kwargs):
         """
