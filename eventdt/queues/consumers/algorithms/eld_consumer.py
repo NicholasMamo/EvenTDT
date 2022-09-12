@@ -453,13 +453,13 @@ class ELDConsumer(Consumer):
                     node = timeline.nodes[-1]
                     if node.expired(timeline.expiry, latest_timestamp) and not node.attributes.get('printed'):
                         t1 = time.time()
-                        summary_documents = self._score_documents(node.get_all_documents())[:10]
+                        summary_documents = self._score_documents(node.get_all_documents())[:20]
 
                         # generate a query from the topical keywords and use it to come up with a summary
                         query = Cluster(vectors=node.topics).centroid
                         summary = self.summarization.summarize(summary_documents, 280, query=query)
                         t2 = time.time()
-                        logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(self.cleaner.clean(str(summary))) } ({round(t2 - t1)}s)", process=str(self))
+                        logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(self.cleaner.clean(str(summary))) } ({t2 - t1}s)", process=str(self))
                         node.attributes['printed'] = True
 
                         #  any time a node expires, apply the reporting strategy to recent (frozen) clusters to immediately minimize memory use
@@ -808,7 +808,13 @@ class ELDConsumer(Consumer):
     def _score_documents(self, documents, *args, **kwargs):
         """
         Score the given documents.
-        The score is the length of the documents.
+        The score is the product of two scores:
+
+            #. A brevity score, based on `BLEU: a Method for Automatic Evaluation of Machine Translation by Papineni et al. (2002) <https://dl.acm.org/doi/10.3115/1073083.1073135>`; and
+
+            #. An emotion score, which is the complement of the fraction of tokens that are capitalized.
+
+        Any additional arguments and keyword arguments are passed on to the functions that calculate the scores.
 
         :param documents: The list of documents to score.
         :type documents: list of :class:`~nlp.document.Document`
@@ -817,10 +823,19 @@ class ELDConsumer(Consumer):
         :rtype: list of :class:`~nlp.document.Document`
         """
 
-        documents = { document.text: document for document in documents } # remove duplicates
-        documents = sorted(documents.items(), key=lambda d: len(d[0]), reverse=True) # sort in descending order of length
-        documents = [ d[1] for d in documents ]
-        return documents
+        documents = { document.text: document for document in documents }
+
+        """
+        Score each document.
+        """
+        scores = { }
+        for i, document in enumerate(documents):
+            brevity = self._brevity_score(document.text, *args, **kwargs)
+            emotion = self._emotion_score(document.text, *args, **kwargs)
+            scores[i] = brevity * emotion
+
+        scores = sorted(scores, key=scores.get, reverse=True)
+        return [ documents[i] for i in scores ]
 
     def _brevity_score(self, text, r=10, *args, **kwargs):
         """
