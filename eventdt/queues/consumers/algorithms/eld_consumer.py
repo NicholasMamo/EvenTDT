@@ -128,6 +128,10 @@ class ELDConsumer(Consumer):
     :vartype tdt: :class:`~tdt.algorithms.eld.ELD`
     :ivar summarization: The summarization algorithm used to create the timeline.
     :vartype summarization: :class:`~summarization.algorithms.dgs.DGS`
+    :ivar upper_pattern: The pattern used to count the number of uppercase letters in a text.
+    :vartype upper_pattern: :class:`re.Pattern`
+    :ivar lower_pattern: The pattern used to count the number of lowercase letters in a text.
+    :vartype lower_pattern: :class:`re.Pattern`
     :ivar cleaner: The cleaner used to make summaries more presentable.
     :vartype cleaner: :class:`~nlp.cleaners.tweet_cleaner.TweetCleaner`
     :ivar filtering: The amount of filtering to apply on tweets.
@@ -222,6 +226,9 @@ class ELDConsumer(Consumer):
                                     remove_unicode_entities=True, remove_urls=True,
                                     remove_hashtags=True, split_hashtags=True,
                                     remove_retweet_prefix=True)
+
+        self.upper_pattern = re.compile("[A-Z]")
+        self.lower_pattern = re.compile("[a-z]")
         self.summarization = DGS()
 
         if verbose:
@@ -885,10 +892,8 @@ class ELDConsumer(Consumer):
         :rtype: float
         """
 
-        upper_pattern = re.compile("[A-Z]")
-        lower_pattern = re.compile("[a-z]")
-        upper = len(upper_pattern.findall(text))
-        lower = len(lower_pattern.findall(text))
+        upper = len(self.upper_pattern.findall(text))
+        lower = len(self.lower_pattern.findall(text))
 
         return 1 - upper/(upper + lower) if (upper + lower) else 0
 
