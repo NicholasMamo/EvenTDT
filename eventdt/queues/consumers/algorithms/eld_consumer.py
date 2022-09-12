@@ -462,6 +462,12 @@ class ELDConsumer(Consumer):
                         logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(self.cleaner.clean(str(summary))) } ({t2 - t1}s)", process=str(self))
                         node.attributes['printed'] = True
 
+                        #  any time a node expires, apply the reporting strategy to recent (frozen) clusters to immediately minimize memory use
+                        if self.reporting != ReportingLevel.ALL:
+                            for node in timeline.nodes[-3:]:
+                                for cluster in node.clusters:
+                                    cluster.vectors = self._apply_reporting_level(cluster.vectors) if cluster.frozen else cluster.vectors
+
         # before returning, apply the reporting strategy to all clusters (frozen or not)
         for node in timeline.nodes:
             for cluster in node.clusters:
