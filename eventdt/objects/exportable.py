@@ -216,7 +216,7 @@ class Exportable(ABC):
     def __hash__(self):
         """
         Create an immutable hash of the Exportable instance.
-        The function 
+        The function converts the object to an array, creates a JSON representation of it, and then hashes the string.
 
         :return: An intenger representation of the Exportable instance.
         :rtype: int
