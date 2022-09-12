@@ -459,7 +459,7 @@ class ELDConsumer(Consumer):
                         query = Cluster(vectors=node.topics).centroid
                         summary = self.summarization.summarize(summary_documents, 280, query=query)
                         t2 = time.time()
-                        logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(self.cleaner.clean(str(summary))) } ({t2 - t1}s)", process=str(self))
+                        logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(self.cleaner.clean(str(summary))) } ({round(t2 - t1)}s)", process=str(self))
                         node.attributes['printed'] = True
 
                         #  any time a node expires, apply the reporting strategy to recent (frozen) clusters to immediately minimize memory use
