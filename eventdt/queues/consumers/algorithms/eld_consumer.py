@@ -453,7 +453,7 @@ class ELDConsumer(Consumer):
                     node = timeline.nodes[-1]
                     if node.expired(timeline.expiry, latest_timestamp) and not node.attributes.get('printed'):
                         t1 = time.time()
-                        summary_documents = self._score_documents(node.get_all_documents())[:20]
+                        summary_documents = self._score_documents(node.get_all_documents())[:10]
 
                         # generate a query from the topical keywords and use it to come up with a summary
                         query = Cluster(vectors=node.topics).centroid
