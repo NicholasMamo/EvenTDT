@@ -2048,7 +2048,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         consumer = ELDConsumer(Queue(), 30)
         documents = [ Document('THIS IS A PIPE'),
                       Document('This is a pipe and this is a cigar'),
-                      Document('this is a pipe'), ]
+                      Document('this is a cigar'), ]
         self.assertEqual([ documents[1], documents[2], documents[0] ], consumer._score_documents(documents))
 
     def test_score_documents(self):
@@ -2059,7 +2059,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         consumer = ELDConsumer(Queue(), 30)
         documents = [ Document('THIS IS A PIPE'),
                       Document('This is a pipe and this is a cigar'),
-                      Document('this is a pipe'), ]
+                      Document('this is a cigar'), ]
         self.assertEqual(set(documents), set(consumer._score_documents(documents)))
 
     def test_brevity_score_empty(self):

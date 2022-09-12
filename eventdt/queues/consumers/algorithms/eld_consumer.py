@@ -808,13 +808,7 @@ class ELDConsumer(Consumer):
     def _score_documents(self, documents, *args, **kwargs):
         """
         Score the given documents.
-        The score is the product of two scores:
-
-            #. A brevity score, based on `BLEU: a Method for Automatic Evaluation of Machine Translation by Papineni et al. (2002) <https://dl.acm.org/doi/10.3115/1073083.1073135>`; and
-
-            #. An emotion score, which is the complement of the fraction of tokens that are capitalized.
-
-        Any additional arguments and keyword arguments are passed on to the functions that calculate the scores.
+        The score is the length of the documents.
 
         :param documents: The list of documents to score.
         :type documents: list of :class:`~nlp.document.Document`
@@ -823,17 +817,10 @@ class ELDConsumer(Consumer):
         :rtype: list of :class:`~nlp.document.Document`
         """
 
-        """
-        Score each document.
-        """
-        scores = { }
-        for i, document in enumerate(documents):
-            brevity = self._brevity_score(document.text, *args, **kwargs)
-            emotion = self._emotion_score(document.text, *args, **kwargs)
-            scores[i] = brevity * emotion
-
-        scores = sorted(scores, key=scores.get, reverse=True)
-        return [ documents[i] for i in scores ]
+        documents = { document.text: document for document in documents } # remove duplicates
+        documents = sorted(documents.items(), key=lambda d: len(d[0]), reverse=True) # sort in descending order of length
+        documents = [ d[1] for d in documents ]
+        return documents
 
     def _brevity_score(self, text, r=10, *args, **kwargs):
         """
