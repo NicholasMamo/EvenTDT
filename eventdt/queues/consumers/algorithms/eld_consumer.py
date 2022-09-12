@@ -454,9 +454,10 @@ class ELDConsumer(Consumer):
                         node.attributes['printed'] = True
 
                         #  any time a node expires, apply the reporting strategy to recent (frozen) clusters to immediately minimize memory use
-                        for node in timeline.nodes[-3:]:
-                            for cluster in node.clusters:
-                                cluster.vectors = self._apply_reporting_level(cluster.vectors) if cluster.frozen else cluster.vectors
+                        if self.reporting != ReportingLevel.ALL:
+                            for node in timeline.nodes[-3:]:
+                                for cluster in node.clusters:
+                                    cluster.vectors = self._apply_reporting_level(cluster.vectors) if cluster.frozen else cluster.vectors
 
         # before returning, apply the reporting strategy to all clusters (frozen or not)
         for node in timeline.nodes:
