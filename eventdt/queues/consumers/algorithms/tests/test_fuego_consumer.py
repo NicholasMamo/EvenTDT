@@ -1131,7 +1131,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
 
     def test_filter_tweets_strict_replies(self):
         """
-        Test that if the tweet is a reply, it is filtered out.
+        Test that if the tweet is a reply, it is filtered out in lenient filtering.
         """
 
         trivial = True
@@ -1151,7 +1151,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
 
     def test_filter_tweets_lenient_replies(self):
         """
-        Test that if the tweet is a reply, it is not filtered out.
+        Test that if the tweet is a reply, it is filtered out in lenient filtering.
         """
 
         consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
@@ -1160,11 +1160,11 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
-            self.assertTrue(any( twitter.is_reply(tweet) for tweet in tweets ))
+            self.assertTrue(not any( twitter.is_reply(tweet) for tweet in tweets ))
 
     def test_filter_tweets_strict_v2_replies(self):
         """
-        Test that if the tweet is a reply, it is filtered out.
+        Test that if the tweet is a reply, it is filtered out in lenient filtering.
         """
 
         trivial = True
@@ -1184,7 +1184,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
 
     def test_filter_tweets_v2_lenient_replies(self):
         """
-        Test that if the tweet is a reply, it is not filtered out.
+        Test that if the tweet is a reply, it is filtered out in lenient filtering.
         """
 
         consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
@@ -1193,7 +1193,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
-            self.assertTrue(any( twitter.is_reply(tweet) for tweet in tweets ))
+            self.assertTrue(not any( twitter.is_reply(tweet) for tweet in tweets ))
 
     def test_filter_tweets_strict_reply_retweet(self):
         """
@@ -1251,7 +1251,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
 
     def test_filter_tweets_lenient_v2_reply_retweet(self):
         """
-        Test that if the tweet is a retweet of a reply, it is not filtered out.
+        Test that if the tweet is a retweet of a reply, it is filtered out in lenient filtering.
         """
 
         consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
@@ -1260,7 +1260,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
-            self.assertTrue(any( twitter.is_retweet(tweet) and twitter.is_reply(tweet) for tweet in tweets ))
+            self.assertTrue(not any( twitter.is_retweet(tweet) and twitter.is_reply(tweet) for tweet in tweets ))
 
     def test_to_documents_storage_tweet(self):
         """

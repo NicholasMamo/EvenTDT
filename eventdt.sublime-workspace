@@ -75,11 +75,22 @@
 			"file": "eventdt/queues/consumers/algorithms/fuego_consumer.py",
 			"settings":
 			{
-				"buffer_size": 46926,
+				"buffer_size": 46927,
+				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			},
 			"undo_stack":
 			[
+				[
+					63,
+					1,
+					"insert",
+					{
+						"characters": "t"
+					},
+					"AQAAAKVUAAAAAAAAplQAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAApVQAAAAAAAClVAAAAAAAAAAAAAAAAPC/"
+				]
 			]
 		}
 	],
@@ -373,7 +384,7 @@
 	],
 	"find":
 	{
-		"height": 23.0
+		"height": 44.0
 	},
 	"find_in_files":
 	{
@@ -574,15 +585,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 46926,
+						"buffer_size": 46927,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								37266,
-								37266
+								37161,
+								37161
 							]
 						],
 						"settings":
@@ -592,7 +603,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 10077.0,
+						"translation.y": 10084.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
