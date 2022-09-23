@@ -197,6 +197,7 @@ class FUEGOConsumer(Consumer):
         logger.info(f"Filtering:        { self.filtering }")
         logger.info(f"Reporting:        { self.reporting }")
         logger.info(f"Storage:          { self.storage }")
+        logger.info(f"Scheme:           { str(self.scheme) }")
 
     async def understand(self, max_inactivity=-1, *args, **kwargs):
         """

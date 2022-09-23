@@ -75,6 +75,82 @@
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
+		},
+		{
+			"file": "tools/consume.py",
+			"settings":
+			{
+				"buffer_size": 48785,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
+				[
+					22,
+					1,
+					"left_delete",
+					null,
+					"AQAAAHspAAAAAAAAeykAAAAAAAABAAAAYA",
+					"AQAAAAAAAAABAAAAfCkAAAAAAAB8KQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					28,
+					1,
+					"insert",
+					{
+						"characters": ";"
+					},
+					"AgAAAOUoAAAAAAAA5igAAAAAAAAAAAAA5igAAAAAAADmKAAAAAAAAAIAAAAgKA",
+					"AQAAAAAAAAABAAAA5SgAAAAAAADnKAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					29,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAAOYoAAAAAAAA5ygAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA5igAAAAAAADmKAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					32,
+					1,
+					"left_delete",
+					null,
+					"AQAAAHspAAAAAAAAeykAAAAAAAABAAAAKQ",
+					"AQAAAAAAAAABAAAAfCkAAAAAAAB8KQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					37,
+					2,
+					"left_delete",
+					null,
+					"AgAAAAdKAAAAAAAAB0oAAAAAAAABAAAAKAZKAAAAAAAABkoAAAAAAAABAAAAIA",
+					"AQAAAAAAAAABAAAAB0oAAAAAAAAISgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					38,
+					1,
+					"insert",
+					{
+						"characters": ";"
+					},
+					"AQAAAAZKAAAAAAAAB0oAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAABkoAAAAAAAAGSgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					39,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAAAdKAAAAAAAACEoAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAB0oAAAAAAAAHSgAAAAAAAAAAAAAAAPC/"
+				]
+			]
 		}
 	],
 	"build_system": "",
@@ -384,6 +460,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"`.",
 			"remove_unicode_entities",
 			"emoji",
 			"eventdt",
@@ -510,8 +587,7 @@
 			"ClusterNode",
 			"test_create",
 			"id",
-			"ClusterNode",
-			"cluster"
+			"ClusterNode"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -564,7 +640,6 @@
 				{
 					"buffer": 0,
 					"file": "eventdt/twitter/__init__.py",
-					"selected": true,
 					"semi_transient": false,
 					"settings":
 					{
@@ -587,6 +662,38 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 4099.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "tools/consume.py",
+					"selected": true,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 48785,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								19001,
+								19001
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4513.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -648,6 +755,10 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"consume",
+				"tools/consume.py"
+			],
 			[
 				"tokeni",
 				"eventdt/nlp/tokenizer.py"
@@ -847,10 +958,6 @@
 			[
 				"testclust",
 				"eventdt/vsm/clustering/tests/test_cluster.py"
-			],
-			[
-				"consume",
-				"tools/consume.py"
 			],
 			[
 				"testcluster",
