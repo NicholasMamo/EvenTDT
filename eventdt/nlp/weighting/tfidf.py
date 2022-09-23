@@ -79,3 +79,13 @@ class TFIDF(Exportable, TermWeightingScheme):
         """
 
         return TFIDF(idf=array.get('idf').get('idf'), documents=array.get('idf').get('documents'))
+
+    def __str__(self):
+        """
+        Print a string representation of the TF-IDF scheme.
+
+        :return: A string representation of the TF-IDF scheme.
+        :rtype: str
+        """
+
+        return f"{ type(self) } ({ self.global_scheme.documents } documents)"
