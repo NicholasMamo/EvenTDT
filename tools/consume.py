@@ -233,7 +233,7 @@ The following arguments are the most basic ones to build timelines:
     - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used, but new understanding is generated.
     - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if an `--understanding` corpus is provided; otherwise, a scheme can be created using the :mod:`~tools.idf` tool.
     - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
-    - ``--window-size``             *<Optional>* The size in seconds of the time window, used by real-time algorithms, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer` and :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer``).
+    - ``--window-size``             *<Optional>* The size in seconds of the time window, used by real-time algorithms, defaults to 60 seconds; used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer` and :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer`.
 
 The following arguments let you control how to handle the timeline of events such as by sampling, speeding up or skipping ahead with the data.
 You can also filter the data (``--filters``) and generate multiple timelines by focusing on different streams (``--splits``):
@@ -334,7 +334,7 @@ def setup_args():
     group.add_argument('--periodicity', type=int, required=False, default=60,
                        help='<Optional> The periodicity in seconds of the consumer, defaults to 60 seconds (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`).')
     group.add_argument('--window-size', type=int, required=False, default=60,
-                       help='<Optional> The size in seconds of the time window, used by real-time algorithms, defaults to 60 seconds (used by the `FUEGOConsumer` and `SEERConsumer`.')
+                       help='<Optional> The size in seconds of the time window, used by real-time algorithms, defaults to 60 seconds; used by the `FUEGOConsumer` and `SEERConsumer`.')
 
     group = parser.add_argument_group('Data arguments', 'The following arguments let you control how to handle the data:')
     group.add_argument('--sample', type=float, required=False, default=1,
