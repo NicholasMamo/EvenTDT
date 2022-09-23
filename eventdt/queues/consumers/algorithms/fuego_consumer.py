@@ -401,7 +401,7 @@ class FUEGOConsumer(Consumer):
         Removing all tweets with URLs also removes premeditated tweets.
 
         In lenient filtering mode, FUEGO accepts replies, quoted tweets and URLs.
-        This mode addresses unspecified TDT, or detecting breaking news from a general sream, in which news outlets often report news using URLs.
+        This mode addresses unspecified TDT, or detecting breaking news from a general stream, in which news outlets often report news using URLs.
 
         :param tweet: The tweet to validate.
         :type tweet: dict

@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"global",
+				"global_scheme"
+			],
+			[
 				"__mod",
 				"__module__"
 			],
@@ -68,88 +72,14 @@
 	"buffers":
 	[
 		{
-			"file": "eventdt/twitter/__init__.py",
+			"file": "eventdt/queues/consumers/algorithms/fuego_consumer.py",
 			"settings":
 			{
-				"buffer_size": 18479,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "tools/consume.py",
-			"settings":
-			{
-				"buffer_size": 48785,
-				"encoding": "UTF-8",
+				"buffer_size": 46926,
 				"line_ending": "Unix"
 			},
 			"undo_stack":
 			[
-				[
-					22,
-					1,
-					"left_delete",
-					null,
-					"AQAAAHspAAAAAAAAeykAAAAAAAABAAAAYA",
-					"AQAAAAAAAAABAAAAfCkAAAAAAAB8KQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					28,
-					1,
-					"insert",
-					{
-						"characters": ";"
-					},
-					"AgAAAOUoAAAAAAAA5igAAAAAAAAAAAAA5igAAAAAAADmKAAAAAAAAAIAAAAgKA",
-					"AQAAAAAAAAABAAAA5SgAAAAAAADnKAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					29,
-					1,
-					"insert",
-					{
-						"characters": " "
-					},
-					"AQAAAOYoAAAAAAAA5ygAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAA5igAAAAAAADmKAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					32,
-					1,
-					"left_delete",
-					null,
-					"AQAAAHspAAAAAAAAeykAAAAAAAABAAAAKQ",
-					"AQAAAAAAAAABAAAAfCkAAAAAAAB8KQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					37,
-					2,
-					"left_delete",
-					null,
-					"AgAAAAdKAAAAAAAAB0oAAAAAAAABAAAAKAZKAAAAAAAABkoAAAAAAAABAAAAIA",
-					"AQAAAAAAAAABAAAAB0oAAAAAAAAISgAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					38,
-					1,
-					"insert",
-					{
-						"characters": ";"
-					},
-					"AQAAAAZKAAAAAAAAB0oAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAABkoAAAAAAAAGSgAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					39,
-					1,
-					"insert",
-					{
-						"characters": " "
-					},
-					"AQAAAAdKAAAAAAAACEoAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAB0oAAAAAAAAHSgAAAAAAAAAAAAAAAPC/"
-				]
 			]
 		}
 	],
@@ -312,12 +242,16 @@
 	],
 	"file_history":
 	[
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/eld_consumer.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fuego_consumer.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/weighting/tfidf.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/weighting/global_schemes/idf.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/consume.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tokenizer.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/summarize.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_summarize.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/eld_consumer.py",
 		"/home/nicholas/DATA/c6-tdt/analyses/Southampton - Arsenal (ELD).json",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/algorithms/dgs.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/document.py",
@@ -326,10 +260,8 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/vector_math.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/cluster.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/objects/exportable.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fuego_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/objects/attributable.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/algorithms/temporal_no_k_means.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/consume.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/tests/test_fuego_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_participants.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_shareable.py",
@@ -437,13 +369,11 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/extrapolators/external/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/extrapolators/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/resolvers/resolver.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/postprocessors/postprocessor.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/__init__.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/attributes/extractors/tests/test_linguistic.py"
+		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/postprocessors/postprocessor.py"
 	],
 	"find":
 	{
-		"height": 44.0
+		"height": 23.0
 	},
 	"find_in_files":
 	{
@@ -460,6 +390,12 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"idf",
+			"global_schemes",
+			"scheme",
+			"storage",
+			"Storage",
+			"TF-",
 			"`.",
 			"remove_unicode_entities",
 			"emoji",
@@ -581,12 +517,6 @@
 			"attributes",
 			"4",
 			"one",
-			"ClusterNode",
-			"test_create",
-			"clusters",
-			"ClusterNode",
-			"test_create",
-			"id",
 			"ClusterNode"
 		],
 		"highlight": true,
@@ -639,51 +569,20 @@
 			[
 				{
 					"buffer": 0,
-					"file": "eventdt/twitter/__init__.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 18479,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								10964,
-								10964
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 4099.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"stack_multiselect": false,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "tools/consume.py",
+					"file": "eventdt/queues/consumers/algorithms/fuego_consumer.py",
 					"selected": true,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 48785,
+						"buffer_size": 46926,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								19001,
-								19001
+								37266,
+								37266
 							]
 						],
 						"settings":
@@ -693,7 +592,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 4513.0,
+						"translation.y": 10077.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -755,6 +654,26 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"fegoc",
+				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
+			],
+			[
+				"fuegoco",
+				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
+			],
+			[
+				"idf.py",
+				"eventdt/nlp/weighting/global_schemes/idf.py"
+			],
+			[
+				"tfidf",
+				"eventdt/nlp/weighting/tfidf.py"
+			],
+			[
+				"eldconsu",
+				"eventdt/queues/consumers/algorithms/eld_consumer.py"
+			],
 			[
 				"consume",
 				"tools/consume.py"
@@ -950,10 +869,6 @@
 			[
 				"exportable",
 				"eventdt/objects/exportable.py"
-			],
-			[
-				"eldconsu",
-				"eventdt/queues/consumers/algorithms/eld_consumer.py"
 			],
 			[
 				"testclust",
@@ -1250,22 +1165,6 @@
 			[
 				"modelersinit",
 				"eventdt/modeling/modelers/__init__.py"
-			],
-			[
-				"consum",
-				"tools/consume.py"
-			],
-			[
-				"model.py",
-				"tools/model.py"
-			],
-			[
-				"terms.",
-				"tools/terms.py"
-			],
-			[
-				"bootstra",
-				"tools/bootstrap.py"
 			]
 		],
 		"width": 0.0
