@@ -347,7 +347,7 @@ def author(tweet, user_id=None):
             return authors[str(user_id)]
     elif version(tweet) == 2:
         if 'includes' not in tweet:
-            raise KeyError("The included users must be provided in the tweet object")
+            raise KeyError("The included users are not available. Make sure to provide the original tweet as the first parameter.")
 
         authors = { user['id']: user for user in tweet['includes']['users'] }
         return authors[user_id] if user_id else authors[tweet['data']['author_id']]
