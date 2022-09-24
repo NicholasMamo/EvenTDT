@@ -1147,7 +1147,9 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             tweets = [ json.loads(tweet) for tweet in f ]
             documents = consumer._to_documents(tweets)
-            self.assertTrue(all( twitter.is_verified(tweet) == document.is_verified for tweet, document in zip(tweets, documents) ))
+            self.assertTrue(all( twitter.is_verified(tweet) == document.author_is_verified
+                                 for tweet, document in zip(tweets, documents)
+                                 if not twitter.is_retweet(tweet) ))
 
     def test_to_documents_v2_is_verified(self):
         """
@@ -1158,7 +1160,37 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
             tweets = [ json.loads(tweet) for tweet in f ]
             documents = consumer._to_documents(tweets)
-            self.assertTrue(all( twitter.is_verified(tweet) == document.is_verified for tweet, document in zip(tweets, documents) ))
+            self.assertTrue(all( twitter.is_verified(tweet) == document.author_is_verified
+                                 for tweet, document in zip(tweets, documents) 
+                                 if not twitter.is_retweet(tweet)))
+
+    def test_to_documents_is_verified_retweet(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores whether it is a verified.
+        In the case of retweets, the attribute should store whether the original author was verified.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.is_verified(tweet, user_id=twitter.user_id(twitter.original(tweet))) == document.author_is_verified
+                                 for tweet, document in zip(tweets, documents)
+                                 if twitter.is_retweet(tweet) ))
+
+    def test_to_documents_v2_is_verified_retweet(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores whether it is a verified.
+        In the case of retweets, the attribute should store whether the original author was verified.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.is_verified(tweet, user_id=twitter.user_id(twitter.original(tweet))) == document.author_is_verified
+                                 for tweet, document in zip(tweets, documents) 
+                                 if twitter.is_retweet(tweet)))
 
     def test_to_documents_ellipsis(self):
         """

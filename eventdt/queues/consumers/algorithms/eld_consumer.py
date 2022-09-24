@@ -583,6 +583,8 @@ class ELDConsumer(Consumer):
             """
             tokens = self.tokenizer.tokenize(text)
             document = item if type(item) is Document else Document(text, tokens, scheme=self.scheme)
+
+            author_id = twitter.user_id(twitter.original(tweet)) if twitter.is_retweet(tweet) else None
             document.attributes['id'] = twitter.id(tweet)
             document.attributes['version'] = twitter.version(tweet)
             document.attributes['lang'] = twitter.lang(tweet)
@@ -592,7 +594,8 @@ class ELDConsumer(Consumer):
             document.attributes['is_retweet'] = twitter.is_retweet(tweet)
             document.attributes['is_reply'] = twitter.is_reply(tweet)
             document.attributes['is_quote'] = twitter.is_quote(tweet)
-            document.attributes['is_verified'] = twitter.is_verified(tweet)
+            document.attributes['author_is_verified'] = twitter.is_verified(tweet, user_id=author_id)
+            document.attributes['author_handle'] = twitter.user_handle(tweet, user_id=author_id)
             if self.storage == StorageLevel.TWEET:
                 document.attributes['tweet'] = tweet
             document.normalize()
