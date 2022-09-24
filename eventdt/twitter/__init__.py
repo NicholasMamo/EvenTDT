@@ -447,23 +447,26 @@ def user_description(tweet, user_id=None):
 
     return author(tweet, user_id)['description']
 
-def is_verified(tweet):
+def is_verified(tweet, user_id=None):
     """
     Check whether the given tweet's author is verified.
     Verified authors have a ``verified`` key set to ``true``.
 
     .. note::
 
-        If the tweet is a retweet, the function checks whether the retweeting author is verified, not the author of the original tweet.
+        By default, if the tweet is a retweet, the function checks whether the retweeting author is verified, not whether the author of the original tweet is verified.
 
     :param tweet: The tweet to check.
     :type tweet: dict
+    :param user_id: The ID of the user to check whether is verified.
+                    Use this parameter to extract information about retweet or quote tweet authors from APIv2 tweets.
+    :type user_id: str
 
     :return: A boolean indicating whether the tweet is from a verified author.
     :rtype: bool
     """
 
-    return author(tweet)['verified']
+    return author(tweet, user_id)['verified']
 
 def expand_mentions(text, tweet):
     """

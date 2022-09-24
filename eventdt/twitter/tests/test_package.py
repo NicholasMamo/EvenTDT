@@ -2182,6 +2182,26 @@ class TestPackage(unittest.TestCase):
         if not found:
             logger.warning('Trivial test')
 
+    def test_is_verified_retweet(self):
+        """
+        Test that checking whether the author of a retweeted tweet is verified returns ``True`` only if the author is verified.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    original = twitter.original(tweet)
+                    if twitter.author(tweet, original['user']['id_str'])['verified']:
+                        found = True
+                        self.assertTrue(twitter.is_verified(tweet, original['user']['id_str']))
+                    else:
+                        self.assertFalse(twitter.is_verified(tweet, original['user']['id_str']))
+
+        if not found:
+            logger.warning('Trivial test')
+
     def test_is_verified_v2(self):
         """
         Test that when checking whether the tweet is from a verified author, the function returns ``True`` only if the author is verified.
@@ -2224,6 +2244,26 @@ class TestPackage(unittest.TestCase):
                 if not twitter.author(tweet)['verified'] and twitter.author(tweet, twitter.original(tweet)['author_id'])['verified']:
                     found = True
                     self.assertFalse(twitter.is_verified(tweet))
+
+        if not found:
+            logger.warning('Trivial test')
+
+    def test_is_verified_v2_retweet(self):
+        """
+        Test that checking whether the author of a retweeted tweet is verified returns ``True`` only if the author is verified.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    original = twitter.original(tweet)
+                    if twitter.author(tweet, original['author_id'])['verified']:
+                        found = True
+                        self.assertTrue(twitter.is_verified(tweet, original['author_id']))
+                    else:
+                        self.assertFalse(twitter.is_verified(tweet, original['author_id']))
 
         if not found:
             logger.warning('Trivial test')
