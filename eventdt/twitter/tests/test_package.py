@@ -1446,6 +1446,134 @@ class TestPackage(unittest.TestCase):
                     authors = { user['id']: user for user in tweet['includes']['users'] }
                     self.assertEqual(authors[twitter.original(tweet)['author_id']], twitter.author(tweet))
 
+    def test_user_id_normal(self):
+        """
+        Test that getting the user ID from a normal tweet simply returns the author ID.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
+                    found = True
+                    self.assertEqual(tweet['user']['id_str'], twitter.user_id(tweet))
+
+        if not found:
+            logger.warning('Trivial test: `test_user_id_normal`')
+
+    def test_user_id_reply(self):
+        """
+        Test that getting the user ID from a reply simply returns the author ID.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_reply(tweet):
+                    found = True
+                    self.assertEqual(tweet['user']['id_str'], twitter.user_id(tweet))
+
+        if not found:
+            logger.warning('Trivial test: `test_user_id_reply`')
+
+    def test_user_id_quoted(self):
+        """
+        Test that getting the user ID from a quoted tweet returns the original author's ID.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet):
+                    found = True
+                    self.assertEqual(twitter.quoted(tweet)['user']['id_str'], twitter.user_id(twitter.quoted(tweet)))
+
+        if not found:
+            logger.warning('Trivial test: `test_user_id_quote`')
+
+    def test_user_id_retweeted(self):
+        """
+        Test that getting the user ID from a retweeted tweet returns the original author's ID.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    found = True
+                    self.assertEqual(twitter.original(tweet)['user']['id_str'], twitter.user_id(twitter.original(tweet)))
+
+        if not found:
+            logger.warning('Trivial test: `test_user_id_retweeted`')
+
+    def test_user_id_v2_normal(self):
+        """
+        Test that getting the user ID from a normal tweet simply returns the author ID.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
+                    found = True
+                    self.assertEqual(tweet['data']['author_id'], twitter.user_id(tweet))
+
+        if not found:
+            logger.warning('Trivial test: `test_user_id_v2_normal`')
+
+    def test_user_id_v2_reply(self):
+        """
+        Test that getting the user ID from a reply simply returns the author ID.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_reply(tweet):
+                    found = True
+                    self.assertEqual(tweet['data']['author_id'], twitter.user_id(tweet))
+
+        if not found:
+            logger.warning('Trivial test: `test_user_id_v2_reply`')
+
+    def test_user_id_v2_quoted(self):
+        """
+        Test that getting the user ID from a quoted tweet returns the original author's ID.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_retweet(tweet) and twitter.is_quote(tweet):
+                    found = True
+                    self.assertEqual(twitter.quoted(tweet)['author_id'], twitter.user_id(twitter.quoted(tweet)))
+
+        if not found:
+            logger.warning('Trivial test: `test_user_id_v2_quote`')
+
+    def test_user_id_v2_retweeted(self):
+        """
+        Test that getting the user ID from a retweeted tweet returns the original author's ID.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    found = True
+                    self.assertEqual(twitter.original(tweet)['author_id'], twitter.user_id(twitter.original(tweet)))
+
+        if not found:
+            logger.warning('Trivial test: `test_user_id_v2_retweeted`')
+
     def test_user_favorites_returns_int(self):
         """
         Test that getting the number of user favorites returns an integer.

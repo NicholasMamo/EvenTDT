@@ -352,6 +352,23 @@ def author(tweet, user_id=None):
         authors = { user['id']: user for user in tweet['includes']['users'] }
         return authors[user_id] if user_id else authors[tweet['data']['author_id']]
 
+def user_id(tweet):
+    """
+    Extract the user ID who published the given tweet.
+    The function accepts not only original tweet objects but also quoted and original tweets.
+
+    :param tweet: The tweet whose author to extract.
+    :type tweet: dict
+
+    :return: The ID of the user who published the tweet.
+    :rtype: str
+    """
+
+    if version(tweet) == 1:
+        return tweet['user']['id_str']
+    else:
+        return tweet.get('data', tweet)['author_id']
+
 def user_favorites(tweet, user_id=None):
     """
     Get the number of tweets favorited by the author of the tweet.
