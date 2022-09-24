@@ -1574,6 +1574,138 @@ class TestPackage(unittest.TestCase):
         if not found:
             logger.warning('Trivial test: `test_user_id_v2_retweeted`')
 
+    def test_user_handle_normal(self):
+        """
+        Test that getting the user handle from a normal tweet simply returns the author handle.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
+                    found = True
+                    self.assertEqual(tweet['user']['screen_name'], twitter.user_handle(tweet))
+
+        if not found:
+            logger.warning('Trivial test: `test_user_handle_normal`')
+
+    def test_user_handle_reply(self):
+        """
+        Test that getting the user handle from a reply simply returns the author handle.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_reply(tweet):
+                    found = True
+                    self.assertEqual(tweet['user']['screen_name'], twitter.user_handle(tweet))
+
+        if not found:
+            logger.warning('Trivial test: `test_user_handle_reply`')
+
+    def test_user_handle_quoted(self):
+        """
+        Test that getting the user handle from a quoted tweet returns the original author's handle.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet):
+                    found = True
+                    self.assertEqual(twitter.quoted(tweet)['user']['screen_name'],
+                                     twitter.user_handle(tweet, twitter.user_id(twitter.quoted(tweet))))
+
+        if not found:
+            logger.warning('Trivial test: `test_user_handle_quote`')
+
+    def test_user_handle_retweeted(self):
+        """
+        Test that getting the user handle from a retweeted tweet returns the original author's handle.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    found = True
+                    self.assertEqual(twitter.original(tweet)['user']['screen_name'],
+                                     twitter.user_handle(tweet, twitter.user_id(twitter.original(tweet))))
+
+        if not found:
+            logger.warning('Trivial test: `test_user_handle_retweeted`')
+
+    def test_user_handle_v2_normal(self):
+        """
+        Test that getting the user handle from a normal tweet simply returns the author handle.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
+                    found = True
+                    self.assertEqual(twitter.author(tweet)['username'], twitter.user_handle(tweet))
+
+        if not found:
+            logger.warning('Trivial test: `test_user_handle_v2_normal`')
+
+    def test_user_handle_v2_reply(self):
+        """
+        Test that getting the user handle from a reply simply returns the author handle.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_reply(tweet):
+                    found = True
+                    self.assertEqual(twitter.author(tweet)['username'], twitter.user_handle(tweet))
+
+        if not found:
+            logger.warning('Trivial test: `test_user_handle_v2_reply`')
+
+    def test_user_handle_v2_quoted(self):
+        """
+        Test that getting the user handle from a quoted tweet returns the original author's handle.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_retweet(tweet) and twitter.is_quote(tweet):
+                    found = True
+                    self.assertEqual(twitter.author(tweet, twitter.user_id(twitter.quoted(tweet)))['username'],
+                                     twitter.user_handle(tweet, twitter.user_id(twitter.quoted(tweet))))
+
+        if not found:
+            logger.warning('Trivial test: `test_user_handle_v2_quote`')
+
+    def test_user_handle_v2_retweeted(self):
+        """
+        Test that getting the user handle from a retweeted tweet returns the original author's handle.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    found = True
+                    self.assertEqual(twitter.author(tweet, twitter.user_id(twitter.original(tweet)))['username'],
+                                     twitter.user_handle(tweet, twitter.user_id(twitter.original(tweet))))
+
+        if not found:
+            logger.warning('Trivial test: `test_user_handle_v2_retweeted`')
+
     def test_user_favorites_returns_int(self):
         """
         Test that getting the number of user favorites returns an integer.

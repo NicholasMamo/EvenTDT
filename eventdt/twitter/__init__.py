@@ -369,6 +369,27 @@ def user_id(tweet):
     else:
         return tweet.get('data', tweet)['author_id']
 
+def user_handle(tweet, user_id=None):
+    """
+    Extract the handle of the user who published the given tweet.
+    The function accepts not only original tweet objects but also quoted and original tweets.
+
+    .. note::
+
+        By default, if the tweet is a retweet, the function retrieves the number of tweets favorited by the retweeting author, not by the author of the original tweet.
+
+    :param tweet: The tweet whose user handle to extract.
+    :type tweet: dict
+
+    :return: The ID of the user who published the tweet.
+    :rtype: str
+    """
+
+    if version(tweet) == 1:
+        return author(tweet, user_id)['screen_name']
+    else:
+        return author(tweet, user_id)['username']
+
 def user_favorites(tweet, user_id=None):
     """
     Get the number of tweets favorited by the author of the tweet.
