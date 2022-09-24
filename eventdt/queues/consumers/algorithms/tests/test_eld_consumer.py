@@ -1140,7 +1140,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
 
     def test_to_documents_is_verified(self):
         """
-        Test that when creating a document from a tweet, an attribute stores whether it is a verified.
+        Test that when creating a document from a tweet, an attribute stores whether its user is verified.
         """
 
         consumer = ELDConsumer(Queue(), 60)
@@ -1153,7 +1153,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
 
     def test_to_documents_v2_is_verified(self):
         """
-        Test that when creating a document from a tweet, an attribute stores whether it is a verified.
+        Test that when creating a document from a tweet, an attribute stores whether its user is verified.
         """
 
         consumer = ELDConsumer(Queue(), 60)
@@ -1166,7 +1166,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
 
     def test_to_documents_is_verified_retweet(self):
         """
-        Test that when creating a document from a tweet, an attribute stores whether it is a verified.
+        Test that when creating a document from a tweet, an attribute stores whether its user is verified.
         In the case of retweets, the attribute should store whether the original author was verified.
         """
 
@@ -1180,7 +1180,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
 
     def test_to_documents_v2_is_verified_retweet(self):
         """
-        Test that when creating a document from a tweet, an attribute stores whether it is a verified.
+        Test that when creating a document from a tweet, an attribute stores whether its user is verified.
         In the case of retweets, the attribute should store whether the original author was verified.
         """
 
@@ -1189,6 +1189,60 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             tweets = [ json.loads(tweet) for tweet in f ]
             documents = consumer._to_documents(tweets)
             self.assertTrue(all( twitter.is_verified(tweet, user_id=twitter.user_id(twitter.original(tweet))) == document.author_is_verified
+                                 for tweet, document in zip(tweets, documents) 
+                                 if twitter.is_retweet(tweet)))
+
+    def test_to_documents_handle(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores the user's handle.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.user_handle(tweet) == document.author_handle
+                                 for tweet, document in zip(tweets, documents)
+                                 if not twitter.is_retweet(tweet) ))
+
+    def test_to_documents_v2_handle(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores the user's handle.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.user_handle(tweet) == document.author_handle
+                                 for tweet, document in zip(tweets, documents) 
+                                 if not twitter.is_retweet(tweet)))
+
+    def test_to_documents_handle(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores the user's handle.
+        In the case of retweets, the attribute should store the original author's handle.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.user_handle(tweet, user_id=twitter.user_id(twitter.original(tweet))) == document.author_handle
+                                 for tweet, document in zip(tweets, documents)
+                                 if twitter.is_retweet(tweet) ))
+
+    def test_to_documents_v2_handle(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores the user's handle.
+        In the case of retweets, the attribute should store the original author's handle.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.user_handle(tweet, user_id=twitter.user_id(twitter.original(tweet))) == document.author_handle
                                  for tweet, document in zip(tweets, documents) 
                                  if twitter.is_retweet(tweet)))
 
