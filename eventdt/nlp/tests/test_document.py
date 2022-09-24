@@ -474,6 +474,56 @@ class TestDocument(unittest.TestCase):
                 if twitter.is_retweet(tweet):
                     self.assertEqual(twitter.is_verified(tweet, user_id=twitter.user_id(twitter.original(tweet))), document.author_is_verified)
 
+    def test_from_dict_author_handle(self):
+        """
+        Test that creating a document from a dictionary saves the author's handle.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                if not twitter.is_retweet(tweet):
+                    self.assertEqual(twitter.user_handle(tweet), document.author_handle)
+
+    def test_from_dict_v2_author_handle(self):
+        """
+        Test that creating a document from a dictionary saves the author's handle.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                if not twitter.is_retweet(tweet):
+                    self.assertEqual(twitter.user_handle(tweet), document.author_handle)
+
+    def test_from_dict_author_handle_retweet(self):
+        """
+        Test that creating a document from a dictionary saves the author's handle.
+        In the case of retweets, the author attribute should refer to the original tweet's author.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(twitter.user_handle(tweet, user_id=twitter.user_id(twitter.original(tweet))), document.author_handle)
+
+    def test_from_dict_v2_author_handle_retweet(self):
+        """
+        Test that creating a document from a dictionary saves the author's handle.
+        In the case of retweets, the author attribute should refer to the original tweet's author.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(twitter.user_handle(tweet, user_id=twitter.user_id(twitter.original(tweet))), document.author_handle)
+
     def test_from_dict_with_tweet(self):
         """
         Test that creating a document from a dictionary saves the tweet as an attribute.

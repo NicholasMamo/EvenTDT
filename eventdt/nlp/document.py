@@ -125,6 +125,7 @@ class Document(Vector):
                                          'urls': twitter.urls(tweet), 'hashtags': twitter.hashtags(tweet),
                                          'is_retweet': twitter.is_retweet(tweet), 'is_reply': twitter.is_reply(tweet), 'is_quote': twitter.is_quote(tweet),
                                          'author_is_verified': twitter.is_verified(tweet, user_id=author_id),
+                                         'author_handle': twitter.user_handle(tweet, user_id=author_id),
                                          'tweet': tweet })
         if twitter.version(tweet) == 2:
             document.attributes['annotations'] = twitter.annotations(tweet)
