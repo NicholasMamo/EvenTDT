@@ -23,6 +23,7 @@ from summarization import Summary
 from summarization.timeline import Timeline
 from summarization.timeline.nodes import Node, TopicalClusterNode
 from tools import bootstrap, summarize
+import twitter
 from vsm import Vector
 from vsm.clustering import Cluster
 
@@ -727,9 +728,9 @@ class TestSummarize(unittest.TestCase):
         Test that when filtering documents with the 'VERIFIED' reporting strategy, if no documents are verified, they are all returned.
         """
 
-        documents = [ Document('a', attributes={ 'is_verified': False }),
-                      Document('b', attributes={ 'is_verified': False }),
-                      Document('c', attributes={ 'is_verified': False }) ]
+        documents = [ Document('a', attributes={ 'author_is_verified': False }),
+                      Document('b', attributes={ 'author_is_verified': False }),
+                      Document('c', attributes={ 'author_is_verified': False }) ]
         self.assertEqual(documents, summarize.filter_documents(documents, reporting=ReportingLevel.VERIFIED))
 
     def test_filter_documents_reporting_verified_no_verified_from_tweet(self):
@@ -741,16 +742,16 @@ class TestSummarize(unittest.TestCase):
         with open(file) as f:
             tweets = [ json.loads(line) for line in f ]
             documents = [ Document.from_dict(tweet) for tweet in tweets ]
-            documents = [ document for document in documents if not document.is_verified ]
+            documents = [ document for document in documents if not document.author_is_verified ]
             for document in documents:
-                del document.attributes['is_verified']
+                del document.attributes['author_is_verified']
 
             # remove duplicates
             filtered = { document.text.lower(): document for document in documents }
             documents = [ document for document in documents
                                    if document in filtered.values() ]
 
-        self.assertTrue(not any( document.is_verified for document in documents ))
+        self.assertTrue(not any( document.author_is_verified for document in documents ))
         self.assertTrue(documents)
         self.assertEqual(documents, summarize.filter_documents(documents, reporting=ReportingLevel.VERIFIED))
 
@@ -759,14 +760,14 @@ class TestSummarize(unittest.TestCase):
         Test that when filtering documents with the 'VERIFIED' reporting strategy, verified tweets are returned.
         """
 
-        documents = [ Document('a', attributes={ 'is_verified': True }),
-                      Document('b', attributes={ 'is_verified': False }),
-                      Document('c', attributes={ 'is_verified': True }) ]
+        documents = [ Document('a', attributes={ 'author_is_verified': True }),
+                      Document('b', attributes={ 'author_is_verified': False }),
+                      Document('c', attributes={ 'author_is_verified': True }) ]
         filtered = summarize.filter_documents(documents, reporting=ReportingLevel.VERIFIED)
         self.assertTrue(documents[0] in filtered)
         self.assertFalse(documents[1] in filtered)
         self.assertTrue(documents[0] in filtered)
-        self.assertTrue(all( document.is_verified for document in filtered ))
+        self.assertTrue(all( document.author_is_verified for document in filtered ))
 
     def test_filter_documents_reporting_verified_only_from_tweet(self):
         """
@@ -778,19 +779,38 @@ class TestSummarize(unittest.TestCase):
             tweets = [ json.loads(line) for line in f ]
             documents = [ Document.from_dict(tweet) for tweet in tweets ]
             for document in documents:
-                del document.attributes['is_verified']
+                del document.attributes['author_is_verified']
 
-        self.assertTrue(not any( document.is_verified for document in documents ))
-        self.assertTrue(all( document.is_verified for document in summarize.filter_documents(documents, reporting=ReportingLevel.VERIFIED) ))
+        self.assertTrue(not any( document.author_is_verified for document in documents ))
+        self.assertTrue(all( document.author_is_verified for document in summarize.filter_documents(documents, reporting=ReportingLevel.VERIFIED) ))
+
+    def test_filter_documents_reporting_verified_only_from_tweet_retweet(self):
+        """
+        Test that when filtering documents with the 'VERIFIED' reporting strategy, verified tweets are returned.
+        In the case of retweets, the original author should be judged.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', "CRYCHE-500.json")
+        with open(file) as f:
+            tweets = [ json.loads(line) for line in f ]
+            documents = [ Document.from_dict(tweet) for tweet in tweets ]
+            for document in documents:
+                del document.attributes['author_is_verified']
+
+        self.assertTrue(not any( document.author_is_verified for document in documents ))
+        filtered = summarize.filter_documents(documents, reporting=ReportingLevel.VERIFIED)
+        self.assertTrue(all( document.author_is_verified for document in filtered ))
+        self.assertTrue(all( document.author_is_verified == twitter.is_verified(document.tweet, twitter.user_id(twitter.original(document.tweet)))
+                             for document in filtered ))
 
     def test_filter_documents_reporting_verified_all_verified(self):
         """
         Test that when filtering documents with the 'VERIFIED' reporting strategy, all tweets are returned if they are all verified.
         """
 
-        documents = [ Document('a', attributes={ 'is_verified': True }),
-                      Document('b', attributes={ 'is_verified': True }),
-                      Document('c', attributes={ 'is_verified': True }) ]
+        documents = [ Document('a', attributes={ 'author_is_verified': True }),
+                      Document('b', attributes={ 'author_is_verified': True }),
+                      Document('c', attributes={ 'author_is_verified': True }) ]
         self.assertEqual(documents, summarize.filter_documents(documents, reporting=ReportingLevel.VERIFIED))
 
     def test_filter_documents_reporting_verified_all_verified_from_tweet(self):
@@ -802,16 +822,16 @@ class TestSummarize(unittest.TestCase):
         with open(file) as f:
             tweets = [ json.loads(line) for line in f ]
             documents = [ Document.from_dict(tweet) for tweet in tweets ]
-            documents = [ document for document in documents if document.is_verified ]
+            documents = [ document for document in documents if document.author_is_verified ]
             for document in documents:
-                del document.attributes['is_verified']
+                del document.attributes['author_is_verified']
 
             # remove duplicates
             filtered = { document.text.lower(): document for document in documents }
             documents = [ document for document in documents
                                    if document in filtered.values() ]
 
-        self.assertTrue(not any( document.is_verified for document in documents ))
+        self.assertTrue(not any( document.author_is_verified for document in documents ))
         self.assertTrue(documents)
         self.assertEqual(documents, summarize.filter_documents(documents, reporting=ReportingLevel.VERIFIED))
 

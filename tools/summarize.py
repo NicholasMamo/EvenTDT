@@ -628,8 +628,9 @@ def filter_documents(documents, max_documents=None, terms=None, reporting=Report
 
     # add attributes to check if the documents are retweets if they are missing
     for document in documents:
-        if (document.is_verified is None or document.is_retweet is None) and document.tweet:
-            document.attributes['is_verified'] = twitter.is_verified(document.tweet)
+        if (document.author_is_verified is None or document.is_retweet is None) and document.tweet:
+            author_id = twitter.user_id(twitter.original(document.tweet)) if twitter.is_retweet(document.tweet) else None
+            document.attributes['author_is_verified'] = twitter.is_verified(document.tweet, user_id=author_id)
             document.attributes['is_retweet'] = twitter.is_retweet(document.tweet)
 
     # in the 'ORIGINAL' reporting strategy, remove retweets unless all documents are retweets
@@ -637,8 +638,8 @@ def filter_documents(documents, max_documents=None, terms=None, reporting=Report
         documents = [ document for document in documents if not document.is_retweet ]
 
     # in the 'VERIFIED' reporting strategy, remove tweets by unverified authors unless all documents are by them
-    if reporting == ReportingLevel.VERIFIED and any( document.is_verified for document in documents ):
-        documents = [ document for document in documents if document.is_verified ]
+    if reporting == ReportingLevel.VERIFIED and any( document.author_is_verified for document in documents ):
+        documents = [ document for document in documents if document.author_is_verified ]
 
     # if the number of documents is given, sort them in ascending order of score and retain only the top ones
     scorers = [ DomainScorer(terms) ] if terms else [ ]
