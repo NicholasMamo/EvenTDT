@@ -1340,7 +1340,7 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if twitter.is_retweet(tweet):
-                    self.assertEqual(twitter.original(tweet)['user'], twitter.author(tweet, twitter.original(tweet)['user']['id_str']))
+                    self.assertEqual(twitter.original(tweet)['user'], twitter.author(tweet, twitter.user_id(twitter.original(tweet))))
 
     def test_author_retweeted_without_id(self):
         """
@@ -1362,7 +1362,7 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet):
-                    self.assertEqual(tweet['quoted_status']['user'], twitter.author(tweet, tweet['quoted_status']['user']['id_str']))
+                    self.assertEqual(tweet['quoted_status']['user'], twitter.author(tweet, twitter.user_id(twitter.quoted(tweet))))
 
     def test_author_quoted_without_id(self):
         """
@@ -1395,7 +1395,7 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 if not twitter.is_retweet(tweet):
                     authors = { user['id']: user for user in tweet['includes']['users'] }
-                    self.assertEqual(authors[tweet['data']['author_id']], twitter.author(tweet))
+                    self.assertEqual(authors[twitter.user_id(tweet)], twitter.author(tweet))
 
     def test_author_v2_retweeted(self):
         """
@@ -1407,7 +1407,7 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 if twitter.is_retweet(tweet):
                     authors = { user['id']: user for user in tweet['includes']['users'] }
-                    self.assertEqual(authors[twitter.original(tweet)['author_id']], twitter.author(tweet, twitter.original(tweet)['author_id']))
+                    self.assertEqual(authors[twitter.user_id(twitter.original(tweet))], twitter.author(tweet, twitter.user_id(twitter.original(tweet))))
 
     def test_author_v2_retweeted_without_id(self):
         """
@@ -1419,7 +1419,7 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 if twitter.is_retweet(tweet):
                     authors = { user['id']: user for user in tweet['includes']['users'] }
-                    self.assertEqual(authors[tweet['data']['author_id']], twitter.author(tweet))
+                    self.assertEqual(authors[twitter.user_id(tweet)], twitter.author(tweet))
 
     def test_author_v2_quoted(self):
         """
@@ -1431,8 +1431,8 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
                     authors = { user['id']: user for user in tweet['includes']['users'] }
-                    self.assertEqual(authors[twitter.quoted(tweet)['author_id']],
-                                     twitter.author(tweet, twitter.quoted(tweet)['author_id']))
+                    self.assertEqual(authors[twitter.user_id(twitter.quoted(tweet))],
+                                     twitter.author(tweet, twitter.user_id(twitter.quoted(tweet))))
 
     def test_author_v2_quoted_without_id(self):
         """
@@ -1444,7 +1444,7 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
                     authors = { user['id']: user for user in tweet['includes']['users'] }
-                    self.assertEqual(authors[twitter.original(tweet)['author_id']], twitter.author(tweet))
+                    self.assertEqual(authors[twitter.user_id(twitter.original(tweet))], twitter.author(tweet))
 
     def test_user_id_normal(self):
         """
@@ -1614,7 +1614,7 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
-                    self.assertEqual(twitter.author(tweet)['favourites_count'], twitter.user_favorites(tweet, twitter.author(tweet)['id']))
+                    self.assertEqual(twitter.author(tweet)['favourites_count'], twitter.user_favorites(tweet, twitter.user_id(tweet)))
 
     def test_user_favorites_retweet(self):
         """
@@ -1638,9 +1638,9 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 if twitter.is_retweet(tweet):
                     self.assertNotEqual(twitter.author(tweet)['favourites_count'],
-                                        twitter.user_favorites(tweet, twitter.original(tweet)['user']['id']))
+                                        twitter.user_favorites(tweet, twitter.user_id(twitter.original(tweet))))
                     self.assertEqual(twitter.author(twitter.original(tweet))['favourites_count'],
-                                        twitter.user_favorites(tweet, twitter.original(tweet)['user']['id']))
+                                        twitter.user_favorites(tweet, twitter.user_id(twitter.original(tweet))))
 
     def test_user_favorites_quoted(self):
         """
@@ -1653,7 +1653,7 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet):
                     self.assertEqual(twitter.author(tweet)['favourites_count'], twitter.user_favorites(tweet))
-                    if twitter.author(twitter.quoted(tweet))['id_str'] != twitter.author(tweet)['id_str']:
+                    if twitter.user_id(twitter.quoted(tweet)) != twitter.user_id(tweet):
                         found = True
                         self.assertNotEqual(twitter.quoted(tweet)['user']['favourites_count'], twitter.user_favorites(tweet))
 
@@ -1669,11 +1669,11 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet):
-                    if twitter.author(twitter.quoted(tweet))['id_str'] != twitter.author(tweet)['id_str']:
+                    if twitter.user_id(twitter.quoted(tweet)) != twitter.user_id(tweet):
                         self.assertNotEqual(twitter.author(tweet)['favourites_count'],
-                                            twitter.user_favorites(tweet, twitter.quoted(tweet)['user']['id']))
+                                            twitter.user_favorites(tweet, twitter.user_id(twitter.quoted(tweet))))
                         self.assertEqual(twitter.author(twitter.quoted(tweet))['favourites_count'],
-                                            twitter.user_favorites(tweet, twitter.quoted(tweet)['user']['id']))
+                                            twitter.user_favorites(tweet, twitter.user_id(twitter.quoted(tweet))))
 
     def test_user_statuses_returns_int(self):
         """
@@ -1715,7 +1715,7 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
-                    self.assertEqual(twitter.author(tweet)['statuses_count'], twitter.user_statuses(tweet, twitter.author(tweet)['id']))
+                    self.assertEqual(twitter.author(tweet)['statuses_count'], twitter.user_statuses(tweet, twitter.user_id(tweet)))
 
     def test_user_statuses_v2_normal_tweet(self):
         """
@@ -1737,7 +1737,7 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
-                    self.assertEqual(twitter.author(tweet)['public_metrics']['tweet_count'], twitter.user_statuses(tweet, twitter.author(tweet)['id']))
+                    self.assertEqual(twitter.author(tweet)['public_metrics']['tweet_count'], twitter.user_statuses(tweet, twitter.user_id(tweet)))
 
     def test_user_statuses_retweet(self):
         """
@@ -1761,9 +1761,9 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 if twitter.is_retweet(tweet):
                     self.assertNotEqual(twitter.author(tweet)['statuses_count'],
-                                        twitter.user_statuses(tweet, twitter.original(tweet)['user']['id']))
+                                        twitter.user_statuses(tweet, twitter.user_id(twitter.original(tweet))))
                     self.assertEqual(twitter.author(twitter.original(tweet))['statuses_count'],
-                                        twitter.user_statuses(tweet, twitter.original(tweet)['user']['id']))
+                                        twitter.user_statuses(tweet, twitter.user_id(twitter.original(tweet))))
 
     def test_user_statuses_v2_retweet(self):
         """
@@ -1789,9 +1789,9 @@ class TestPackage(unittest.TestCase):
                         continue
 
                     self.assertNotEqual(twitter.author(tweet)['public_metrics']['tweet_count'],
-                                        twitter.user_statuses(tweet, twitter.original(tweet)['author_id']))
-                    self.assertEqual(twitter.author(tweet, twitter.original(tweet)['author_id'])['public_metrics']['tweet_count'],
-                                        twitter.user_statuses(tweet, twitter.original(tweet)['author_id']))
+                                        twitter.user_statuses(tweet, twitter.user_id(twitter.original(tweet))))
+                    self.assertEqual(twitter.author(tweet, twitter.user_id(twitter.original(tweet)))['public_metrics']['tweet_count'],
+                                        twitter.user_statuses(tweet, twitter.user_id(twitter.original(tweet))))
 
     def test_user_statuses_quoted(self):
         """
@@ -1804,7 +1804,7 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet):
                     self.assertEqual(twitter.author(tweet)['statuses_count'], twitter.user_statuses(tweet))
-                    if twitter.author(twitter.quoted(tweet))['id_str'] != twitter.author(tweet)['id_str']:
+                    if twitter.user_id(twitter.quoted(tweet)) != twitter.user_id(tweet):
                         found = True
                         self.assertNotEqual(twitter.quoted(tweet)['user']['statuses_count'], twitter.user_statuses(tweet))
 
@@ -1821,14 +1821,14 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet):
-                    if twitter.author(tweet)['id'] == twitter.author(tweet, twitter.quoted(tweet)['user']['id'])['id']:
+                    if twitter.user_id(tweet) == twitter.user_id(twitter.quoted(tweet)):
                         continue
 
                     found = True
                     self.assertNotEqual(twitter.author(tweet)['statuses_count'],
-                                        twitter.user_statuses(tweet, twitter.quoted(tweet)['user']['id']))
+                                        twitter.user_statuses(tweet, twitter.user_id(twitter.quoted(tweet))))
                     self.assertEqual(twitter.author(twitter.quoted(tweet))['statuses_count'],
-                                        twitter.user_statuses(tweet, twitter.quoted(tweet)['user']['id']))
+                                        twitter.user_statuses(tweet, twitter.user_id(twitter.quoted(tweet))))
 
         if not found:
             logger.warning('Trivial test')
@@ -1843,8 +1843,8 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet):
                     self.assertEqual(twitter.author(tweet)['public_metrics']['tweet_count'], twitter.user_statuses(tweet))
-                    if not twitter.is_retweet(tweet) and twitter.quoted(tweet)['author_id'] != twitter.author(tweet)['id']:
-                        self.assertNotEqual(twitter.author(tweet, twitter.quoted(tweet)['author_id'])['public_metrics']['tweet_count'],
+                    if not twitter.is_retweet(tweet) and twitter.user_id(twitter.quoted(tweet)) != twitter.user_id(tweet):
+                        self.assertNotEqual(twitter.author(tweet, twitter.user_id(twitter.quoted(tweet)))['public_metrics']['tweet_count'],
                                             twitter.user_statuses(tweet))
 
     def test_user_statuses_v2_quoted_with_id(self):
@@ -1857,14 +1857,14 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
-                    if twitter.author(tweet) == twitter.author(tweet, twitter.quoted(tweet)['author_id']):
+                    if twitter.author(tweet) == twitter.author(tweet, twitter.user_id(twitter.quoted(tweet))):
                         continue
 
                     found = True
                     self.assertNotEqual(twitter.author(tweet)['public_metrics']['tweet_count'],
-                                        twitter.user_statuses(tweet, twitter.quoted(tweet)['author_id']))
-                    self.assertEqual(twitter.author(tweet, twitter.quoted(tweet)['author_id'])['public_metrics']['tweet_count'],
-                                        twitter.user_statuses(tweet, twitter.quoted(tweet)['author_id']))
+                                        twitter.user_statuses(tweet, twitter.user_id(twitter.quoted(tweet))))
+                    self.assertEqual(twitter.author(tweet, twitter.user_id(twitter.quoted(tweet)))['public_metrics']['tweet_count'],
+                                        twitter.user_statuses(tweet, twitter.user_id(twitter.quoted(tweet))))
 
         if not found:
             logger.warning('Trivial test')
@@ -1909,7 +1909,7 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
-                    self.assertEqual(twitter.author(tweet)['followers_count'], twitter.user_followers(tweet, twitter.author(tweet)['id']))
+                    self.assertEqual(twitter.author(tweet)['followers_count'], twitter.user_followers(tweet, twitter.user_id(tweet)))
 
     def test_user_followers_v2_normal_tweet(self):
         """
@@ -1931,7 +1931,7 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
-                    self.assertEqual(twitter.author(tweet)['public_metrics']['followers_count'], twitter.user_followers(tweet, twitter.author(tweet)['id']))
+                    self.assertEqual(twitter.author(tweet)['public_metrics']['followers_count'], twitter.user_followers(tweet, twitter.user_id(tweet)))
 
     def test_user_followers_retweet(self):
         """
@@ -1955,9 +1955,9 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 if twitter.is_retweet(tweet):
                     self.assertNotEqual(twitter.author(tweet)['followers_count'],
-                                        twitter.user_followers(tweet, twitter.original(tweet)['user']['id']))
+                                        twitter.user_followers(tweet, twitter.user_id(twitter.original(tweet))))
                     self.assertEqual(twitter.author(twitter.original(tweet))['followers_count'],
-                                        twitter.user_followers(tweet, twitter.original(tweet)['user']['id']))
+                                        twitter.user_followers(tweet, twitter.user_id(twitter.original(tweet))))
 
     def test_user_followers_v2_retweet(self):
         """
@@ -1979,13 +1979,13 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if twitter.is_retweet(tweet):
-                    if twitter.author(tweet) == twitter.author(tweet, twitter.original(tweet)['author_id']):
+                    if twitter.author(tweet) == twitter.author(tweet, twitter.user_id(twitter.original(tweet))):
                         continue
 
                     self.assertNotEqual(twitter.author(tweet)['public_metrics']['followers_count'],
-                                        twitter.user_followers(tweet, twitter.original(tweet)['author_id']))
-                    self.assertEqual(twitter.author(tweet, twitter.original(tweet)['author_id'])['public_metrics']['followers_count'],
-                                        twitter.user_followers(tweet, twitter.original(tweet)['author_id']))
+                                        twitter.user_followers(tweet, twitter.user_id(twitter.original(tweet))))
+                    self.assertEqual(twitter.author(tweet, twitter.user_id(twitter.original(tweet)))['public_metrics']['followers_count'],
+                                        twitter.user_followers(tweet, twitter.user_id(twitter.original(tweet))))
 
     def test_user_followers_quoted(self):
         """
@@ -1998,7 +1998,7 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet):
                     self.assertEqual(twitter.author(tweet)['followers_count'], twitter.user_followers(tweet))
-                    if twitter.author(twitter.quoted(tweet))['id_str'] != twitter.author(tweet)['id_str']:
+                    if twitter.user_id(twitter.quoted(tweet)) != twitter.user_id(tweet):
                         found = True
                         self.assertNotEqual(twitter.quoted(tweet)['user']['followers_count'], twitter.user_followers(tweet))
 
@@ -2015,14 +2015,14 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet):
-                    if twitter.author(tweet)['id'] == twitter.author(tweet, twitter.quoted(tweet)['user']['id'])['id']:
+                    if twitter.user_id(tweet) == twitter.user_id(twitter.quoted(tweet)):
                         continue
 
                     found = True
                     self.assertNotEqual(twitter.author(tweet)['followers_count'],
-                                        twitter.user_followers(tweet, twitter.quoted(tweet)['user']['id']))
+                                        twitter.user_followers(tweet, twitter.user_id(twitter.quoted(tweet))))
                     self.assertEqual(twitter.author(twitter.quoted(tweet))['followers_count'],
-                                        twitter.user_followers(tweet, twitter.quoted(tweet)['user']['id']))
+                                        twitter.user_followers(tweet, twitter.user_id(twitter.quoted(tweet))))
 
         if not found:
             logger.warning('Trivial test')
@@ -2037,8 +2037,8 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet):
                     self.assertEqual(twitter.author(tweet)['public_metrics']['followers_count'], twitter.user_followers(tweet))
-                    if not twitter.is_retweet(tweet) and twitter.quoted(tweet)['author_id'] != twitter.author(tweet)['id']:
-                        self.assertNotEqual(twitter.author(tweet, twitter.quoted(tweet)['author_id'])['public_metrics']['followers_count'],
+                    if not twitter.is_retweet(tweet) and twitter.user_id(twitter.quoted(tweet)) != twitter.user_id(tweet):
+                        self.assertNotEqual(twitter.author(tweet, twitter.user_id(twitter.quoted(tweet)))['public_metrics']['followers_count'],
                                             twitter.user_followers(tweet))
 
     def test_user_followers_v2_quoted_with_id(self):
@@ -2051,14 +2051,14 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
-                    if twitter.author(tweet) == twitter.author(tweet, twitter.quoted(tweet)['author_id']):
+                    if twitter.author(tweet) == twitter.author(tweet, twitter.user_id(twitter.quoted(tweet))):
                         continue
 
                     found = True
                     self.assertNotEqual(twitter.author(tweet)['public_metrics']['followers_count'],
-                                        twitter.user_followers(tweet, twitter.quoted(tweet)['author_id']))
-                    self.assertEqual(twitter.author(tweet, twitter.quoted(tweet)['author_id'])['public_metrics']['followers_count'],
-                                        twitter.user_followers(tweet, twitter.quoted(tweet)['author_id']))
+                                        twitter.user_followers(tweet, twitter.user_id(twitter.quoted(tweet))))
+                    self.assertEqual(twitter.author(tweet, twitter.user_id(twitter.quoted(tweet)))['public_metrics']['followers_count'],
+                                        twitter.user_followers(tweet, twitter.user_id(twitter.quoted(tweet))))
 
         if not found:
             logger.warning('Trivial test')
@@ -2105,7 +2105,7 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
-                    self.assertEqual(twitter.author(tweet)['description'], twitter.user_description(tweet, twitter.author(tweet)['id']))
+                    self.assertEqual(twitter.author(tweet)['description'], twitter.user_description(tweet, twitter.user_id(tweet)))
 
     def test_user_description_v2_normal_tweet(self):
         """
@@ -2127,7 +2127,7 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
-                    self.assertEqual(twitter.author(tweet)['description'], twitter.user_description(tweet, twitter.author(tweet)['id']))
+                    self.assertEqual(twitter.author(tweet)['description'], twitter.user_description(tweet, twitter.user_id(tweet)))
 
     def test_user_description_retweet(self):
         """
@@ -2154,9 +2154,9 @@ class TestPackage(unittest.TestCase):
                         continue
 
                     self.assertNotEqual(twitter.author(tweet)['description'],
-                                        twitter.user_description(tweet, twitter.original(tweet)['user']['id']))
+                                        twitter.user_description(tweet, twitter.user_id(twitter.original(tweet))))
                     self.assertEqual(twitter.author(twitter.original(tweet))['description'],
-                                        twitter.user_description(tweet, twitter.original(tweet)['user']['id']))
+                                        twitter.user_description(tweet, twitter.user_id(twitter.original(tweet))))
 
     def test_user_description_v2_retweet(self):
         """
@@ -2178,13 +2178,13 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if twitter.is_retweet(tweet):
-                    if twitter.author(tweet)['description'] == twitter.author(tweet, twitter.original(tweet)['author_id'])['description']:
+                    if twitter.author(tweet)['description'] == twitter.author(tweet, twitter.user_id(twitter.original(tweet)))['description']:
                         continue
 
                     self.assertNotEqual(twitter.author(tweet)['description'],
-                                        twitter.user_description(tweet, twitter.original(tweet)['author_id']))
-                    self.assertEqual(twitter.author(tweet, twitter.original(tweet)['author_id'])['description'],
-                                        twitter.user_description(tweet, twitter.original(tweet)['author_id']))
+                                        twitter.user_description(tweet, twitter.user_id(twitter.original(tweet))))
+                    self.assertEqual(twitter.author(tweet, twitter.user_id(twitter.original(tweet)))['description'],
+                                        twitter.user_description(tweet, twitter.user_id(twitter.original(tweet))))
 
     def test_user_description_quoted(self):
         """
@@ -2197,7 +2197,7 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet):
                     self.assertEqual(twitter.author(tweet)['description'], twitter.user_description(tweet))
-                    if twitter.author(twitter.quoted(tweet))['id_str'] != twitter.author(tweet)['id_str']:
+                    if twitter.user_id(twitter.quoted(tweet)) != twitter.user_id(tweet):
                         found = True
                         self.assertNotEqual(twitter.quoted(tweet)['user']['followers_count'], twitter.user_description(tweet))
 
@@ -2214,14 +2214,14 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet):
-                    if twitter.author(tweet)['id'] == twitter.author(tweet, twitter.quoted(tweet)['user']['id'])['id']:
+                    if twitter.user_id(tweet) == twitter.user_id(twitter.quoted(tweet)):
                         continue
 
                     found = True
                     self.assertNotEqual(twitter.author(tweet)['description'],
-                                        twitter.user_description(tweet, twitter.quoted(tweet)['user']['id']))
+                                        twitter.user_description(tweet, twitter.user_id(twitter.quoted(tweet))))
                     self.assertEqual(twitter.author(twitter.quoted(tweet))['description'],
-                                        twitter.user_description(tweet, twitter.quoted(tweet)['user']['id']))
+                                        twitter.user_description(tweet, twitter.user_id(twitter.quoted(tweet))))
 
         if not found:
             logger.warning('Trivial test')
@@ -2247,14 +2247,14 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
-                    if twitter.author(tweet)['description'] == twitter.author(tweet, twitter.quoted(tweet)['author_id'])['description']:
+                    if twitter.author(tweet)['description'] == twitter.author(tweet, twitter.user_id(twitter.quoted(tweet)))['description']:
                         continue
 
                     found = True
                     self.assertNotEqual(twitter.author(tweet)['description'],
-                                        twitter.user_description(tweet, twitter.quoted(tweet)['author_id']))
-                    self.assertEqual(twitter.author(tweet, twitter.quoted(tweet)['author_id'])['description'],
-                                        twitter.user_description(tweet, twitter.quoted(tweet)['author_id']))
+                                        twitter.user_description(tweet, twitter.user_id(twitter.quoted(tweet))))
+                    self.assertEqual(twitter.author(tweet, twitter.user_id(twitter.quoted(tweet)))['description'],
+                                        twitter.user_description(tweet, twitter.user_id(twitter.quoted(tweet))))
 
         if not found:
             logger.warning('Trivial test')
@@ -2289,7 +2289,7 @@ class TestPackage(unittest.TestCase):
                 if not twitter.is_retweet(tweet):
                     continue
 
-                if twitter.author(tweet)['verified'] and not twitter.author(tweet, twitter.original(tweet)['user']['id_str'])['verified']:
+                if twitter.author(tweet)['verified'] and not twitter.author(tweet, twitter.user_id(twitter.original(tweet)))['verified']:
                     found = True
                     self.assertTrue(twitter.is_verified(tweet))
 
@@ -2303,7 +2303,7 @@ class TestPackage(unittest.TestCase):
                 if not twitter.is_retweet(tweet):
                     continue
 
-                if not twitter.author(tweet)['verified'] and twitter.author(tweet, twitter.original(tweet)['user']['id_str'])['verified']:
+                if not twitter.author(tweet)['verified'] and twitter.author(tweet, twitter.user_id(twitter.original(tweet)))['verified']:
                     found = True
                     self.assertFalse(twitter.is_verified(tweet))
 
@@ -2321,11 +2321,11 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 if twitter.is_retweet(tweet):
                     original = twitter.original(tweet)
-                    if twitter.author(tweet, original['user']['id_str'])['verified']:
+                    if twitter.author(tweet, twitter.user_id(original))['verified']:
                         found = True
-                        self.assertTrue(twitter.is_verified(tweet, original['user']['id_str']))
+                        self.assertTrue(twitter.is_verified(tweet, twitter.user_id(original)))
                     else:
-                        self.assertFalse(twitter.is_verified(tweet, original['user']['id_str']))
+                        self.assertFalse(twitter.is_verified(tweet, twitter.user_id(original)))
 
         if not found:
             logger.warning('Trivial test')
@@ -2355,7 +2355,7 @@ class TestPackage(unittest.TestCase):
                 if not twitter.is_retweet(tweet):
                     continue
 
-                if twitter.author(tweet)['verified'] and not twitter.author(tweet, twitter.original(tweet)['author_id'])['verified']:
+                if twitter.author(tweet)['verified'] and not twitter.author(tweet, twitter.user_id(twitter.original(tweet)))['verified']:
                     found = True
                     self.assertTrue(twitter.is_verified(tweet))
 
@@ -2369,7 +2369,7 @@ class TestPackage(unittest.TestCase):
                 if not twitter.is_retweet(tweet):
                     continue
 
-                if not twitter.author(tweet)['verified'] and twitter.author(tweet, twitter.original(tweet)['author_id'])['verified']:
+                if not twitter.author(tweet)['verified'] and twitter.author(tweet, twitter.user_id(twitter.original(tweet)))['verified']:
                     found = True
                     self.assertFalse(twitter.is_verified(tweet))
 
@@ -2389,9 +2389,9 @@ class TestPackage(unittest.TestCase):
                     original = twitter.original(tweet)
                     if twitter.author(tweet, original['author_id'])['verified']:
                         found = True
-                        self.assertTrue(twitter.is_verified(tweet, original['author_id']))
+                        self.assertTrue(twitter.is_verified(tweet, twitter.user_id(original)))
                     else:
-                        self.assertFalse(twitter.is_verified(tweet, original['author_id']))
+                        self.assertFalse(twitter.is_verified(tweet, twitter.user_id(original)))
 
         if not found:
             logger.warning('Trivial test')
