@@ -118,12 +118,14 @@ class Document(Vector):
         :rtype: :class:`~vector.nlp.document.Document`
         """
 
+        author_id = twitter.user_id(twitter.original(tweet)) if twitter.is_retweet(tweet) else None
         document = Document(text=twitter.expand_mentions(twitter.text(tweet), tweet), dimensions=dimensions,
                             attributes={ 'id': twitter.id(tweet), 'version': twitter.version(tweet),
                                          'lang': twitter.lang(tweet), 'timestamp': twitter.timestamp(tweet),
                                          'urls': twitter.urls(tweet), 'hashtags': twitter.hashtags(tweet),
                                          'is_retweet': twitter.is_retweet(tweet), 'is_reply': twitter.is_reply(tweet), 'is_quote': twitter.is_quote(tweet),
-                                         'is_verified': twitter.is_verified(tweet), 'tweet': tweet })
+                                         'author_is_verified': twitter.is_verified(tweet, user_id=author_id),
+                                         'tweet': tweet })
         if twitter.version(tweet) == 2:
             document.attributes['annotations'] = twitter.annotations(tweet)
         return document

@@ -424,7 +424,7 @@ class TestDocument(unittest.TestCase):
                 document = Document.from_dict(tweet)
                 self.assertEqual(twitter.is_quote(tweet), document.is_quote)
 
-    def test_from_dict_is_verified(self):
+    def test_from_dict_author_is_verified(self):
         """
         Test that creating a document from a dictionary saves a boolean indicating whether the tweet is by a verified author.
         """
@@ -433,9 +433,10 @@ class TestDocument(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 document = Document.from_dict(tweet)
-                self.assertEqual(twitter.is_verified(tweet), document.is_verified)
+                if not twitter.is_retweet(tweet):
+                    self.assertEqual(twitter.is_verified(tweet), document.author_is_verified)
 
-    def test_from_dict_v2_is_verified(self):
+    def test_from_dict_v2_author_is_verified(self):
         """
         Test that creating a document from a dictionary saves a boolean indicating whether the tweet is by a verified author.
         """
@@ -444,7 +445,34 @@ class TestDocument(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 document = Document.from_dict(tweet)
-                self.assertEqual(twitter.is_verified(tweet), document.is_verified)
+                if not twitter.is_retweet(tweet):
+                    self.assertEqual(twitter.is_verified(tweet), document.author_is_verified)
+
+    def test_from_dict_author_is_verified_retweet(self):
+        """
+        Test that creating a document from a dictionary saves a boolean indicating whether the tweet is by a verified author.
+        In the case of retweets, the author attribute should refer to the original tweet's author.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(twitter.is_verified(tweet, user_id=twitter.user_id(twitter.original(tweet))), document.author_is_verified)
+
+    def test_from_dict_v2_author_is_verified_retweet(self):
+        """
+        Test that creating a document from a dictionary saves a boolean indicating whether the tweet is by a verified author.
+        In the case of retweets, the author attribute should refer to the original tweet's author.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(twitter.is_verified(tweet, user_id=twitter.user_id(twitter.original(tweet))), document.author_is_verified)
 
     def test_from_dict_with_tweet(self):
         """
