@@ -101,6 +101,14 @@ class Document(Vector):
         Create a document representation of the tweet in the given dict.
         The document has the full text with mentions expanded.
 
+        The function stores the tweet attributes, extracted using the :mod:`~twitter` package, as document attributes.
+
+        .. note::
+
+            The attributes distinguish between user and author attributes.
+            The two handle original tweets, replies and quoted tweets in the same way, but they handle retweets differently.
+            Attributes prefixed `user_` refer to the user who retweeted the original tweet, but those prefixed `author_` refer to the original author of the retweeted tweet.
+
         :param tweet: The dictionary representation of a tweet.
         :type tweet: dict
         :param dimensions: The document's dimensions; if not given, the document has no dimensions.
