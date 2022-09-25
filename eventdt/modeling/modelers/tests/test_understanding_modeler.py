@@ -92,7 +92,7 @@ class TestUnderstandingModeler(unittest.TestCase):
         participants = self.mock_participants()
         modeler = UnderstandingModeler(participants=participants.values())
         for participant, copy in zip(participants.values(), modeler.participants.values()):
-            self.assertEqual(participant.attributes, copy.attributes)
+            self.assertTrue(all( copy.attributes[attribute] == participant.attributes[attribute] for attribute in participant.attributes ))
 
     def test_init_saves_participants_as_dicts(self):
         """
@@ -147,6 +147,21 @@ class TestUnderstandingModeler(unittest.TestCase):
         participants = [ { 'participant': participant.name } for participant in self.mock_participants().values() ]
         modeler = UnderstandingModeler(participants=participants)
         self.assertTrue(all( Profile == type(participant) for participant in modeler.participants.values()))
+
+    def test_init_preprocesses_participants_with_types(self):
+        """
+        Test that on initialization, the class pre-processes participants and tags them with their entity types.
+        """
+
+        # convert the participants to a format similar to the participants tool's
+        participants = [ { 'participant': participant.name } for participant in self.mock_participants().values() ]
+        modeler = UnderstandingModeler(participants=participants)
+        self.assertTrue(all( participant.attributes['is_person'] == participant.is_person()
+                             for participant in modeler.participants.values() ))
+        self.assertTrue(all( participant.attributes['is_location'] == participant.is_location()
+                             for participant in modeler.participants.values() ))
+        self.assertTrue(all( participant.attributes['is_organization'] == participant.is_organization()
+                             for participant in modeler.participants.values() ))
 
     def test_init_copies_participants(self):
         """

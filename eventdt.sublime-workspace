@@ -71,6 +71,17 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "tools/summarize.py",
+			"settings":
+			{
+				"buffer_size": 34831,
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
+			]
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -231,9 +242,9 @@
 	],
 	"file_history":
 	[
+		"/home/nicholas/GitHub/EvenTDT/tools/summarize.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/eld_consumer.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/summarize.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_summarize.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tests/test_document.py",
@@ -362,7 +373,7 @@
 	],
 	"find":
 	{
-		"height": 44.0
+		"height": 23.0
 	},
 	"find_in_files":
 	{
@@ -556,6 +567,38 @@
 		{
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "tools/summarize.py",
+					"selected": true,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 34831,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								25661,
+								25668
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 6421.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"stack_multiselect": false,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -611,6 +654,10 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"summar",
+				"tools/summarize.py"
+			],
 			[
 				"twitterini",
 				"eventdt/twitter/__init__.py"
@@ -970,10 +1017,6 @@
 			[
 				"model.",
 				"tools/model.py"
-			],
-			[
-				"summar",
-				"tools/summarize.py"
 			],
 			[
 				"firecon",

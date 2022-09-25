@@ -79,6 +79,7 @@ class UnderstandingModeler(EventModeler):
     def _preprocess_participants(self, participants):
         """
         Pre-process the participants, which includes removing parentheses from their names to facilitate matching later on.
+        The function also automatically tags participants as whether representing persons, locations or organizations.
 
         :param participants: The participants that are used to understand the Who and the Where.
                              The class expects participants to be :class:`~attributes.profile.Profile` instances but also accepts a list of participants from the :mod:`~tools.participants` tool.
@@ -98,6 +99,10 @@ class UnderstandingModeler(EventModeler):
                 participants[i] = participant
 
             participant.name = nlp.remove_parentheses(participant.name).strip()
+            participant.attributes['is_person'] = participant.is_person()
+            participant.attributes['is_location'] = participant.is_location()
+            participant.attributes['is_organization'] = participant.is_organization()
+
         return { participant.name: participant for participant in participants }
 
     def who(self, node):
@@ -120,7 +125,7 @@ class UnderstandingModeler(EventModeler):
             found = [ ] # the list of participants found in this document's text
             entities = { entity: False for entity, _ in nlp.entities(document.text, netype=[ "PERSON", "ORGANIZATION", "FACILITY" ]) } # values indicate whether we could match the entity to a participant
             for participant, profile in self.participants.items():
-                if profile.is_location():
+                if profile.attributes['is_location']:
                     continue
 
                 # check for the participant's name or aliases in the text
@@ -212,7 +217,7 @@ class UnderstandingModeler(EventModeler):
             found = [ ] # the list of participants found in this document's text
             entities = { entity: False for entity, _ in nlp.entities(document.text, netype=[ "GPE", "LOCATION", "GSP" ]) } # values indicate whether we could match the entity to a participant
             for participant, profile in self.participants.items():
-                if not profile.is_location():
+                if not profile.attributes['is_location']:
                     continue
 
                 if nlp.transliterate(profile.name.lower()) in nlp.transliterate(document.text.lower()):
