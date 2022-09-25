@@ -9,12 +9,6 @@ import json
 from logger import logger
 import re
 
-unoptimized_hashing = False
-"""
-A boolean indicating whether the :class:`~objects.exportable.Exportable` class has already reported unoptimized hashing.
-This boolean is set to ``True`` after the first warning to suppress repeated warnings.
-"""
-
 class Exportable(ABC):
     """
     An abstract class of an object that can be exported as a JSON string and imported back.
@@ -24,6 +18,12 @@ class Exportable(ABC):
                 'summarization.timeline.timeline': 'summarization.timeline' }
     CLASS_PATTERN = re.compile('<class \'(.+)?\.?\'>')
     IMPORTED = { }
+
+    unoptimized_hashing = False
+    """
+    A boolean indicating whether the :class:`~objects.exportable.Exportable` class has already reported unoptimized hashing.
+    This boolean is set to ``True`` after the first warning to suppress repeated warnings.
+    """
 
     @abstractmethod
     def to_array(self):
@@ -229,8 +229,8 @@ class Exportable(ABC):
         :rtype: int
         """
 
-        if not unoptimized_hashing:
+        if not Exportable.unoptimized_hashing:
             logger.warning(f"Hashing { type(self) } with unoptimized function. Further warnings suppressed.")
-            unoptimized_hashing = True
+            Exportable.unoptimized_hashing = True
 
         return hash(json.dumps(self.to_array()))
