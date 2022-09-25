@@ -35,6 +35,7 @@ class EventModeler(ABC):
         models = [ ]
 
         for node in timeline.nodes:
+            node = self._preprocess_node(node)
             who = self.who(node)
             what = self.what(node)
             where = self.where(node)
@@ -131,6 +132,20 @@ class EventModeler(ABC):
         """
 
         pass
+
+    def _preprocess_node(self, node):
+        """
+        Pre-process the node or its documents to facilitate future processing.
+        By default, the function returns the node without making any changes.
+
+        :param node: The node to pre-process.
+        :type node: :class:`~summarization.timeline.nodes.Node`
+
+        :return: The pre-processed node.
+        :rtype: :class:`~summarization.timeline.nodes.Node`
+        """
+
+        return node
 
 class DummyEventModeler(EventModeler):
     """
