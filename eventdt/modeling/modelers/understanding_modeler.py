@@ -304,5 +304,6 @@ class UnderstandingModeler(EventModeler):
         node = node.copy()
         for document in node.get_all_documents():
             document.attributes['simplified_text'] = nlp.transliterate(document.text)
+            document.attributes['entities'] = { entity: _type for entity, _type in nlp.entities(document.text) }
 
         return node

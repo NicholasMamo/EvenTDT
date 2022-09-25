@@ -1508,7 +1508,7 @@ class TestUnderstandingModeler(unittest.TestCase):
 
     def test_preprocess_node_with_simplified_text(self):
         """
-        Test that when pre-processing a node, returns another node.
+        Test that when pre-processing a node, the function stores each document's simplified (transliterated) text as an attribute.
         """
 
         timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
@@ -1519,3 +1519,18 @@ class TestUnderstandingModeler(unittest.TestCase):
         modeler = UnderstandingModeler()
         self.assertTrue(all( nlp.transliterate(original.text) == document.simplified_text
                              for original, document in zip(timeline.nodes[0].get_all_documents(), modeler._preprocess_node(timeline.nodes[0]).get_all_documents()) ))
+
+    def test_preprocess_node_with_entities(self):
+        """
+        Test that when pre-processing a node, the function stores each document's entities as an attribute.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="He's done it! Max Verstappen wins the Grand Prix.")
+        ]))
+
+        modeler = UnderstandingModeler()
+        entities = { entity: _type for entity, _type in nlp.entities(timeline.nodes[0].get_all_documents()[0].text) }
+        node = modeler._preprocess_node(timeline.nodes[0])
+        self.assertEqual(entities, node.get_all_documents()[0].entities)
