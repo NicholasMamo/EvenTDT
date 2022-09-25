@@ -34,21 +34,22 @@ class TestClusterNode(unittest.TestCase):
         Test that the cluster node is created with no attributes.
         """
 
-        self.assertEqual({ }, ClusterNode(0).attributes)
+        self.assertEqual(1, len(ClusterNode(0).attributes))
+        self.assertEqual({ 'id' }, ClusterNode(0).attributes.keys())
 
     def test_init_with_id(self):
         """
         Test that creating a cluster node automatically creates a unique ID.
         """
 
-        self.assertTrue(ClusterNode(0).id)
+        self.assertTrue(ClusterNode(0).attributes['id'])
 
     def test_init_unique_id(self):
         """
         Test that creating a cluster node automatically creates a unique ID.
         """
 
-        ids = [ ClusterNode(0).id for i in range(100) ]
+        ids = [ ClusterNode(0).attributes['id'] for i in range(100) ]
         self.assertTrue(len(ids), len(set(ids)))
 
     def test_init_with_timestamp_zero(self):

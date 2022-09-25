@@ -36,7 +36,7 @@ class TopicalClusterNode(ClusterNode):
     :type topics: list of :class:`~vsm.vector.Vector`
     """
 
-    def __init__(self, created_at, id=None, clusters=None, topics=None, *args, **kwargs):
+    def __init__(self, created_at, clusters=None, topics=None, *args, **kwargs):
         """
         Create the node with, optionally, an initial list of :class:`~vsm.clustering.cluster.Cluster` instances and topics.
 
@@ -63,7 +63,7 @@ class TopicalClusterNode(ClusterNode):
             topics = topics or [ ]
             raise ValueError(f"The number of clusters and topics must be the same, received { len(clusters) } and { len(topics) } respectively")
 
-        super(TopicalClusterNode, self).__init__(created_at, id=id, clusters=clusters, *args, **kwargs)
+        super(TopicalClusterNode, self).__init__(created_at, clusters=clusters, *args, **kwargs)
         self.topics = topics or [ ]
 
     def add(self, cluster, topic, *args, **kwargs):
@@ -110,7 +110,6 @@ class TopicalClusterNode(ClusterNode):
         array = Node.to_array(self)
         array.update({
             'class': str(TopicalClusterNode),
-            'attributes': copy.deepcopy(self.attributes),
             'clusters': [ cluster.to_array() for cluster in self.clusters ],
             'topics': [ topic.to_array() for topic in self.topics ],
         })
@@ -140,7 +139,7 @@ class TopicalClusterNode(ClusterNode):
             cls = getattr(module, Exportable.get_class(topic.get('class')))
             topics.append(cls.from_array(topic))
 
-        return TopicalClusterNode(created_at=array.get('created_at'), id=array.get('id'), clusters=clusters, topics=topics, attributes=copy.deepcopy(array.get('attributes')))
+        return TopicalClusterNode(created_at=array.get('created_at'), clusters=clusters, topics=topics, attributes=copy.deepcopy(array.get('attributes')))
 
     @staticmethod
     def merge(created_at, *args):

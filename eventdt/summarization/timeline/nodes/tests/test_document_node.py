@@ -34,7 +34,8 @@ class TestDocumentNode(unittest.TestCase):
         Test that the document node is created with no attributes.
         """
 
-        self.assertEqual({ }, DocumentNode(0).attributes)
+        self.assertEqual(1, len(DocumentNode(0).attributes))
+        self.assertEqual({ 'id' }, DocumentNode(0).attributes.keys())
 
     def test_init_with_timestamp_zero(self):
         """
@@ -55,14 +56,14 @@ class TestDocumentNode(unittest.TestCase):
         Test that creating a cluster node automatically creates a unique ID.
         """
 
-        self.assertTrue(DocumentNode(0).id)
+        self.assertTrue(DocumentNode(0).attributes['id'])
 
     def test_init_unique_id(self):
         """
         Test that creating a cluster node automatically creates a unique ID.
         """
 
-        ids = [ DocumentNode(0).id for i in range(100) ]
+        ids = [ DocumentNode(0).attributes['id'] for i in range(100) ]
         self.assertTrue(len(ids), len(set(ids)))
 
     def test_init_with_no_documents(self):

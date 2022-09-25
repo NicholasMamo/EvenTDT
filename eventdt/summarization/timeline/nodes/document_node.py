@@ -38,7 +38,7 @@ class DocumentNode(Node):
         :type documents: None or list of :class:`~nlp.document.Document`
         """
 
-        super(DocumentNode, self).__init__(created_at, id=id, *args, **kwargs)
+        super(DocumentNode, self).__init__(created_at, *args, **kwargs)
         self.documents = documents or [ ]
 
     def add(self, documents, *args, **kwargs):
@@ -97,7 +97,6 @@ class DocumentNode(Node):
         array = Node.to_array(self)
         array.update({
             'class': str(DocumentNode),
-            'attributes': copy.deepcopy(self.attributes),
             'created_at': self.created_at,
             'documents': [ document.to_array() for document in self.documents ],
         })

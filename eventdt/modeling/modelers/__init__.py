@@ -42,7 +42,7 @@ class EventModeler(ABC):
             why = self.why(node)
             how = self.how(node)
             model = EventModel(who=who, what=what, where=where, when=when, why=why, how=how)
-            model.attributes['node_id'] = node.id
+            model.attributes['node_id'] = node.attributes['id']
             models.append(model)
 
         return models

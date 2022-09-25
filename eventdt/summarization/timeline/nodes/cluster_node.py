@@ -31,20 +31,17 @@ class ClusterNode(Node):
     :vartype clusters: list of :class:`~vsm.clustering.cluster.Cluster`
     """
 
-    def __init__(self, created_at, id=None, clusters=None, *args, **kwargs):
+    def __init__(self, created_at, clusters=None, *args, **kwargs):
         """
         Create the node with an optional initial list of :class:`~vsm.clustering.cluster.Cluster` instances.
 
         :param created_at: The timestamp when the node was created.
         :type created_at: float
-        :param id: A unique ID representing the node.
-                   If a value is not given, the node automatically assigns a UUID-4 ID.
-        :type id: str
         :param clusters: The initial list of :class:`~vsm.clustering.cluster.Cluster` instances in this node.
         :type clusters: None or list of :class:`~vsm.clustering.cluster.Cluster`
         """
 
-        super(ClusterNode, self).__init__(created_at, id=id, *args, **kwargs)
+        super(ClusterNode, self).__init__(created_at, *args, **kwargs)
         self.clusters = clusters or [ ]
 
     def add(self, cluster, *args, **kwargs):
@@ -99,7 +96,6 @@ class ClusterNode(Node):
         array = Node.to_array(self)
         array.update({
             'class': str(ClusterNode),
-            'attributes': copy.deepcopy(self.attributes),
             'clusters': [ cluster.to_array() for cluster in self.clusters ],
         })
         return array
@@ -122,7 +118,7 @@ class ClusterNode(Node):
             cls = getattr(module, Exportable.get_class(cluster.get('class')))
             clusters.append(cls.from_array(cluster))
 
-        return ClusterNode(created_at=array.get('created_at'), id=array.get('id'), clusters=clusters, attributes=copy.deepcopy(array.get('attributes')))
+        return ClusterNode(created_at=array.get('created_at'), clusters=clusters, attributes=copy.deepcopy(array.get('attributes')))
 
     @staticmethod
     def merge(created_at, *args):

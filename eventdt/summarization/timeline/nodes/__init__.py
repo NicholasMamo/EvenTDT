@@ -8,6 +8,7 @@ Both functions accept the same input, regardless if they do not use all of it.
 """
 
 from abc import ABC, abstractmethod
+import copy
 import os
 import sys
 import time
@@ -41,26 +42,23 @@ class Node(Exportable, Attributable):
 
     :ivar created_at: The timestamp when the node was created.
     :vartype created_at: float
-    :ivar id: A unique ID representing the node.
-              The ID, a UUID-4 string, helps link summaries and models to nodes.
-    :vartype id: str
     """
 
-    def __init__(self, created_at, id=None, *args, **kwargs):
+    def __init__(self, created_at, *args, **kwargs):
         """
         Create the node with the given timestamp.
         Attributes can be provided as keyword arguments.
 
         :param created_at: The timestamp when the node was created.
         :type created_at: float
-        :param id: A unique ID representing the node.
-                   If a value is not given, the node automatically assigns a UUID-4 ID.
-        :type id: str
+        :param node_id: A unique ID representing the node.
+                        If a value is not given, the node automatically assigns a UUID-4 ID.
+        :type node_id: str
         """
 
         super(Node, self).__init__(*args, **kwargs)
         self.created_at = created_at
-        self.id = id or str(uuid.uuid4())
+        self.attributes['id'] = self.attributes.get('id', str(uuid.uuid4()))
 
     @abstractmethod
     def add(self, *args, **kwargs):
@@ -127,7 +125,7 @@ class Node(Exportable, Attributable):
         return {
             'class': str(Node),
             'created_at': self.created_at,
-            'id': self.id,
+            'attributes': copy.deepcopy(self.attributes),
         }
 
     @staticmethod
