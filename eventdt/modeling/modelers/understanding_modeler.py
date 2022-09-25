@@ -288,3 +288,21 @@ class UnderstandingModeler(EventModeler):
             participant.attributes['is_organization'] = participant.is_organization()
 
         return { participant.name: participant for participant in participants }
+
+    def _preprocess_node(self, node):
+        """
+        Pre-process the node's documents to optimize future modeling.
+        The function creates a transliterated version of documents.
+
+        :param node: The node to pre-process.
+        :type node: :class:`~summarization.timeline.nodes.Node`
+
+        :return: The pre-processed node.
+        :rtype: :class:`~summarization.timeline.nodes.Node`
+        """
+
+        node = node.copy()
+        for document in node.get_all_documents():
+            document.attributes['simplified_text'] = nlp.transliterate(document.text)
+
+        return node

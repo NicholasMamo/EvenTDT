@@ -1477,3 +1477,45 @@ class TestUnderstandingModeler(unittest.TestCase):
         modeler = UnderstandingModeler()
         models = modeler.model(timeline)
         self.assertTrue(all( model.when[0] == node.created_at for model, node in zip(models, timeline.nodes) ))
+
+    def test_preprocess_node_all_documents(self):
+        """
+        Test that when pre-processing a node, the function creates a copy.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="He's done it! Max Verstappen wins the Grand Prix.")
+        ]))
+
+        modeler = UnderstandingModeler()
+        self.assertNotEqual(timeline.nodes[0], modeler._preprocess_node(timeline.nodes[0]))
+        self.assertTrue(all( original != document for original, document in zip(timeline.nodes[0].get_all_documents(), modeler._preprocess_node(timeline.nodes[0]).get_all_documents()) ))
+        self.assertNotEqual(timeline.nodes[0], modeler._preprocess_node(timeline.nodes[0]))
+
+    def test_preprocess_node_returns_node(self):
+        """
+        Test that when pre-processing a node, the function returns another node.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="He's done it! Max Verstappen wins the Grand Prix.")
+        ]))
+
+        modeler = UnderstandingModeler()
+        self.assertEqual(type(timeline.nodes[0]), type(modeler._preprocess_node(timeline.nodes[0])))
+
+    def test_preprocess_node_with_simplified_text(self):
+        """
+        Test that when pre-processing a node, returns another node.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="He's done it! Max Verstappen wins the Grand Prix.")
+        ]))
+
+        modeler = UnderstandingModeler()
+        self.assertTrue(all( nlp.transliterate(original.text) == document.simplified_text
+                             for original, document in zip(timeline.nodes[0].get_all_documents(), modeler._preprocess_node(timeline.nodes[0]).get_all_documents()) ))
