@@ -94,7 +94,8 @@ class UnderstandingModeler(EventModeler):
         freq = { } # the document frequency of each participant
         for document in node.get_all_documents():
             found = [ ] # the list of participants found in this document's text
-            entities = { entity: False for entity, _ in nlp.entities(document.text, netype=[ "PERSON", "ORGANIZATION", "FACILITY" ]) } # values indicate whether we could match the entity to a participant
+            entities = { entity: False for entity, netype in document.entities.items()
+                                       if netype in [ "PERSON", "ORGANIZATION", "FACILITY" ] } # values indicate whether we could match the entity to a participant
             for participant, profile in self.participants.items():
                 if profile.attributes['is_location']:
                     continue
@@ -186,7 +187,8 @@ class UnderstandingModeler(EventModeler):
         freq = { } # the document frequency of each participant
         for document in node.get_all_documents():
             found = [ ] # the list of participants found in this document's text
-            entities = { entity: False for entity, _ in nlp.entities(document.text, netype=[ "GPE", "LOCATION", "GSP" ]) } # values indicate whether we could match the entity to a participant
+            entities = { entity: False for entity, netype in document.entities.items()
+                                       if netype in [ "GPE", "LOCATION", "GSP" ] } # values indicate whether we could match the entity to a participant
             for participant, profile in self.participants.items():
                 if not profile.attributes['is_location']:
                     continue
