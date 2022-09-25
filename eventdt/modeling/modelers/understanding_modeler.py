@@ -100,8 +100,8 @@ class UnderstandingModeler(EventModeler):
                     continue
 
                 # check for the participant's name or aliases in the text
-                if (nlp.transliterate(profile.name.lower()) in nlp.transliterate(document.text.lower()) or
-                    any( nlp.transliterate(reference.lower()) in nlp.transliterate(document.text.lower()) for reference in profile.attributes.get('known_as', [ ]) )):
+                if (nlp.transliterate(profile.name.lower()) in document.simplified_text.lower() or
+                    any( nlp.transliterate(reference.lower()) in document.simplified_text.lower() for reference in profile.attributes.get('known_as', [ ]) )):
                     found.append(participant)
 
                 # check for entities that are subsets of the entity or its aliases
@@ -191,7 +191,7 @@ class UnderstandingModeler(EventModeler):
                 if not profile.attributes['is_location']:
                     continue
 
-                if nlp.transliterate(profile.name.lower()) in nlp.transliterate(document.text.lower()):
+                if nlp.transliterate(profile.name.lower()) in document.simplified_text.lower():
                     found.append(participant)
 
                 # check for entities that are subsets of the entity or its aliases
