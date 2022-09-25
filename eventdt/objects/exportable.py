@@ -6,7 +6,14 @@ from abc import ABC, abstractmethod
 import copy
 import importlib
 import json
+from logger import logger
 import re
+
+unoptimized_hashing = False
+"""
+A boolean indicating whether the :class:`~objects.exportable.Exportable` class has already reported unoptimized hashing.
+This boolean is set to ``True`` after the first warning to suppress repeated warnings.
+"""
 
 class Exportable(ABC):
     """
@@ -221,5 +228,9 @@ class Exportable(ABC):
         :return: An intenger representation of the Exportable instance.
         :rtype: int
         """
+
+        if not unoptimized_hashing:
+            logger.warning(f"Hashing { type(self) } with unoptimized function. Further warnings suppressed.")
+            unoptimized_hashing = True
 
         return hash(json.dumps(self.to_array()))
