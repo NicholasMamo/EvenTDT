@@ -1534,3 +1534,117 @@ class TestUnderstandingModeler(unittest.TestCase):
         entities = { entity: _type for entity, _type in nlp.entities(timeline.nodes[0].get_all_documents()[0].text) }
         node = modeler._preprocess_node(timeline.nodes[0])
         self.assertEqual(entities, node.get_all_documents()[0].entities)
+
+    def test_split_keeps_mentions(self):
+        """
+        Test that splitting the text retains mentions.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertEqual([ 'Well', 'done', 'ElfaDosInsetos' ],
+                         modeler._split("Well done, @ElfaDosInsetos"))
+
+    def test_split_keeps_hashtags(self):
+        """
+        Test that splitting the text retains hashtags.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertEqual([ 'Well', 'done', 'elfadosinsetos' ],
+                         modeler._split("Well done, #elfadosinsetos"))
+
+    def test_split_keeps_hashtags_whole(self):
+        """
+        Test that splitting the text retains hashtags whole, without splitting them.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertEqual([ 'Well', 'done', 'ElfaDosInsetos' ],
+                         modeler._split("Well done, #ElfaDosInsetos"))
+
+    def test_split_does_not_normalize_words(self):
+        """
+        Test that splitting the text does not normalize repeated characters.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertEqual([ 'Goooool' ],
+                         modeler._split("Goooool"))
+
+    def test_split_does_not_case_fold(self):
+        """
+        Test that splitting the text does not case-fold the text.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertEqual([ 'Four', 'of', 'Virgil', 'van', 'Dijk', 's', 'six', 'goals', 'for', 'the', 'Netherlands', 'were', 'headers', 'from', 'corners' ],
+                         modeler._split("Four of Virgil van Dijk’s six goals for the Netherlands were headers from corners"))
+
+    def test_split_keeps_stopwords(self):
+        """
+        Test that splitting the text keeps stopwords.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertEqual([ 'Four', 'of', 'Virgil', 'van', 'Dijk', 's', 'six', 'goals', 'for', 'the', 'Netherlands', 'were', 'headers', 'from', 'corners' ],
+                         modeler._split("Four of Virgil van Dijk’s six goals for the Netherlands were headers from corners"))
+
+    def test_split_keeps_accents(self):
+        """
+        Test that splitting the text keeps accents.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertEqual([ 'Federer', 's', 'class', 'unmatched', 'says', 'Björn', 'Borg' ],
+                         modeler._split("Federer's class unmatched, says Björn Borg"))
+
+    def test_split_keeps_short_tokens(self):
+        """
+        Test that splitting the text keeps short words.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertEqual([ 'Lacazette', 'named', 'a', 'man', 'of', 'the', 'match' ],
+                         modeler._split("Lacazette named a man of the match"))
+
+    def test_split_does_not_stem(self):
+        """
+        Test that splitting the text does not stem them.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertEqual([ 'The', 'Mexican', 'army', 's', 'role', 'in', 'the', 'disappearance', 'of', '43', 'college', 'students' ],
+                         modeler._split("The Mexican army’s role in the disappearance of 43 college students"))
+
+    def test_split_keeps_numbers(self):
+        """
+        Test that splitting the text retains numbers.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertEqual([ 'Uganda', 's', 'Ebola', 'caseload', 'rises', 'to', '16', 'as', 'outbreak', 'spreads' ],
+                         modeler._split("Uganda’s Ebola caseload rises to 16 as outbreak spreads"))
+
+    def test_split_removes_punctuation(self):
+        """
+        Test that splitting the text also removes all punctuation.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertEqual([ 'Bodies', 'everywhere', 'Survivors', 'recount', 'Lebanon', 'boat', 'disaster' ],
+                         modeler._split("‘Bodies everywhere’: Survivors recount Lebanon boat disaster."))
+
+        self.assertEqual([ 'Wales', '0', '1', 'Poland', 'A', 'moment', 'of', 'class', 'from', 'Poland', 'won', 'the', 'game', 'in', 'what', 'was', 'an', 'even', 'battle' ],
+                         modeler._split("Wales 0-1 Poland: A moment of class from Poland won the game in what was an even battle."))
+
+        self.assertEqual([ 'Russia', 'sought', 'to', 'defend', 'its', 'seven', 'month', 'old', 'war', 'at', 'the', 'UN', 'with', 'Foreign', 'Minister', 'Sergei', 'Lavrov', 'saying', 'that', 'regions', 'of', 'Ukraine', 'where', 'widely', 'derided', 'referendums', 'are', 'being', 'held', 'would', 'be', 'under', 'Russia', 's', 'full', 'protection', 'if', 'annexed', 'by', 'Moscow' ],
+                         modeler._split("Russia sought to defend its seven-month old war at the UN, with Foreign Minister Sergei Lavrov saying that regions of Ukraine where widely-derided referendums are being held would be under Russia's 'full protection' if annexed by Moscow"))
+
+    def test_split_separates_possessives(self):
+        """
+        Test that splitting the text also separates possessives.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertEqual([ 'what', 's', 'pissing', 'me', 'off', 'right', 'now' ],
+                         modeler._split("what's pissing me off right now"))

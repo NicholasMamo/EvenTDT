@@ -309,3 +309,26 @@ class UnderstandingModeler(EventModeler):
             document.attributes['entities'] = { entity: _type for entity, _type in nlp.entities(document.text) }
 
         return node
+
+    def _split(self, text):
+        """
+        Split the given text into tokens.
+        The function uses a minimal tokenizer with the aim of creating as many tokens as possible with as high a fidelity to the original text as possible.
+
+        .. note::
+
+            The function retains mentions and hashtags but removes the '@' and '#' symbols.
+
+        :param text: The text to tokenize.
+        :type text: str
+
+        :return: The tokenized text.
+        :rtype: list of str
+        """
+
+        tokenizer = nlp.Tokenizer(remove_mentions=False, remove_hashtags=False, split_hashtags=False,
+                                  normalize_words=False, case_fold=False, remove_punctuation=True,
+                                  remove_unicode_entities=False, min_length=1, stem=False,
+                                  remove_numbers=False, normalize_special_characters=False)
+
+        return tokenizer.tokenize(text)
