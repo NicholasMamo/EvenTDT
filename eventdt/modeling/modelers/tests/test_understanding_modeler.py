@@ -486,6 +486,21 @@ class TestUnderstandingModeler(unittest.TestCase):
         self.assertEqual({ 'Max Verstappen', 'George Russell' },
                          { participant.name for participant in models[0].who })
 
+    def test_who_whole_word(self):
+        """
+        Test that identifying the Who only checks against whole words.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Imagine FIAT racing here."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertFalse(models[0].who)
+
     def test_who_checks_known_as(self):
         """
         Test that identifying the Who also uses the `known_as` attribute if it exists.
@@ -515,6 +530,21 @@ class TestUnderstandingModeler(unittest.TestCase):
         modeler = UnderstandingModeler(participants=participants.values())
         models = modeler.model(timeline)
         self.assertEqual({ 'Carlos Sainz Jr.' }, { participant.name for participant in models[0].who })
+
+    def test_who_checks_known_as_whole_word(self):
+        """
+        Test that identifying the Who's aliases only checks against whole words.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Imagine Carlos Sainzo racing here."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertFalse(models[0].who)
 
     def test_who_known_as_like_name(self):
         """
@@ -628,6 +658,22 @@ class TestUnderstandingModeler(unittest.TestCase):
         modeler = UnderstandingModeler(participants=participants.values())
         models = modeler.model(timeline)
         self.assertEqual({ 'Sainz' }, { participant.name for participant in models[0].who })
+
+    def test_who_entity_subset_whole_word(self):
+        """
+        Test that identifying the Who only checks against whole words.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Could you imagine Carl racing here."),
+        ]))
+
+        self.assertTrue(('Carl', 'PERSON') in nlp.entities(timeline.nodes[0].get_all_documents()[0].text, [ "PERSON" ]))
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertFalse(models[0].who)
 
     def test_who_with_ner(self):
         """
@@ -1295,6 +1341,21 @@ class TestUnderstandingModeler(unittest.TestCase):
         self.assertEqual({ 'Montreal', 'Canada' },
                          { participant.name for participant in models[0].where })
 
+    def test_where_whole_word(self):
+        """
+        Test that identifying the Where only checks against whole words.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Plenty of Montrealers here for the Grand Prix."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertFalse(models[0].where)
+
     def test_where_rejects_persons(self):
         """
         Test that identifying the Where rejects persons.
@@ -1372,6 +1433,22 @@ class TestUnderstandingModeler(unittest.TestCase):
         modeler = UnderstandingModeler(participants=participants.values())
         models = modeler.model(timeline)
         self.assertEqual({ 'Circuit de Monaco' }, { participant.name for participant in models[0].where })
+
+    def test_where_entity_subset_whole_word(self):
+        """
+        Test that identifying the Where only checks against whole words.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="We're off for the race in Hungar."),
+        ]))
+
+        self.assertTrue(('Hungar', 'GPE') in nlp.entities(timeline.nodes[0].get_all_documents()[0].text, [ "GPE" ]))
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertFalse(models[0].where)
 
     def test_where_with_ner(self):
         """
