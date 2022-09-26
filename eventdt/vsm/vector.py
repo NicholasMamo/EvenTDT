@@ -149,3 +149,14 @@ class Vector(Attributable, Exportable):
 
         return Vector(dimensions=copy.deepcopy(array.get('dimensions')),
                       attributes=copy.deepcopy(array.get('attributes')))
+
+    def __repr__(self):
+        """
+        Get a string representation of the vector's dimensions.
+
+        :return: A string representation of the vector.
+        :rtype: str
+        """
+
+        return '; '.join( f"{ dimension }: { round(self.dimensions[dimension], 2) }"
+                          for dimension in sorted(self.dimensions, key=self.dimensions.get, reverse=True) )
