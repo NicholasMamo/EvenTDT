@@ -261,7 +261,7 @@ class Tokenizer(object):
         if self.pos:
             tokens = self._pos(text)
         else:
-            text = ''.join([ char if char not in string.punctuation + '’' else ' ' for char in text ]) if self.remove_punctuation else text
+            text = ''.join([ char if char not in string.punctuation + '’' + '‘' else ' ' for char in text ]) if self.remove_punctuation else text
             tokens = self.tokenize_pattern.split(text)
 
         """
