@@ -194,14 +194,17 @@ class UnderstandingModeler(EventModeler):
                 if not profile.attributes['is_location']:
                     continue
 
-                if self._matches(nlp.transliterate(profile.name.lower()), document.simplified_text.lower()):
+                # check for the participant's name or aliases in the text
+                if any( self._matches(nlp.transliterate(reference.lower()), document.simplified_text.lower())
+                        for reference in [ profile.name ] + list(profile.attributes.get('known_as', [ ])) ):
                     found.append(participant)
 
                 # check for entities that are subsets of the entity or its aliases
                 for entity in entities:
-                    if self._matches(nlp.transliterate(entity.lower()), nlp.transliterate(profile.name.lower())):
+                    if any( self._matches(nlp.transliterate(entity.lower()), nlp.transliterate(reference.lower()))
+                            for reference in [ profile.name ] + list(profile.attributes.get('known_as', [ ])) ):
                         found.append(participant)
-                        entities[entity] = True
+                        entities[entity] = True # mark the entity as having been matched to a participant
 
             # handle other common named entities that appear in the text but do not match a participant
             for entity, matched in entities.items():
