@@ -6,6 +6,7 @@ The class applies that understanding to model events.
 
 import json
 import os
+import re
 import sys
 
 path = os.path.join(os.path.dirname(__file__), '..', '..')
@@ -309,6 +310,27 @@ class UnderstandingModeler(EventModeler):
             document.attributes['entities'] = { entity: _type for entity, _type in nlp.entities(document.text) }
 
         return node
+
+    def _matches(self, reference, text):
+        """
+        Check whether the given reference is found in the given text.
+        The function looks for whole-world matches but does not perform case-folding.
+
+        :param reference: A string, normally a named entity or a participant's name.
+                          The reference can include multiple words.
+        :type reference: str
+        :param text: The text in which to look for the reference.
+                     The text can be a tweet, but it can also be another entity.
+        :type text: str
+
+        :return: A boolean indicating whether the reference appears in the text.
+        :rtype: bool
+        """
+
+        if not reference: # empty references never match
+            return False
+
+        return re.search(rf"\b{ reference }\b", text) is not None
 
     def _split(self, text):
         """

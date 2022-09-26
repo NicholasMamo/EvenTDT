@@ -1535,6 +1535,79 @@ class TestUnderstandingModeler(unittest.TestCase):
         node = modeler._preprocess_node(timeline.nodes[0])
         self.assertEqual(entities, node.get_all_documents()[0].entities)
 
+    def test_matches_empty_reference(self):
+        """
+        Test that an empty reference matches no text.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertFalse(modeler._matches('', "He's done it! Max Verstappen wins the Grand Prix."))
+
+    def test_matches_empty_text(self):
+        """
+        Test that a reference never matches empty text.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertFalse(modeler._matches('Max Verstappen', ""))
+
+    def test_matches_returns_bool(self):
+        """
+        Test that matches always return True or False.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertEqual(bool, type(modeler._matches('Gasly', "He's done it! Max Verstappen wins the Grand Prix.")))
+        self.assertEqual(bool, type(modeler._matches('Verstappen', "He's done it! Max Verstappen wins the Grand Prix.")))
+
+    def test_matches_start(self):
+        """
+        Test that matches in the beginning return True.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertTrue(modeler._matches('Max', "Max Verstappen wins the Grand Prix."))
+
+    def test_matches_middle(self):
+        """
+        Test that matches in the middle return True.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertTrue(modeler._matches('Verstappen', "Max Verstappen wins the Grand Prix."))
+
+    def test_matches_end(self):
+        """
+        Test that matches in the end return True.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertTrue(modeler._matches('Prix', "Max Verstappen wins the Grand Prix"))
+
+    def test_matches_whole_words(self):
+        """
+        Test that matches only perform whole-word searches.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertFalse(modeler._matches('Vers', "Max Verstappen wins the Grand Prix."))
+
+    def test_matches_whole_words_multiple(self):
+        """
+        Test that matches may include multiple words.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertTrue(modeler._matches('Max Verstappen', "Max Verstappen wins the Grand Prix."))
+
+    def test_matches_next_to_punctuation(self):
+        """
+        Test that punctuation is considered a word boundary when looking for matches.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertTrue(modeler._matches('Grand Prix', "Max Verstappen wins the Grand Prix!"))
+
     def test_split_keeps_mentions(self):
         """
         Test that splitting the text retains mentions.
