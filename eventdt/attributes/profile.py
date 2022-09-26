@@ -231,3 +231,13 @@ class Profile(Attributable, Exportable):
             _str += f"    { attribute }: { str(value) }\n"
 
         return _str
+
+    def __repr__(self):
+        """
+        Get a concise string representation of the profile.
+
+        :return: A string representation of the profile.
+        :rtype: str
+        """
+
+        return self.name
