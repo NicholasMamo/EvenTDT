@@ -219,18 +219,3 @@ class Exportable(ABC):
 
         path = Exportable.CLASS_PATTERN.findall(cls)[0].split('.')
         return path[-1]
-
-    def __hash__(self):
-        """
-        Create an immutable hash of the Exportable instance.
-        The function converts the object to an array, creates a JSON representation of it, and then hashes the string.
-
-        :return: An intenger representation of the Exportable instance.
-        :rtype: int
-        """
-
-        if not Exportable.unoptimized_hashing:
-            logger.warning(f"Hashing { type(self) } with unoptimized function. Further warnings suppressed.")
-            Exportable.unoptimized_hashing = True
-
-        return hash(json.dumps(self.to_array()))
