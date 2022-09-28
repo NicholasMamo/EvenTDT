@@ -51,6 +51,17 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         consumer = FUEGOConsumer(Queue(), name=name)
         self.assertEqual(name, str(consumer))
 
+    def test_init_tracking(self):
+        """
+        Test that on initialization, the tracking variable is saved.
+        """
+
+        consumer = FUEGOConsumer(Queue(), tracking=90)
+        self.assertEqual(90, consumer.tracking)
+
+        consumer = FUEGOConsumer(Queue(), tracking=300)
+        self.assertEqual(300, consumer.tracking)
+
     def test_init_queue(self):
         """
         Test that when creating a consumer, the class saves the queue.

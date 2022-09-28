@@ -73,6 +73,8 @@ class FUEGOConsumer(Consumer):
     :vartype correlations: :class:`~tdt.nutrition.memory.MemoryNutritionStore`
     :ivar tdt: The TDT algorithm used by the consumer to detect and track bursty terms.
     :vartype tdt: :class:`~tdt.algorithms.eld.SlidingELD`
+    :ivar tracking: The life-span of a node (in seconds), during which time newly-created nodes automatically absorb all topics.
+    :vartype tracking: int
     :ivar burst_start: The minimum burst value to consider a term to be bursty.
                        This value is applied to terms that are known to find new bursty terms during detection.
                        If the burst of a term is above this value, the consumer considers it to be bursty.
@@ -100,7 +102,7 @@ class FUEGOConsumer(Consumer):
     """
 
     def __init__(self, queue, scheme=None, damping=0.5,
-                 window_size=60, windows=5, burst_start=0.5, burst_end=0.2, min_volume=15,
+                 window_size=60, windows=5, tracking=90, burst_start=0.5, burst_end=0.2, min_volume=15,
                  threshold=DynamicThreshold.MEAN, filtering=FilteringLevel.STRICT, reporting=ReportingLevel.ALL,
                  storage=StorageLevel.TWEET, verbose=True, *args, **kwargs):
         """
@@ -119,6 +121,8 @@ class FUEGOConsumer(Consumer):
         :type window_size: int
         :param windows: The number of sliding time windows to use when detecting or tracking bursty terms.
         :type windows: int
+        :param tracking: The life-span of a node (in seconds), during which time newly-created nodes automatically absorb all topics.
+        :type tracking: int
         :param burst_start: The minimum burst value to consider a term to be bursty.
                             This value is applied to terms that are known to find new bursty terms during detection.
                             If the burst of a term is above this value, the consumer considers it to be bursty.
@@ -172,6 +176,7 @@ class FUEGOConsumer(Consumer):
         self.nutrition = MemoryNutritionStore()
         self.correlations = MemoryNutritionStore()
         self.tdt = SlidingELD(self.nutrition, window_size=window_size, windows=windows)
+        self.tracking = tracking
         self.burst_start, self.burst_end = burst_start, burst_end
         self.min_volume = min_volume
         self.threshold = threshold
