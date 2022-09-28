@@ -40,6 +40,17 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         consumer = ELDConsumer(Queue(), 10, name=name)
         self.assertEqual(name, str(consumer))
 
+    def test_init_tracking(self):
+        """
+        Test that on initialization, the tracking variable is saved.
+        """
+
+        consumer = ELDConsumer(Queue(), tracking=90)
+        self.assertEqual(90, consumer.tracking)
+
+        consumer = ELDConsumer(Queue(), tracking=300)
+        self.assertEqual(300, consumer.tracking)
+
     def test_init_filtering(self):
         """
         Test setting the type of filtering level when creating a consumer.

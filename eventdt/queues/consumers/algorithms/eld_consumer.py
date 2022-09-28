@@ -92,8 +92,10 @@ class ELDConsumer(Consumer):
 
     Summarization uses the :class:`~summarization.algorithms.dgs.DGS` algorithm, which was developed as part of ELD.
 
-    :ivar window_size: The size of the window after which checkpoints are created.
+    :ivar window_size: The size of the window (in seconds) after which checkpoints are created.
     :vartype window_size: int
+    :ivar tracking: The life-span of a node (in seconds), during which time newly-created nodes automatically absorb all topics.
+    :vartype tracking: int
     :ivar ~.scheme: The term-weighting scheme used to create documents.
     :vartype ~.scheme: :class:`~nlp.weighting.TermWeightingScheme`
     :ivar min_size: The minimum size of a cluster to be considered valid.
@@ -142,7 +144,7 @@ class ELDConsumer(Consumer):
     :vartype storage: :class:`~queues.consumers.algorithms.StorageLevel`
     """
 
-    def __init__(self, queue, window_size=30, scheme=None,
+    def __init__(self, queue, window_size=30, tracking=90, scheme=None,
                  threshold=0.5, freeze_period=20, min_size=3, cooldown=1, max_intra_similarity=0.8,
                  sets=10, min_burst=0.5, log_nutrition=False, filtering=FilteringLevel.STRICT, reporting=ReportingLevel.ALL,
                  storage=StorageLevel.TWEET, verbose=True, *args, **kwargs):
@@ -161,6 +163,8 @@ class ELDConsumer(Consumer):
         :type queue: :class:`~queues.Queue`
         :param window_size: The size of the window after which checkpoints are created.
         :type window_size: int
+        :param tracking: The life-span of a node (in seconds), during which time newly-created nodes automatically absorb all topics.
+        :type tracking: int
         :param scheme: The term-weighting scheme that is used to create dimensions.
                        If ``None`` is given, the :class:`~nlp.weighting.tf.TF` term-weighting scheme is used.
         :type scheme: None or :class:`~nlp.weighting.TermWeightingScheme`
@@ -202,6 +206,7 @@ class ELDConsumer(Consumer):
         super(ELDConsumer, self).__init__(queue, *args, **kwargs)
 
         self.window_size = window_size
+        self.tracking = tracking
         self.scheme = scheme
         self.sets = sets
         self.min_size = min_size
