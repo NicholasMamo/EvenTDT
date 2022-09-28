@@ -413,7 +413,7 @@ class TestConsume(unittest.TestCase):
         """
         consumer = consume.create_consumer(FIREConsumer, Queue(), scheme=scheme, min_size=5, min_burst=0.1, window_size=900,
                                            max_intra_similarity=0.9, periodicity=20, min_volume=50, threshold=0.8,
-                                           burst_start=0.7, burst_end=0.4, log_nutrition=True,)
+                                           burst_start=0.7, burst_end=0.4, log_nutrition=True, tracking=300)
         self.assertEqual(5, consumer.min_size)
         self.assertEqual(20, consumer.periodicity)
         self.assertEqual(scheme, consumer.scheme)
@@ -425,12 +425,13 @@ class TestConsume(unittest.TestCase):
         consumer = consume.create_consumer(ELDConsumer, Queue(), scheme=scheme, min_size=5, min_burst=0.1, window_size=900,
                                            max_intra_similarity=0.9, periodicity=20, min_volume=50, threshold=0.8,
                                            burst_start=0.7, burst_end=0.4, log_nutrition=True, filtering=FilteringLevel.LENIENT,
-                                           reporting=ReportingLevel.ORIGINAL, storage=StorageLevel.ATTRIBUTES)
+                                           reporting=ReportingLevel.ORIGINAL, storage=StorageLevel.ATTRIBUTES, tracking=300)
         self.assertEqual(5, consumer.min_size)
         self.assertEqual(0.1, consumer.min_burst)
         self.assertEqual(0.9, consumer.max_intra_similarity)
         self.assertEqual(900, consumer.window_size)
         self.assertEqual(0.8, consumer.clustering.threshold)
+        self.assertEqual(300, consumer.tracking)
         self.assertEqual(scheme, consumer.scheme)
         self.assertTrue(consumer.log_nutrition)
         self.assertEqual(FilteringLevel.LENIENT, consumer.filtering)
@@ -444,12 +445,13 @@ class TestConsume(unittest.TestCase):
                                            max_intra_similarity=0.9, periodicity=20, min_volume=50, threshold=0.8,
                                            burst_start=0.7, burst_end=0.4, log_nutrition=True,
                                            threshold_type=DynamicThreshold.MEAN_STDEV, filtering=FilteringLevel.LENIENT,
-                                           reporting=ReportingLevel.ORIGINAL, storage=StorageLevel.ATTRIBUTES)
+                                           reporting=ReportingLevel.ORIGINAL, storage=StorageLevel.ATTRIBUTES, tracking=300)
         self.assertEqual(scheme, consumer.scheme)
         self.assertEqual(50, consumer.min_volume)
         self.assertEqual(0.7, consumer.burst_start)
         self.assertEqual(0.4, consumer.burst_end)
         self.assertEqual(900, consumer.tdt.window_size)
+        self.assertEqual(300, consumer.tracking)
         self.assertEqual(DynamicThreshold.MEAN_STDEV, consumer.threshold)
         self.assertEqual(FilteringLevel.LENIENT, consumer.filtering)
         self.assertEqual(ReportingLevel.ORIGINAL, consumer.reporting)
@@ -562,9 +564,10 @@ class TestConsume(unittest.TestCase):
         """
         Zhao consumer - custom
         """
-        consumer = consume.create_consumer(ZhaoConsumer, Queue(), scheme=scheme, splits=splits, periodicity=1, post_rate=2.1)
+        consumer = consume.create_consumer(ZhaoConsumer, Queue(), scheme=scheme, splits=splits, periodicity=1, post_rate=2.1, tracking=300)
         self.assertTrue(all( 1 == _consumer.periodicity for _consumer in consumer.consumers ))
         self.assertTrue(all( 2.1 == _consumer.tdt.post_rate for _consumer in consumer.consumers ))
+        self.assertTrue(all( 300 == _consumer.tracking for _consumer in consumer.consumers ))
 
         """
         FIRE consumer
@@ -583,12 +586,13 @@ class TestConsume(unittest.TestCase):
         """
         ELD consumer
         """
-        consumer = consume.create_consumer(ELDConsumer, Queue(), scheme=scheme, splits=splits, window_size=90,
+        consumer = consume.create_consumer(ELDConsumer, Queue(), scheme=scheme, splits=splits, window_size=90, tracking=300,
                                            min_size=5, min_burst=0.1, max_intra_similarity=0.9, threshold=0.8,
                                            periodicity=20, min_volume=50, burst_start=0.7, burst_end=0.4,
                                            freeze_period=10, log_nutrition=True, filtering=FilteringLevel.LENIENT,
                                            reporting=ReportingLevel.ORIGINAL, storage=StorageLevel.ATTRIBUTES)
         self.assertTrue(all( 90 == _consumer.window_size for _consumer in consumer.consumers ))
+        self.assertTrue(all( 300 == _consumer.tracking for _consumer in consumer.consumers ))
         self.assertTrue(all( 5 == _consumer.min_size for _consumer in consumer.consumers ))
         self.assertTrue(all( 0.1 == _consumer.min_burst for _consumer in consumer.consumers ))
         self.assertTrue(all( 0.9 == _consumer.max_intra_similarity for _consumer in consumer.consumers ))
@@ -603,7 +607,7 @@ class TestConsume(unittest.TestCase):
         """
         FUEGO consumer
         """
-        consumer = consume.create_consumer(FUEGOConsumer, Queue(), scheme=scheme, splits=splits, threshold=0.8, window_size=900,
+        consumer = consume.create_consumer(FUEGOConsumer, Queue(), scheme=scheme, splits=splits, threshold=0.8, window_size=900, tracking=300,
                                            min_size=5, min_burst=0.1, max_intra_similarity=0.9, threshold_type=DynamicThreshold.MEAN_STDEV,
                                            periodicity=20, min_volume=50, burst_start=0.7, burst_end=0.4,
                                            freeze_period=10, log_nutrition=True, filtering=FilteringLevel.LENIENT,
@@ -613,6 +617,7 @@ class TestConsume(unittest.TestCase):
         self.assertTrue(all( 0.7 == _consumer.burst_start for _consumer in consumer.consumers ))
         self.assertTrue(all( 0.4 == _consumer.burst_end for _consumer in consumer.consumers ))
         self.assertTrue(all( 900 == _consumer.tdt.window_size for _consumer in consumer.consumers ))
+        self.assertTrue(all( 300 == _consumer.tracking for _consumer in consumer.consumers ))
         self.assertTrue(all( DynamicThreshold.MEAN_STDEV == _consumer.threshold for _consumer in consumer.consumers ))
         self.assertTrue(all( FilteringLevel.LENIENT == _consumer.filtering for _consumer in consumer.consumers ))
         self.assertTrue(all( ReportingLevel.ORIGINAL == _consumer.reporting for _consumer in consumer.consumers ))
@@ -621,7 +626,7 @@ class TestConsume(unittest.TestCase):
         """
         SEER consumer, alias for the FUEGO consumer
         """
-        consumer = consume.create_consumer(SEERConsumer, Queue(), scheme=scheme, splits=splits, threshold=0.8, window_size=900,
+        consumer = consume.create_consumer(SEERConsumer, Queue(), scheme=scheme, splits=splits, threshold=0.8, window_size=900, tracking=300,
                                            min_size=5, min_burst=0.1, max_intra_similarity=0.9, threshold_type=DynamicThreshold.MEAN_STDEV,
                                            periodicity=20, min_volume=50, burst_start=0.7, burst_end=0.4,
                                            freeze_period=10, log_nutrition=True, filtering=FilteringLevel.LENIENT,
@@ -631,6 +636,7 @@ class TestConsume(unittest.TestCase):
         self.assertTrue(all( 0.7 == _consumer.burst_start for _consumer in consumer.consumers ))
         self.assertTrue(all( 0.4 == _consumer.burst_end for _consumer in consumer.consumers ))
         self.assertTrue(all( 900 == _consumer.tdt.window_size for _consumer in consumer.consumers ))
+        self.assertTrue(all( 300 == _consumer.tracking for _consumer in consumer.consumers ))
         self.assertTrue(all( DynamicThreshold.MEAN_STDEV == _consumer.threshold for _consumer in consumer.consumers ))
         self.assertTrue(all( FilteringLevel.LENIENT == _consumer.filtering for _consumer in consumer.consumers ))
         self.assertTrue(all( ReportingLevel.ORIGINAL == _consumer.reporting for _consumer in consumer.consumers ))
@@ -700,9 +706,10 @@ class TestConsume(unittest.TestCase):
         """
         Zhao consumer - custom
         """
-        consumer = consume.create_consumer(ZhaoConsumer, Queue(), scheme=scheme, filters=filters, periodicity=1, post_rate=2.1)
+        consumer = consume.create_consumer(ZhaoConsumer, Queue(), scheme=scheme, filters=filters, periodicity=1, post_rate=2.1, tracking=300)
         self.assertEqual(1, consumer.consumer.periodicity)
         self.assertEqual(2.1, consumer.consumer.tdt.post_rate)
+        self.assertEqual(300, consumer.consumer.tracking)
 
         """
         FIRE consumer
@@ -722,7 +729,7 @@ class TestConsume(unittest.TestCase):
         """
         ELD consumer
         """
-        consumer = consume.create_consumer(ELDConsumer, Queue(), scheme=scheme, filters=filters, window_size=90,
+        consumer = consume.create_consumer(ELDConsumer, Queue(), scheme=scheme, filters=filters, window_size=90, tracking=300,
                                            min_size=5, min_burst=0.1, max_intra_similarity=0.9, threshold=0.8,
                                            periodicity=20, min_volume=50, burst_start=0.7, burst_end=0.4, freeze_period=10,
                                            log_nutrition=True, threshold_type=DynamicThreshold.MEAN_STDEV, filtering=FilteringLevel.LENIENT,
@@ -731,6 +738,7 @@ class TestConsume(unittest.TestCase):
         self.assertEqual(0.1, consumer.consumer.min_burst)
         self.assertEqual(0.9, consumer.consumer.max_intra_similarity)
         self.assertEqual(90, consumer.consumer.window_size)
+        self.assertEqual(300, consumer.consumer.tracking)
         self.assertEqual(scheme, consumer.consumer.scheme)
         self.assertEqual(0.8, consumer.consumer.clustering.threshold)
         self.assertEqual(10, consumer.consumer.clustering.freeze_period)
@@ -742,7 +750,7 @@ class TestConsume(unittest.TestCase):
         FUEGO consumer
         """
         consumer = consume.create_consumer(FUEGOConsumer, Queue(), scheme=scheme, filters=filters,
-                                           min_size=5, min_burst=0.1, max_intra_similarity=0.9, threshold=0.8, window_size=900,
+                                           min_size=5, min_burst=0.1, max_intra_similarity=0.9, threshold=0.8, window_size=900, tracking=300,
                                            periodicity=20, min_volume=50, burst_start=0.7, burst_end=0.4, freeze_period=10,
                                            log_nutrition=True, threshold_type=DynamicThreshold.MEAN_STDEV, filtering=FilteringLevel.LENIENT,
                                            reporting=ReportingLevel.ORIGINAL, storage=StorageLevel.ATTRIBUTES)
@@ -751,6 +759,7 @@ class TestConsume(unittest.TestCase):
         self.assertEqual(0.7, consumer.consumer.burst_start)
         self.assertEqual(0.4, consumer.consumer.burst_end)
         self.assertEqual(900, consumer.consumer.tdt.window_size)
+        self.assertEqual(300, consumer.consumer.tracking)
         self.assertEqual(DynamicThreshold.MEAN_STDEV, consumer.consumer.threshold)
         self.assertEqual(ReportingLevel.ORIGINAL, consumer.consumer.reporting)
         self.assertEqual(StorageLevel.ATTRIBUTES, consumer.consumer.storage)
@@ -759,7 +768,7 @@ class TestConsume(unittest.TestCase):
         SEER consumer, alias for the FUEGO consumer
         """
         consumer = consume.create_consumer(SEERConsumer, Queue(), scheme=scheme, filters=filters,
-                                           min_size=5, min_burst=0.1, max_intra_similarity=0.9, threshold=0.8, window_size=900,
+                                           min_size=5, min_burst=0.1, max_intra_similarity=0.9, threshold=0.8, window_size=900, tracking=300,
                                            periodicity=20, min_volume=50, burst_start=0.7, burst_end=0.4, freeze_period=10,
                                            log_nutrition=True, threshold_type=DynamicThreshold.MEAN_STDEV, filtering=FilteringLevel.LENIENT,
                                            reporting=ReportingLevel.ORIGINAL, storage=StorageLevel.ATTRIBUTES)
@@ -768,6 +777,7 @@ class TestConsume(unittest.TestCase):
         self.assertEqual(0.7, consumer.consumer.burst_start)
         self.assertEqual(0.4, consumer.consumer.burst_end)
         self.assertEqual(900, consumer.consumer.tdt.window_size)
+        self.assertEqual(300, consumer.consumer.tracking)
         self.assertEqual(DynamicThreshold.MEAN_STDEV, consumer.consumer.threshold)
         self.assertEqual(ReportingLevel.ORIGINAL, consumer.consumer.reporting)
         self.assertEqual(StorageLevel.ATTRIBUTES, consumer.consumer.storage)
