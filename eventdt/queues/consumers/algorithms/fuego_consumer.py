@@ -196,6 +196,7 @@ class FUEGOConsumer(Consumer):
         """
 
         logger.info(f"Window size:      { self.tdt.window_size }")
+        logger.info(f"Tracking:         { self.tracking }")
         logger.info(f"Burst:            [{ self.burst_start }, { self.burst_end }]")
         logger.info(f"Minimum volume:   { self.min_volume }")
         logger.info(f"Threshold:        { self.threshold }")

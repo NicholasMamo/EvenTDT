@@ -245,6 +245,7 @@ class ELDConsumer(Consumer):
         """
 
         logger.info(f"Window size:      { self.window_size }")
+        logger.info(f"Tracking:         { self.tracking }")
         logger.info(f"Freeze period:    { self.clustering.freeze_period }")
         logger.info(f"Cluster size:     { self.min_size }")
         logger.info(f"Filtering:        { self.filtering }")
