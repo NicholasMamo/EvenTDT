@@ -175,6 +175,7 @@ The output is a JSON file with the following structure, although additional data
             "filters": null,
             "filters_keep": null,
             "splits": null,
+            "tracking": 90,
             "threshold": 0.5,
             "threshold_type": "MEAN",
             "post_rate": 1.7,
@@ -207,6 +208,7 @@ The output is a JSON file with the following structure, although additional data
             "filters": null,
             "filters_keep": null,
             "splits": null,
+            "tracking": 90,
             "threshold": 0.5,
             "threshold_type": "MEAN",
             "post_rate": 1.7,
@@ -234,6 +236,7 @@ The following arguments are the most basic ones to build timelines:
     - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if an `--understanding` corpus is provided; otherwise, a scheme can be created using the :mod:`~tools.idf` tool.
     - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
     - ``--window-size``             *<Optional>* The size in seconds of the time window, used by real-time algorithms, defaults to 60 seconds; used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer` and :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer`.
+    - ``--tracking``                *<Optional>* The life-span of a node, in seconds, during which time newly-created nodes automatically absorb all new topics, a base form of event tracking; defaults to 90 seconds; used by the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`, :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer` and :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer`, and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`.
 
 The following arguments let you control how to handle the timeline of events such as by sampling, speeding up or skipping ahead with the data.
 You can also filter the data (``--filters``) and generate multiple timelines by focusing on different streams (``--splits``):
@@ -335,6 +338,8 @@ def setup_args():
                        help='<Optional> The periodicity in seconds of the consumer, defaults to 60 seconds (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`).')
     group.add_argument('--window-size', type=int, required=False, default=60,
                        help='<Optional> The size in seconds of the time window, used by real-time algorithms, defaults to 60 seconds; used by the `FUEGOConsumer` and `SEERConsumer`.')
+    group.add_argument('--tracking', type=int, required=False, default=90,
+                       help='<Optional> The life-span of a node, in seconds, during which time newly-created nodes automatically absorb all new topics, a base form of event tracking; defaults to 90 seconds; used by the `ELDConsumer`, `FUEGOConsumer` and `SEERConsumer`, and `ZhaoConsumer`')
 
     group = parser.add_argument_group('Data arguments', 'The following arguments let you control how to handle the data:')
     group.add_argument('--sample', type=float, required=False, default=1,
