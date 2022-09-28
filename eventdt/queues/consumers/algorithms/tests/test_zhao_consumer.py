@@ -13,6 +13,7 @@ path = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
+from logger import logger
 from nlp.weighting import TF
 from queues import Queue
 from queues.consumers.algorithms import ZhaoConsumer
@@ -20,6 +21,7 @@ from summarization.timeline import Timeline
 from vsm import vector_math
 
 logging.getLogger('asyncio').setLevel(logging.ERROR) # disable task length outputs
+logger.set_logging_level(logger.LogLevel.WARNING)
 
 class TestZhaoConsumer(unittest.IsolatedAsyncioTestCase):
     """

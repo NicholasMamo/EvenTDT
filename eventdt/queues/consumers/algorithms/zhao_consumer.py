@@ -78,7 +78,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
     :vartype summarization: :class:`~summarization.algorithms.mmr.MMR`
     """
 
-    def __init__(self, queue, periodicity=5, tracking=90, scheme=None, post_rate=1.7, *args, **kwargs):
+    def __init__(self, queue, periodicity=5, tracking=90, scheme=None, post_rate=1.7, verbose=True, *args, **kwargs):
         """
         Create the consumer with a :class:`~queues.Queue`.
         Simultaneously create a :class:`~tdt.nutrition.NutritionStore` and the :class:`~tdt.algorithms.zhao.Zhao` TDT algorithm.
@@ -97,6 +97,8 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
         :type scheme: None or :class:`~nlp.weighting.TermWeightingScheme`
         :param post_rate: The minimum increase between the two halves of the sliding time window to represent a burst.
         :type post_rate: float
+        :param verbose: A boolean indicating whether to log the consumer's main parameters.
+        :type verbose: bool
         """
 
         super(ZhaoConsumer, self).__init__(queue, periodicity, *args, **kwargs)
@@ -106,6 +108,18 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
         self.documents = { }
         self.tdt = Zhao(self.store, post_rate)
         self.summarization = MMR()
+
+        if verbose:
+            self.parameters()
+
+    def parameters(self):
+        """
+        Log the consumer's main parameters.
+        """
+
+        logger.info(f"Periodicity:      { self.periodicity }")
+        logger.info(f"Tracking:         { self.tracking }")
+        logger.info(f"Post rate:        { self.tdt.post_rate }")
 
     async def _process(self):
         """
