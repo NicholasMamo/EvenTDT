@@ -374,7 +374,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
-            self.assertTrue(all(len(twitter.hashtags(tweet)) <= 2 for tweet in tweets))
+            self.assertTrue(all(len(tweet['entities']['hashtags']) <= 2 for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
     def test_filter_tweets_lenient_hashtags(self):
@@ -388,7 +388,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
-            self.assertTrue(all(len(twitter.hashtags(tweet)) <= 2 for tweet in tweets))
+            self.assertTrue(all(len(tweet['entities']['hashtags']) <= 2 for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
     def test_filter_tweets_strict_v2_hashtags(self):
@@ -514,7 +514,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
-            self.assertTrue(all( len(twitter.urls(tweet)) <= 1 or (twitter.is_quote(tweet) and len(twitter.urls(tweet)) <= 2)
+            self.assertTrue(all( len(tweet['entities']['urls']) <= 1 or (twitter.is_quote(tweet) and len(tweet['entities']['urls']) <= 2)
                                 for tweet in tweets ))
             self.assertGreater(count, len(tweets))
 
@@ -571,8 +571,8 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             filtered = consumer._filter_tweets(tweets)
-            self.assertTrue(all( len(twitter.urls(tweet)) <= 1 or
-                                 len(twitter.urls(tweet)) <= 2 and twitter.is_quote(tweet)
+            self.assertTrue(all( len(tweet['entities']['urls']) <= 1 or
+                                 len(tweet['entities']['urls']) <= 2 and twitter.is_quote(tweet)
                                 for tweet in filtered ))
             self.assertGreater(len(tweets), len(filtered))
 

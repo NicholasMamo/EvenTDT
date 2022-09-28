@@ -536,7 +536,9 @@ class ELDConsumer(Consumer):
         if not twitter.lang(tweet) == 'en':
             return False
 
-        if len(twitter.hashtags(tweet)) > 2:
+        # for reproducibility, the old filters are retained
+        hashtags = tweet['entities']['hashtags'] if twitter.version(tweet) == 1 else twitter.hashtags(tweet)
+        if len(hashtags) > 2:
             return False
 
         if twitter.version(tweet) == 1 and twitter.user_favorites(tweet) == 0:
@@ -545,8 +547,9 @@ class ELDConsumer(Consumer):
         if twitter.user_followers(tweet) / twitter.user_statuses(tweet) < 1e-3:
             return False
 
+        # for reproducibility, the old filters are retained
+        urls = tweet['entities']['urls'] if twitter.version(tweet) == 1 else twitter.urls(tweet)
         # filter out URLs, but allow one URL in quoted tweets (referring to the quoted tweet)
-        urls = twitter.urls(tweet)
         if ((len(urls) > 1 and not twitter.is_quote(tweet) # non-quote tweets may only have one URL
              or len(urls) > 2 and twitter.is_quote(tweet)) # quote tweets may only have two URLs (the quoted tweet and another link)
              and self.filtering == FilteringLevel.STRICT): 
