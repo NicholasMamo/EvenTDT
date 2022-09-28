@@ -432,6 +432,34 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(dict, type(output))
         self.assertLess(output['filtered'], output['consumed'])
 
+    async def test_run_timeline_with_tracking(self):
+        """
+        Test that the FUEGO consumer's timeline uses the tracking variable.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'idf.json'), 'r') as f:
+            data = json.loads(f.readline())
+            scheme = Exportable.decode(data)['tfidf']
+
+        """
+        Create an empty queue.
+        Use it to create a consumer and set it running.
+        """
+        queue = Queue()
+        consumer = FUEGOConsumer(queue, scheme=scheme, tracking=150)
+        running = asyncio.ensure_future(consumer.run(max_inactivity=3))
+        await asyncio.sleep(0.5)
+
+        """
+        Load all tweets into the queue.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
+            tweets = [ json.loads(line) for line in f ]
+            queue.enqueue(*tweets)
+
+        output = await running
+        self.assertEqual(consumer.tracking, output['timeline'].expiry)
+
     def test_filter_tweets_empty(self):
         """
         Test that when filtering a list of empty tweets, another empty list is returned.

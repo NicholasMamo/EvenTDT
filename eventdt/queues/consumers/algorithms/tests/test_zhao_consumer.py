@@ -128,7 +128,7 @@ class TestZhaoConsumer(unittest.IsolatedAsyncioTestCase):
         Use it to create a buffered consumer and set it running.
         """
         queue = Queue()
-        consumer = ZhaoConsumer(queue, 60)
+        consumer = ZhaoConsumer(queue, 60, expity=120)
         running = asyncio.ensure_future(consumer.run(max_inactivity=3))
         await asyncio.sleep(0.5)
 
