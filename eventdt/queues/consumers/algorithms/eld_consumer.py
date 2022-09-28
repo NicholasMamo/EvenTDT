@@ -374,7 +374,7 @@ class ELDConsumer(Consumer):
         """
 
         consumed, filtered, skipped = 0, 0, 0
-        timeline = Timeline(TopicalClusterNode, expiry=90, min_similarity=0.6)
+        timeline = Timeline(TopicalClusterNode, expiry=self.tracking, min_similarity=0.6)
 
         """
         The consumer should keep working until it is stopped.
