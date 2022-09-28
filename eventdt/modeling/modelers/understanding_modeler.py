@@ -103,13 +103,13 @@ class UnderstandingModeler(EventModeler):
 
                 # check for the participant's name or aliases in the text
                 if any( self._matches(nlp.transliterate(reference.lower()), document.simplified_text.lower())
-                        for reference in [ profile.name ] + list(profile.attributes.get('known_as', [ ])) ):
+                        for reference in [ profile.name ] + list(profile.attributes.get('known_as', [ ]))  + list(profile.attributes.get('referred_to', [ ])) ):
                     found.append(participant)
 
                 # check for entities that are subsets of the entity or its aliases
                 for entity in entities:
                     if any( self._matches(nlp.transliterate(entity.lower()), nlp.transliterate(reference.lower()))
-                            for reference in [ profile.name ] + list(profile.attributes.get('known_as', [ ])) ):
+                            for reference in [ profile.name ] + list(profile.attributes.get('known_as', [ ]))  + list(profile.attributes.get('referred_to', [ ])) ):
                         found.append(participant)
                         entities[entity] = True # mark the entity as having been matched to a participant
 
@@ -196,13 +196,13 @@ class UnderstandingModeler(EventModeler):
 
                 # check for the participant's name or aliases in the text
                 if any( self._matches(nlp.transliterate(reference.lower()), document.simplified_text.lower())
-                        for reference in [ profile.name ] + list(profile.attributes.get('known_as', [ ])) ):
+                        for reference in [ profile.name ] + list(profile.attributes.get('known_as', [ ]))  + list(profile.attributes.get('referred_to', [ ])) ):
                     found.append(participant)
 
                 # check for entities that are subsets of the entity or its aliases
                 for entity in entities:
                     if any( self._matches(nlp.transliterate(entity.lower()), nlp.transliterate(reference.lower()))
-                            for reference in [ profile.name ] + list(profile.attributes.get('known_as', [ ])) ):
+                            for reference in [ profile.name ] + list(profile.attributes.get('known_as', [ ]))  + list(profile.attributes.get('referred_to', [ ])) ):
                         found.append(participant)
                         entities[entity] = True # mark the entity as having been matched to a participant
 

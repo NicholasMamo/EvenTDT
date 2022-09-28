@@ -75,136 +75,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "eventdt/modeling/modelers/understanding_modeler.py",
-			"settings":
-			{
-				"buffer_size": 17827,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			},
-			"undo_stack":
-			[
-				[
-					16,
-					2,
-					"run_macro_file",
-					{
-						"file": "res://Packages/Default/Add Line Before.sublime-macro"
-					},
-					"BAAAAB0pAAAAAAAAHikAAAAAAAAAAAAAHSkAAAAAAAAxKQAAAAAAAAAAAAAdKQAAAAAAAB4pAAAAAAAAAAAAAB0pAAAAAAAAMSkAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAaCkAAAAAAABoKQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					17,
-					1,
-					"left_delete",
-					null,
-					"AgAAAC0pAAAAAAAALSkAAAAAAAAEAAAAICAgIC4pAAAAAAAALikAAAAAAAAUAAAAICAgICAgICAgICAgICAgICAgICA",
-					"AQAAAAAAAAABAAAAMSkAAAAAAAAxKQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					18,
-					1,
-					"paste",
-					null,
-					"AQAAAC0pAAAAAAAAaywAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAALSkAAAAAAAAtKQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					32,
-					2,
-					"run_macro_file",
-					{
-						"file": "res://Packages/Default/Add Line Before.sublime-macro"
-					},
-					"BAAAAG0sAAAAAAAAbiwAAAAAAAAAAAAAbSwAAAAAAACFLAAAAAAAAAAAAABtLAAAAAAAAG4sAAAAAAAAAAAAAG0sAAAAAAAAhSwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAmiwAAAAAAACaLAAAAAAAAAAAAAAAsHNA"
-				],
-				[
-					33,
-					2,
-					"left_delete",
-					null,
-					"AwAAAIEsAAAAAAAAgSwAAAAAAAAEAAAAICAgIIIsAAAAAAAAgiwAAAAAAAAYAAAAICAgICAgICAgICAgICAgICAgICAgICAgfSwAAAAAAAB9LAAAAAAAAAQAAAAgICAg",
-					"AQAAAAAAAAABAAAAhSwAAAAAAACFLAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					34,
-					1,
-					"paste",
-					null,
-					"AQAAAH0sAAAAAAAARy0AAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAfSwAAAAAAAB9LAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					74,
-					2,
-					"run_macro_file",
-					{
-						"file": "res://Packages/Default/Delete Line.sublime-macro"
-					},
-					"AgAAAEgtAAAAAAAASC0AAAAAAAABAAAACkgtAAAAAAAASC0AAAAAAABtAAAAICAgICAgICAgICAgICAgIGlmIHNlbGYuX21hdGNoZXMobmxwLnRyYW5zbGl0ZXJhdGUocHJvZmlsZS5uYW1lLmxvd2VyKCkpLCBkb2N1bWVudC5zaW1wbGlmaWVkX3RleHQubG93ZXIoKSk6Cg",
-					"AQAAAAAAAAABAAAASC0AAAAAAABILQAAAAAAAAAAAAAAoIdA"
-				],
-				[
-					79,
-					5,
-					"run_macro_file",
-					{
-						"file": "res://Packages/Default/Delete Line.sublime-macro"
-					},
-					"BQAAAGcpAAAAAAAAZykAAAAAAABuAAAAICAgICAgICAgICAgICAgIGlmIGFueSggc2VsZi5fbWF0Y2hlcyhubHAudHJhbnNsaXRlcmF0ZShyZWZlcmVuY2UubG93ZXIoKSksIGRvY3VtZW50LnNpbXBsaWZpZWRfdGV4dC5sb3dlcigpKQpnKQAAAAAAAGcpAAAAAAAAbQAAACAgICAgICAgICAgICAgICAgICAgICAgIGZvciByZWZlcmVuY2UgaW4gWyBwcm9maWxlLm5hbWUgXSArIGxpc3QocHJvZmlsZS5hdHRyaWJ1dGVzLmdldCgna25vd25fYXMnLCBbIF0pKSApOgpnKQAAAAAAAGcpAAAAAAAALgAAACAgICAgICAgICAgICAgICAgICAgZm91bmQuYXBwZW5kKHBhcnRpY2lwYW50KQpnKQAAAAAAAGcpAAAAAAAAAQAAAApnKQAAAAAAAGcpAAAAAAAAUwAAACAgICAgICAgICAgICAgICAjIGNoZWNrIGZvciBlbnRpdGllcyB0aGF0IGFyZSBzdWJzZXRzIG9mIHRoZSBlbnRpdHkgb3IgaXRzIGFsaWFzZXMK",
-					"AQAAAAAAAAABAAAAhykAAAAAAACHKQAAAAAAAAAAAAAAAGxA"
-				],
-				[
-					86,
-					1,
-					"cut",
-					null,
-					"AQAAAHcpAAAAAAAAdykAAAAAAACXAQAAZm9yIGVudGl0eSBpbiBlbnRpdGllczoKICAgICAgICAgICAgICAgICAgICBpZiBhbnkoIHNlbGYuX21hdGNoZXMobmxwLnRyYW5zbGl0ZXJhdGUoZW50aXR5Lmxvd2VyKCkpLCBubHAudHJhbnNsaXRlcmF0ZShyZWZlcmVuY2UubG93ZXIoKSkpCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3IgcmVmZXJlbmNlIGluIFsgcHJvZmlsZS5uYW1lIF0gKyBsaXN0KHByb2ZpbGUuYXR0cmlidXRlcy5nZXQoJ2tub3duX2FzJywgWyBdKSkgKToKICAgICAgICAgICAgICAgICAgICAgICAgZm91bmQuYXBwZW5kKHBhcnRpY2lwYW50KQogICAgICAgICAgICAgICAgICAgICAgICBlbnRpdGllc1tlbnRpdHldID0gVHJ1ZSAjIG1hcmsgdGhlIGVudGl0eSBhcyBoYXZpbmcgYmVlbiBtYXRjaGVkIHRvIGEgcGFydGljaXBhbnQ",
-					"AQAAAAAAAAABAAAAdykAAAAAAAAOKwAAAAAAAP///////+9/"
-				],
-				[
-					87,
-					2,
-					"run_macro_file",
-					{
-						"file": "res://Packages/Default/Delete Line.sublime-macro"
-					},
-					"AgAAAGcpAAAAAAAAZykAAAAAAAARAAAAICAgICAgICAgICAgICAgIApnKQAAAAAAAGcpAAAAAAAAAQAAAAo",
-					"AQAAAAAAAAABAAAAdykAAAAAAAB3KQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					90,
-					2,
-					"run_macro_file",
-					{
-						"file": "res://Packages/Default/Add Line Before.sublime-macro"
-					},
-					"BAAAAMQqAAAAAAAAxSoAAAAAAAAAAAAAxCoAAAAAAADUKgAAAAAAAAAAAADEKgAAAAAAAMUqAAAAAAAAAAAAAMQqAAAAAAAA1CoAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAA6CoAAAAAAADoKgAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					91,
-					1,
-					"paste",
-					null,
-					"AQAAANQqAAAAAAAAaywAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAA1CoAAAAAAADUKgAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					94,
-					5,
-					"run_macro_file",
-					{
-						"file": "res://Packages/Default/Delete Line.sublime-macro"
-					},
-					"BgAAAH0sAAAAAAAAfSwAAAAAAAAoAAAAICAgICAgICAgICAgICAgIGZvciBlbnRpdHkgaW4gZW50aXRpZXM6CmwsAAAAAAAAbCwAAAAAAAAQAAAAICAgICAgICAgICAgICAgIG0sAAAAAAAAbSwAAAAAAAByAAAAICAgICAgICAgICAgICAgICAgICBpZiBzZWxmLl9tYXRjaGVzKG5scC50cmFuc2xpdGVyYXRlKGVudGl0eS5sb3dlcigpKSwgbmxwLnRyYW5zbGl0ZXJhdGUocHJvZmlsZS5uYW1lLmxvd2VyKCkpKToKbSwAAAAAAABtLAAAAAAAADIAAAAgICAgICAgICAgICAgICAgICAgICAgICBmb3VuZC5hcHBlbmQocGFydGljaXBhbnQpCm0sAAAAAAAAbSwAAAAAAAAwAAAAICAgICAgICAgICAgICAgICAgICAgICAgZW50aXRpZXNbZW50aXR5XSA9IFRydWUKbSwAAAAAAABtLAAAAAAAAAEAAAAK",
-					"AQAAAAAAAAABAAAApCwAAAAAAACkLAAAAAAAAAAAAAAA+IZA"
-				]
-			]
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -359,15 +229,32 @@
 	"expanded_folders":
 	[
 		"/home/nicholas/GitHub/EvenTDT",
-		"/home/nicholas/GitHub/EvenTDT/eventdt",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm"
+		"/home/nicholas/GitHub/EvenTDT/eventdt"
 	],
 	"file_history":
 	[
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/eld_consumer.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fuego_consumer.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/zhao_consumer.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/tests/test_zhao_consumer.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tdt/algorithms/zhao.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/consume.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_consume.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/tests/test_fuego_consumer.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tdt/algorithms/tests/test_zhao.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tests/test_document.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/document.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fire_consumer.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/objects/exportable.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/algorithms/temporal_no_k_means.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/understanding_modeler.py",
+		"/home/nicholas/GitHub/phd-thesis/visualizations/modern-custom.style",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/attributes/profile.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/vector.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/summary.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/understanding_modeler.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/tests/test_understanding_modeler.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tokenizer.py",
@@ -383,32 +270,21 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/tests/test_cluster_node.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/document_node.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/__init__.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/objects/exportable.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/__init__.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/document.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/summarize.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/eld_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_summarize.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/__init__.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tests/test_document.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fuego_consumer.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/tests/test_fuego_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/tests/test_package.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/CRYCHE-500.json",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/samplev2.json",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/weighting/tfidf.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/weighting/global_schemes/idf.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/consume.py",
 		"/home/nicholas/DATA/c6-tdt/analyses/Southampton - Arsenal (ELD).json",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/algorithms/dgs.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/vector_math.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/cluster.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/objects/attributable.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/algorithms/temporal_no_k_means.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_participants.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_shareable.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_consume.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/tests/test_package.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_model.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/__init__.py",
@@ -420,13 +296,9 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/tests/test_timeline.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/split_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/token_split_consumer.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/zhao_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tdt/algorithms/__init__.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fire_consumer.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/tdt/algorithms/zhao.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/algorithms/tests/test_no_k_means.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/algorithms/no_k_means.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tests/test_package.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/ate/concepts.json",
 		"/home/nicholas/GitHub/EvenTDT/tools/filter_retweets.py",
@@ -488,14 +360,11 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/resolvers/external/wikipedia_search_resolver.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/filters/local/rank_filter.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/tokenizer.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/extractors/local/entity_extractor.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/extractors/local/annotation_extractor.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/extractors/local/twitterner_entity_extractor.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/ate/extractor.py"
+		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/extractors/local/entity_extractor.py"
 	],
 	"find":
 	{
-		"height": 23.0
+		"height": 44.0
 	},
 	"find_in_files":
 	{
@@ -512,6 +381,51 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"twitter.urls(tweet)",
+			".attributes['_urls']",
+			"periodicity",
+			"Periodicity",
+			"f",
+			"freeze_period",
+			"clustering",
+			"post_rate",
+			"window_size",
+			"tdt.tracking",
+			"window_size)",
+			"consumer.window_size)",
+			"window_size=",
+			"tdt",
+			", tracking=300",
+			"tracking.window_size",
+			"window_size for _consumer in consumer.consumers ))",
+			" == _consumer.window_size for _consumer in consumer.consumers ))",
+			"window_size=9",
+			"window_size=90,",
+			"tdt",
+			"min_size=5, max_intra_similarity=0.9, freeze_period=10)",
+			"len(['entities']",
+			"(['entities']",
+			"twitter.urls(tweet)",
+			"replicability",
+			"urls",
+			"~queues.consumers.algorithms.fuego_consumer.ELDConsumer",
+			"60",
+			"FUEGOConsumer",
+			"60",
+			"\"threshold\": 0.5,",
+			"ELDConsumer",
+			"window_size",
+			"test_run_returns",
+			"MemoryNutritionStore",
+			"ELDConsumer",
+			"__hash__",
+			"cluster",
+			"[cluster]",
+			"window_size",
+			"90",
+			"filtering",
+			"ivar",
+			"prop_cy",
 			"vector",
 			"_dimensions",
 			"PERSON",
@@ -594,52 +508,7 @@
 			" whether it is a verified.",
 			"stores whether it is a verified.",
 			"_is_verified",
-			"if not twitter.is_retweet(tweet)",
-			"_is_verified",
-			"for tweet, document in zip(tweets, documents)\n                                                                                    if not twitter.is_retweet(tweet) ))",
-			"document.is_verified",
-			"is_verified",
-			"twitter.handle",
-			"Test that creating a document from a dictionary saves a boolean indicating whether the tweet is by a verified author.",
-			"is_verified",
-			"_author_is_verified",
-			"_is_verified",
-			"is_verified",
-			"test_from_dict_is_verified",
-			"is_verified",
-			"provided",
-			"twitter.user_handle(twitter.original(tweet)))",
-			"twitter.user_handle(twitter.quoted(tweet))",
-			"twitter.quoted(tweet)['user']",
-			"screen_name",
-			"tweet['user']",
-			"CRYCHE-500",
-			"test_user_handle_",
-			"id_str",
-			"user_id",
-			"user ID",
-			"test_user_id",
-			"username",
-			"user_id",
-			"user",
-			"(tweet)['user']['id_str']",
-			"['user']['id_str']",
-			"original['author_id']",
-			"original['user']['id_str']",
-			"twitter.original(tweet)['user']['id_str']",
-			"twitter.quoted(tweet)['author_id']",
-			"twitter.author(tweet)['id_str']",
-			"author",
-			"twitter.author(twitter.quoted(tweet))['id_str']",
-			"twitter.author(tweet, twitter.user_id(twitter.quoted(tweet)))['id']",
-			"twitter.quoted(tweet)['user']['id']",
-			"twitter.original(tweet)['author_id']",
-			"twitter.original(tweet)['user']['id']",
-			"twitter.author(tweet)['id']",
-			"author",
-			"twitter.quoted(tweet)['user']['id'])",
-			"author",
-			"twitter.quoted(tweet))['id_str']"
+			"if not twitter.is_retweet(tweet)"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -689,38 +558,6 @@
 		{
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "eventdt/modeling/modelers/understanding_modeler.py",
-					"selected": true,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 17827,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								11373,
-								11373
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2289.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"stack_multiselect": false,
-					"type": "text"
-				}
 			]
 		}
 	],
@@ -776,6 +613,98 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"testeld",
+				"eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py"
+			],
+			[
+				"twitterinit",
+				"eventdt/twitter/__init__.py"
+			],
+			[
+				"eldconsu",
+				"eventdt/queues/consumers/algorithms/eld_consumer.py"
+			],
+			[
+				"fuegoc",
+				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
+			],
+			[
+				"testzhao",
+				"eventdt/queues/consumers/algorithms/tests/test_zhao_consumer.py"
+			],
+			[
+				"za",
+				"eventdt/tdt/algorithms/zhao.py"
+			],
+			[
+				"eldcon",
+				"eventdt/queues/consumers/algorithms/eld_consumer.py"
+			],
+			[
+				"zhaocon",
+				"eventdt/queues/consumers/algorithms/zhao_consumer.py"
+			],
+			[
+				"testeldcons",
+				"eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py"
+			],
+			[
+				"testconsume",
+				"tools/tests/test_consume.py"
+			],
+			[
+				"eldcons",
+				"eventdt/queues/consumers/algorithms/eld_consumer.py"
+			],
+			[
+				"consume",
+				"tools/consume.py"
+			],
+			[
+				"testfuego",
+				"eventdt/queues/consumers/algorithms/tests/test_fuego_consumer.py"
+			],
+			[
+				"fuego",
+				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
+			],
+			[
+				"testzhaocon",
+				"eventdt/queues/consumers/algorithms/tests/test_zhao_consumer.py"
+			],
+			[
+				"testdocume",
+				"eventdt/nlp/tests/test_document.py"
+			],
+			[
+				"documen",
+				"eventdt/nlp/document.py"
+			],
+			[
+				"testzha",
+				"eventdt/tdt/algorithms/tests/test_zhao.py"
+			],
+			[
+				"firec",
+				"eventdt/queues/consumers/algorithms/fire_consumer.py"
+			],
+			[
+				"temporalno",
+				"eventdt/vsm/clustering/algorithms/temporal_no_k_means.py"
+			],
+			[
+				"exporta",
+				"eventdt/objects/exportable.py"
+			],
+			[
+				"consumerini",
+				"eventdt/queues/consumers/__init__.py"
+			],
+			[
+				"zhaoc",
+				"eventdt/queues/consumers/algorithms/zhao_consumer.py"
+			],
 			[
 				"undermo",
 				"eventdt/modeling/modelers/understanding_modeler.py"
@@ -933,20 +862,8 @@
 				"tools/summarize.py"
 			],
 			[
-				"testeld",
-				"eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py"
-			],
-			[
-				"eldconsu",
-				"eventdt/queues/consumers/algorithms/eld_consumer.py"
-			],
-			[
 				"testfueg",
 				"eventdt/queues/consumers/algorithms/tests/test_fuego_consumer.py"
-			],
-			[
-				"fuego",
-				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
 			],
 			[
 				"fuegocon",
@@ -955,10 +872,6 @@
 			[
 				"testdo",
 				"eventdt/nlp/tests/test_document.py"
-			],
-			[
-				"documen",
-				"eventdt/nlp/document.py"
 			],
 			[
 				"samplve",
@@ -971,14 +884,6 @@
 			[
 				"testpackage",
 				"eventdt/twitter/tests/test_package.py"
-			],
-			[
-				"twitterinit",
-				"eventdt/twitter/__init__.py"
-			],
-			[
-				"testfuego",
-				"eventdt/queues/consumers/algorithms/tests/test_fuego_consumer.py"
 			],
 			[
 				"fegoc",
@@ -995,10 +900,6 @@
 			[
 				"tfidf",
 				"eventdt/nlp/weighting/tfidf.py"
-			],
-			[
-				"consume",
-				"tools/consume.py"
 			],
 			[
 				"testsumm",
@@ -1033,10 +934,6 @@
 				"eventdt/nlp/tests/test_document.py"
 			],
 			[
-				"fuegoc",
-				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
-			],
-			[
 				"exportab",
 				"eventdt/objects/exportable.py"
 			],
@@ -1053,16 +950,8 @@
 				"tools/consume.py"
 			],
 			[
-				"eldcons",
-				"eventdt/queues/consumers/algorithms/eld_consumer.py"
-			],
-			[
 				"testeldcon",
 				"eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py"
-			],
-			[
-				"eldcon",
-				"eventdt/queues/consumers/algorithms/eld_consumer.py"
 			],
 			[
 				"cosnume",
@@ -1075,10 +964,6 @@
 			[
 				"testsha",
 				"tools/tests/test_shareable.py"
-			],
-			[
-				"testconsume",
-				"tools/tests/test_consume.py"
 			],
 			[
 				"modelersini",
@@ -1147,10 +1032,6 @@
 			[
 				"testcluster",
 				"eventdt/vsm/clustering/tests/test_cluster.py"
-			],
-			[
-				"testdocume",
-				"eventdt/summarization/timeline/nodes/tests/test_document_node.py"
 			],
 			[
 				"testtopical",
@@ -1237,56 +1118,12 @@
 				"eventdt/tdt/algorithms/__init__.py"
 			],
 			[
-				"testeldcons",
-				"eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py"
-			],
-			[
 				"model.",
 				"tools/model.py"
 			],
 			[
 				"firecon",
 				"eventdt/queues/consumers/algorithms/fire_consumer.py"
-			],
-			[
-				"zhao",
-				"eventdt/tdt/algorithms/zhao.py"
-			],
-			[
-				"clusternode",
-				"eventdt/summarization/timeline/nodes/topical_cluster_node.py"
-			],
-			[
-				"testnok",
-				"eventdt/vsm/clustering/algorithms/tests/test_no_k_means.py"
-			],
-			[
-				"tempor",
-				"eventdt/vsm/clustering/algorithms/temporal_no_k_means.py"
-			],
-			[
-				"nok",
-				"eventdt/vsm/clustering/algorithms/no_k_means.py"
-			],
-			[
-				"nokme",
-				"eventdt/vsm/clustering/algorithms/no_k_means.py"
-			],
-			[
-				"under",
-				"eventdt/modeling/modelers/understanding_modeler.py"
-			],
-			[
-				"consume.",
-				"tools/consume.py"
-			],
-			[
-				"model.p",
-				"tools/model.py"
-			],
-			[
-				"testunde",
-				"eventdt/modeling/modelers/tests/test_understanding_modeler.py"
 			]
 		],
 		"width": 0.0

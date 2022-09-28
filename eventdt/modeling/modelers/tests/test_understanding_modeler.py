@@ -516,9 +516,27 @@ class TestUnderstandingModeler(unittest.TestCase):
         models = modeler.model(timeline)
         self.assertEqual({ 'Carlos Sainz Jr.' }, { participant.name for participant in models[0].who })
 
-    def test_who_checks_known_as_case_folds(self):
+    def test_who_checks_referred_to(self):
         """
-        Test that identifying the Who also uses the `known_as` attribute if it exists, and it folds the case.
+        Test that identifying the Who also uses the `referred_to` attribute if it exists.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Carlos Sainz crashes out with engine failure."),
+        ]))
+
+        participants = self.mock_participants()
+        for participant in [ participant for participant in participants.values() if participant.known_as ]:
+            participant.attributes['referred_to'] = participant.known_as
+            del participant.attributes['known_as']
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Carlos Sainz Jr.' }, { participant.name for participant in models[0].who })
+
+    def test_who_checks_aliases_case_folds(self):
+        """
+        Test that identifying the Who also uses the alias attributes if they exist, and it folds the case.
         """
 
         timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
@@ -531,7 +549,7 @@ class TestUnderstandingModeler(unittest.TestCase):
         models = modeler.model(timeline)
         self.assertEqual({ 'Carlos Sainz Jr.' }, { participant.name for participant in models[0].who })
 
-    def test_who_checks_known_as_whole_word(self):
+    def test_who_checks_aliases_whole_word(self):
         """
         Test that identifying the Who's aliases only checks against whole words.
         """
@@ -546,9 +564,9 @@ class TestUnderstandingModeler(unittest.TestCase):
         models = modeler.model(timeline)
         self.assertFalse(models[0].who)
 
-    def test_who_known_as_like_name(self):
+    def test_who_aliases_like_name(self):
         """
-        Test that identifying the Who, mentions of the `known_as` attribute are treated exactly the same as if the full name is mentioned.
+        Test that identifying the Who, mentions of the alias attributes are treated exactly the same as if the full name is mentioned.
         In other words, they count to the 50% threshold too.
         """
 
