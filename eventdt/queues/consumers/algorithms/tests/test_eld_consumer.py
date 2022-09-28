@@ -1987,7 +1987,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
-            tweets = [ tweet for tweet in tweets if len(twitter.urls(tweet)) == 2 ]
+            tweets = [ tweet for tweet in tweets if len(tweet['entities']['urls']) == 2 ]
             documents = consumer._to_documents(tweets)
             clusters = [ Cluster(documents[:50]) ]
             self.assertEqual([ ], consumer._filter_clusters(clusters, 10))
@@ -2089,7 +2089,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             clusters.append(Cluster(documents[:50], { 'bursty': True }))
 
             no_url_documents = [ document for document in documents if len(document.attributes['urls']) == 0 ]
-            url_documents = [ document for document in documents if len(document.attributes['urls']) >= 2 ]
+            url_documents = [ document for document in documents if len(document.attributes['_urls']) >= 2 ]
             clusters.append(Cluster(no_url_documents[:1] + url_documents[:3]))
 
             no_reply_documents = [ document for document in documents if not document.text.startswith('@') ]

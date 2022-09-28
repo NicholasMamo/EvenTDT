@@ -599,6 +599,8 @@ class ELDConsumer(Consumer):
             document.attributes['lang'] = twitter.lang(tweet)
             document.attributes['timestamp'] = twitter.timestamp(tweet)
             document.attributes['urls'] = twitter.urls(tweet)
+            # for reproducibility, the original number of URLs are kept
+            document.attributes['_urls'] = tweet['entities']['urls'] if twitter.version(tweet) == 1 else twitter.urls(tweet)
             document.attributes['hashtags'] = twitter.hashtags(tweet)
             document.attributes['is_retweet'] = twitter.is_retweet(tweet)
             document.attributes['is_reply'] = twitter.is_reply(tweet)
@@ -767,7 +769,7 @@ class ELDConsumer(Consumer):
         Filter clusters that have more than 1 url per tweet on average.
         """
         for cluster in filtered:
-            urls = [ len(document.attributes['urls']) for document in cluster.vectors ]
+            urls = [ len(document.attributes['_urls']) for document in cluster.vectors ]
             if sum(urls)/cluster.size() > 1:
                 filtered.remove(cluster)
 
