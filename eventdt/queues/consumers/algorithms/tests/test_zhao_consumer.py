@@ -118,6 +118,30 @@ class TestZhaoConsumer(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(500, output['consumed'])
         self.assertEqual(Timeline, type(output['timeline']))
 
+    async def test_run_timeline_with_tracking(self):
+        """
+        Test that the Zhao consumer's timeline uses the tracking variable.
+        """
+
+        """
+        Create an empty queue.
+        Use it to create a buffered consumer and set it running.
+        """
+        queue = Queue()
+        consumer = ZhaoConsumer(queue, 60)
+        running = asyncio.ensure_future(consumer.run(max_inactivity=3))
+        await asyncio.sleep(0.5)
+
+        """
+        Load all tweets into the queue.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
+            tweets = [ json.loads(line) for line in f ]
+            queue.enqueue(*tweets)
+
+        output = await running
+        self.assertEqual(consumer.tracking, output['timeline'].expiry)
+
     def test_to_documents_tweet(self):
         """
         Test that when creating a document from a tweet, the tweet is saved as an attribute.

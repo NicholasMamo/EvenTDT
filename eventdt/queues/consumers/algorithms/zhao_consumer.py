@@ -115,7 +115,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
         :rtype: dict
         """
 
-        timeline = Timeline(DocumentNode, expiry=90, min_similarity=1)
+        timeline = Timeline(DocumentNode, expiry=self.tracking, min_similarity=1)
 
         while self.active:
             if self.buffer.length() > 0:
