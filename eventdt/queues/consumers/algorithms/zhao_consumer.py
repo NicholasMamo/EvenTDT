@@ -63,6 +63,8 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
     Finally, the consumer also maintains a list of :class:`~nlp.document.Document` instances that cover the largest sliding time-window.
     These documents can be used later for summarization by the :class:`~summarization.algorithms.mmr.MMR` algorithm.
 
+    :ivar tracking: The life-span of a node (in seconds), during which time newly-created nodes automatically absorb all topics.
+    :vartype tracking: int
     :ivar store: The nutrition store used to store the volume.
     :vartype store: :class:`~tdt.nutrition.store.NutritionStore`
     :ivar ~.scheme: The term-weighting scheme used to create documents.
@@ -76,7 +78,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
     :vartype summarization: :class:`~summarization.algorithms.mmr.MMR`
     """
 
-    def __init__(self, queue, periodicity=5, scheme=None, post_rate=1.7, *args, **kwargs):
+    def __init__(self, queue, periodicity=5, tracking=90, scheme=None, post_rate=1.7, *args, **kwargs):
         """
         Create the consumer with a :class:`~queues.Queue`.
         Simultaneously create a :class:`~tdt.nutrition.NutritionStore` and the :class:`~tdt.algorithms.zhao.Zhao` TDT algorithm.
@@ -88,6 +90,8 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
         :param periodicity: The time-window in seconds of the buffered consumer, or how often it is invoked.
                             This defaults to 5 seconds, the same span as half the smallest time-window in Zhao et al.'s algorithm.
         :type periodicity: int
+        :param tracking: The life-span of a node (in seconds), during which time newly-created nodes automatically absorb all topics.
+        :type tracking: int
         :param scheme: The term-weighting scheme that is used to create dimensions.
                        If ``None`` is given, the :class:`~nlp.weighting.tf.TF` term-weighting scheme is used.
         :type scheme: None or :class:`~nlp.weighting.TermWeightingScheme`
@@ -96,6 +100,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
         """
 
         super(ZhaoConsumer, self).__init__(queue, periodicity, *args, **kwargs)
+        self.tracking = tracking
         self.scheme = scheme or TF()
         self.store = MemoryNutritionStore()
         self.documents = { }

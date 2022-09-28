@@ -35,7 +35,18 @@ class TestZhaoConsumer(unittest.IsolatedAsyncioTestCase):
         consumer = ZhaoConsumer(Queue(), periodicity=10, name=name)
         self.assertEqual(name, str(consumer))
 
-    def test_create_consumer(self):
+    def test_init_tracking(self):
+        """
+        Test that on initialization, the tracking variable is saved.
+        """
+
+        consumer = ZhaoConsumer(Queue(), tracking=90)
+        self.assertEqual(90, consumer.tracking)
+
+        consumer = ZhaoConsumer(Queue(), tracking=300)
+        self.assertEqual(300, consumer.tracking)
+
+    def test_init_consumer(self):
         """
         Test that when creating a consumer, all the parameters are saved correctly.
         """

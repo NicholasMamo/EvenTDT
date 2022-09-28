@@ -137,7 +137,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
         """
 
         filtered = 0
-        timeline = Timeline(ClusterNode, 0, 1)
+        timeline = Timeline(ClusterNode, 0, 1) # there is no need for an expiry here
 
         while self.active:
             if self.buffer.length() > 0:
