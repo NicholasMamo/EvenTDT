@@ -454,9 +454,9 @@ def main():
     """
     args = vars(args)
     if args['understanding']:
-        dir = os.path.dirname(args['understanding'])
-        cache = os.path.join(dir, '.cache', os.path.basename(args['understanding']))
-        if args['no_cache'] or not tools.cache_exists(args['understanding']):
+        dir = os.path.dirname(args['understanding'][0])
+        cache = os.path.join(dir, '.cache', os.path.basename(args['understanding'][0]))
+        if args['no_cache'] or not tools.cache_exists(args['understanding'][0]):
             logger.info("Starting understanding period")
             read, understanding = understand(**args) # the tweets read at this point are not saved
             tools.save(cache, understanding['understanding'])
