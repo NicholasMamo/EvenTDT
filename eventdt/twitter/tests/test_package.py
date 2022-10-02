@@ -41,6 +41,17 @@ class TestPackage(unittest.TestCase):
         with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             self.assertTrue(all( 2 == twitter.version(json.loads(line)) for line in f ))
 
+    def test_version_unchanged_tweet(self):
+        """
+        Test that checking the version of a tweet does not change the tweet itself.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                twitter.version(tweet)
+                self.assertEqual(json.loads(line), tweet)
+
     def test_id_returns_string(self):
         """
         Test that getting the ID from a tweet returns a string.
@@ -171,6 +182,17 @@ class TestPackage(unittest.TestCase):
                 if twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
                     self.assertEqual(str(twitter.quoted(tweet)['id']), twitter.id(twitter.quoted(tweet)))
 
+    def test_id_unchanged_tweet(self):
+        """
+        Test that getting the ID of a tweet does not change the tweet itself.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                twitter.id(tweet)
+                self.assertEqual(json.loads(line), tweet)
+
     def test_lang(self):
         """
         Test getting the language matches with the tweets' language.
@@ -200,6 +222,17 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 self.assertEqual(str, type(twitter.lang(tweet)))
+
+    def test_lang_unchanged_tweet(self):
+        """
+        Test that getting the language of a tweet does not change the tweet itself.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                twitter.lang(tweet)
+                self.assertEqual(json.loads(line), tweet)
 
     def test_extract_timestamp_timestamp_ms_date(self):
         """
@@ -318,6 +351,17 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
                     self.assertEqual(twitter.timestamp(twitter.quoted(tweet)), parse(twitter.quoted(tweet)['created_at']).timestamp())
+
+    def test_timestamp_unchanged_tweet(self):
+        """
+        Test that getting the timestamp of a tweet does not change the tweet itself.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                twitter.timestamp(tweet)
+                self.assertEqual(json.loads(line), tweet)
 
     def test_text_alias_full_text(self):
         """
@@ -527,6 +571,17 @@ class TestPackage(unittest.TestCase):
 
         if not found:
             logger.warning('Trivial test')
+
+    def test_full_text_unchanged_tweet(self):
+        """
+        Test that getting the full text of a tweet does not change the tweet itself.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                twitter.text(tweet)
+                self.assertEqual(json.loads(line), tweet)
 
     def test_urls_returns_list(self):
         """
@@ -764,6 +819,17 @@ class TestPackage(unittest.TestCase):
                     self.assertGreaterEqual(len(twitter.urls(tweet)), 1)
                     self.assertTrue(any( re.search('/status/', url) for url in twitter.urls(tweet) ))
 
+    def test_urls_unchanged_tweet(self):
+        """
+        Test that getting the URLs of a tweet does not change the tweet itself.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                twitter.urls(tweet)
+                self.assertEqual(json.loads(line), tweet)
+
     def test_hashtags_returns_list(self):
         """
         Test that extracting hashtags from a tweet returns a list.
@@ -897,6 +963,17 @@ class TestPackage(unittest.TestCase):
                     hashtags = [ hashtag['tag'] for hashtag in hashtags ]
                     self.assertEqual(hashtags, twitter.hashtags(tweet))
 
+    def test_hashtags_unchanged_tweet(self):
+        """
+        Test that getting the hashtags of a tweet does not change the tweet itself.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                twitter.hashtags(tweet)
+                self.assertEqual(json.loads(line), tweet)
+
     def test_annotations_raises_NotImplementedError(self):
         """
         Test that extracting hashtags from an APIv1.1 tweet raises a ``NotImplementedError``.
@@ -972,6 +1049,17 @@ class TestPackage(unittest.TestCase):
                     annotations = [ annotation['normalized_text'] for annotation in annotations ]
                     self.assertEqual(annotations, twitter.annotations(tweet))
 
+    def test_annotations_unchanged_tweet(self):
+        """
+        Test that getting the annotations of a tweet does not change the tweet itself.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                twitter.annotations(tweet)
+                self.assertEqual(json.loads(line), tweet)
+
     def test_is_retweet(self):
         """
         Test that when checking for retweets, the function returns ``True`` only if the ``retweeted_status`` key is set.
@@ -989,6 +1077,61 @@ class TestPackage(unittest.TestCase):
 
         if not found:
             logger.warning('Trivial test')
+
+    def test_is_retweet_v2(self):
+        """
+        Test that when checking for retweets of APIv2 tweets, the function returns ``True`` only if the tweet is a retweet.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if any( referenced['type'] == 'retweeted' for referenced in tweet['data'].get('referenced_tweets', { }) ):
+                    found = True
+                    self.assertTrue(twitter.is_retweet(tweet))
+                else:
+                    self.assertFalse(twitter.is_retweet(tweet))
+
+        if not found:
+            logger.warning("Trivial test (test_is_retweet_v2)")
+
+    def test_is_retweet_v2_only_one(self):
+        """
+        Test that APIv2 tweets may only include one retweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    retweet = [ referenced for referenced in tweet['data']['referenced_tweets']
+                                           if referenced['type'] == 'retweeted' ]
+                    self.assertEqual(1, len(retweet))
+
+    def test_is_retweet_v2_has_matching_id(self):
+        """
+        Test that when retweets in APIv2 tweets include a tweet with a matching referenced ID.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    retweet = [ referenced for referenced in tweet['data']['referenced_tweets']
+                                           if referenced['type'] == 'retweeted' ]
+                    self.assertTrue(any( referenced['id'] == retweet[0]['id'] for referenced in tweet['includes']['tweets'] ))
+
+    def test_is_retweet_unchanged_tweet(self):
+        """
+        Test that checking whether a tweet is a retweet does not change the tweet itself.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                twitter.is_retweet(tweet)
+                self.assertEqual(json.loads(line), tweet)
 
     def test_original_not_retweet(self):
         """
@@ -1039,49 +1182,16 @@ class TestPackage(unittest.TestCase):
 
                     self.assertEqual(original, twitter.original(tweet))
 
-    def test_is_retweet_v2(self):
+    def test_original_unchanged_tweet(self):
         """
-        Test that when checking for retweets of APIv2 tweets, the function returns ``True`` only if the tweet is a retweet.
-        """
-
-        found = False
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
-            for line in f:
-                tweet = json.loads(line)
-                if any( referenced['type'] == 'retweeted' for referenced in tweet['data'].get('referenced_tweets', { }) ):
-                    found = True
-                    self.assertTrue(twitter.is_retweet(tweet))
-                else:
-                    self.assertFalse(twitter.is_retweet(tweet))
-
-        if not found:
-            logger.warning("Trivial test (test_is_retweet_v2)")
-
-    def test_is_retweet_v2_only_one(self):
-        """
-        Test that APIv2 tweets may only include one retweet.
+        Test that getting the original tweet does not change the tweet itself.
         """
 
         with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
-                if twitter.is_retweet(tweet):
-                    retweet = [ referenced for referenced in tweet['data']['referenced_tweets']
-                                           if referenced['type'] == 'retweeted' ]
-                    self.assertEqual(1, len(retweet))
-
-    def test_is_retweet_v2_has_matching_id(self):
-        """
-        Test that when retweets in APIv2 tweets include a tweet with a matching referenced ID.
-        """
-
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
-            for line in f:
-                tweet = json.loads(line)
-                if twitter.is_retweet(tweet):
-                    retweet = [ referenced for referenced in tweet['data']['referenced_tweets']
-                                           if referenced['type'] == 'retweeted' ]
-                    self.assertTrue(any( referenced['id'] == retweet[0]['id'] for referenced in tweet['includes']['tweets'] ))
+                twitter.original(tweet)
+                self.assertEqual(json.loads(line), tweet)
 
     def test_is_quote(self):
         """
@@ -1201,6 +1311,17 @@ class TestPackage(unittest.TestCase):
         if not found:
             logger.warning('Trivial test')
 
+    def test_is_quote_unchanged_tweet(self):
+        """
+        Test that checking whether a tweet is a quoted tweet does not change the tweet itself.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                twitter.is_quote(tweet)
+                self.assertEqual(json.loads(line), tweet)
+
     def test_quoted(self):
         """
         Test that when getting quoted tweets, the function returns the quoted tweet.
@@ -1237,6 +1358,18 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet) and twitter.is_retweet(tweet):
                     self.assertRaises(KeyError, twitter.quoted, tweet)
+
+    def test_quoted_unchanged_tweet(self):
+        """
+        Test that getting a quoted tweet does not change the tweet itself.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
+                    twitter.quoted(tweet)
+                    self.assertEqual(json.loads(line), tweet)
 
     def test_is_reply_all_not_replies(self):
         """
@@ -1298,6 +1431,17 @@ class TestPackage(unittest.TestCase):
 
         if not found:
             logger.warning('Trivial test')
+
+    def test_is_reply_unchanged_tweet(self):
+        """
+        Test that checking whether a tweet is a reply does not change the tweet itself.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                twitter.is_reply(tweet)
+                self.assertEqual(json.loads(line), tweet)
 
     def test_author_unknown_id(self):
         """
@@ -1446,6 +1590,17 @@ class TestPackage(unittest.TestCase):
                     authors = { user['id']: user for user in tweet['includes']['users'] }
                     self.assertEqual(authors[twitter.user_id(twitter.original(tweet))], twitter.author(tweet))
 
+    def test_author_unchanged_tweet(self):
+        """
+        Test that getting a tweet's author does not change the tweet itself.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                twitter.author(tweet)
+                self.assertEqual(json.loads(line), tweet)
+
     def test_user_id_normal(self):
         """
         Test that getting the user ID from a normal tweet simply returns the author ID.
@@ -1573,6 +1728,17 @@ class TestPackage(unittest.TestCase):
 
         if not found:
             logger.warning('Trivial test: `test_user_id_v2_retweeted`')
+
+    def test_user_id_unchanged_tweet(self):
+        """
+        Test that getting a user's id does not change the tweet itself.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                twitter.user_id(tweet)
+                self.assertEqual(json.loads(line), tweet)
 
     def test_user_handle_normal(self):
         """
@@ -1706,6 +1872,17 @@ class TestPackage(unittest.TestCase):
         if not found:
             logger.warning('Trivial test: `test_user_handle_v2_retweeted`')
 
+    def test_user_handle_unchanged_tweet(self):
+        """
+        Test that getting a user's handle does not change the tweet itself.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                twitter.user_handle(tweet)
+                self.assertEqual(json.loads(line), tweet)
+
     def test_user_favorites_returns_int(self):
         """
         Test that getting the number of user favorites returns an integer.
@@ -1806,6 +1983,17 @@ class TestPackage(unittest.TestCase):
                                             twitter.user_favorites(tweet, twitter.user_id(twitter.quoted(tweet))))
                         self.assertEqual(twitter.author(twitter.quoted(tweet))['favourites_count'],
                                             twitter.user_favorites(tweet, twitter.user_id(twitter.quoted(tweet))))
+
+    def test_user_favorites_unchanged_tweet(self):
+        """
+        Test that getting a user's favorites does not change the tweet itself.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                twitter.user_favorites(tweet)
+                self.assertEqual(json.loads(line), tweet)
 
     def test_user_statuses_returns_int(self):
         """
@@ -2001,6 +2189,17 @@ class TestPackage(unittest.TestCase):
         if not found:
             logger.warning('Trivial test')
 
+    def test_user_statuses_unchanged_tweet(self):
+        """
+        Test that getting a user's statuses does not change the tweet itself.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                twitter.user_statuses(tweet)
+                self.assertEqual(json.loads(line), tweet)
+
     def test_user_followers_returns_int(self):
         """
         Test that getting the number of user followers returns an integer.
@@ -2194,6 +2393,17 @@ class TestPackage(unittest.TestCase):
 
         if not found:
             logger.warning('Trivial test')
+
+    def test_user_followers_unchanged_tweet(self):
+        """
+        Test that getting a user's followers does not change the tweet itself.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                twitter.user_followers(tweet)
+                self.assertEqual(json.loads(line), tweet)
 
     def test_user_description_returns_str_or_none(self):
         """
@@ -2391,6 +2601,17 @@ class TestPackage(unittest.TestCase):
         if not found:
             logger.warning('Trivial test')
 
+    def test_user_description_unchanged_tweet(self):
+        """
+        Test that getting a user's description does not change the tweet itself.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                twitter.user_description(tweet)
+                self.assertEqual(json.loads(line), tweet)
+
     def test_is_verified(self):
         """
         Test that when checking whether the tweet is from a verified author, the function returns ``True`` only if the author is verified.
@@ -2527,6 +2748,17 @@ class TestPackage(unittest.TestCase):
 
         if not found:
             logger.warning('Trivial test')
+
+    def test_is_verified_unchanged_tweet(self):
+        """
+        Test that checking whether a user is verified does not change the tweet itself.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                twitter.is_verified(tweet)
+                self.assertEqual(json.loads(line), tweet)
 
     def is_acceptable_mention(self, text):
         """
