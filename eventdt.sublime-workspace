@@ -76,14 +76,34 @@
 	"buffers":
 	[
 		{
-			"file": "eventdt/queues/consumers/token_split_consumer.py",
+			"file": "eventdt/queues/consumers/algorithms/fuego_consumer.py",
 			"settings":
 			{
-				"buffer_size": 8549,
+				"buffer_size": 47423,
 				"line_ending": "Unix"
 			},
 			"undo_stack":
 			[
+			]
+		},
+		{
+			"file": "eventdt/twitter/__init__.py",
+			"settings":
+			{
+				"buffer_size": 19999,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
+				[
+					79,
+					1,
+					"paste",
+					null,
+					"AgAAABcdAAAAAAAATR0AAAAAAAAAAAAATR0AAAAAAABNHQAAAAAAACIAAAB0d2VldFsnZGF0YSddWydyZWZlcmVuY2VkX3R3ZWV0cydd",
+					"AQAAAAAAAAABAAAAFx0AAAAAAAA5HQAAAAAAAP///////+9/"
+				]
 			]
 		}
 	],
@@ -103,12 +123,12 @@
 				"Pretty JSON: Format JSON"
 			],
 			[
-				"pre",
-				"Pretty JSON: Format JSON"
-			],
-			[
 				"pretti",
 				"Pretty JSON: Format JSON Lines"
+			],
+			[
+				"pre",
+				"Pretty JSON: Format JSON"
 			],
 			[
 				"split",
@@ -248,6 +268,7 @@
 	],
 	"file_history":
 	[
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/token_split_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/split_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/consume.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/weighting/global_schemes/idf.py",
@@ -315,7 +336,6 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/tests/test_vector.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/tests/test_cluster.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/tests/test_timeline.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/token_split_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tdt/algorithms/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/algorithms/tests/test_no_k_means.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/algorithms/no_k_means.py",
@@ -379,7 +399,7 @@
 	],
 	"find":
 	{
-		"height": 23.0
+		"height": 44.0
 	},
 	"find_in_files":
 	{
@@ -396,6 +416,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"1566718043006373889",
 			"120",
 			"speed=",
 			"1566443690134048769",
@@ -522,8 +543,7 @@
 			"who",
 			"unoptimized_hashing",
 			"True",
-			"with_ner",
-			"twitter"
+			"with_ner"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -575,20 +595,19 @@
 			[
 				{
 					"buffer": 0,
-					"file": "eventdt/queues/consumers/token_split_consumer.py",
-					"selected": true,
+					"file": "eventdt/queues/consumers/algorithms/fuego_consumer.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8549,
+						"buffer_size": 47423,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6206,
-								6206
+								22666,
+								22666
 							]
 						],
 						"settings":
@@ -598,7 +617,39 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 661.0,
+						"translation.y": 5808.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "eventdt/twitter/__init__.py",
+					"selected": true,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 19999,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7501,
+								7501
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3236.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -660,6 +711,14 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"fuegocon",
+				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
+			],
+			[
+				"twittini",
+				"eventdt/twitter/__init__.py"
+			],
 			[
 				"splitcons",
 				"eventdt/queues/consumers/split_consumer.py"
@@ -953,10 +1012,6 @@
 				"eventdt/queues/consumers/algorithms/tests/test_fuego_consumer.py"
 			],
 			[
-				"fuegocon",
-				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
-			],
-			[
 				"testdo",
 				"eventdt/nlp/tests/test_document.py"
 			],
@@ -1167,10 +1222,6 @@
 			[
 				"tokensplit",
 				"eventdt/queues/consumers/token_split_consumer.py"
-			],
-			[
-				"fuegocons",
-				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
 			]
 		],
 		"width": 0.0

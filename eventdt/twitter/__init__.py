@@ -253,7 +253,7 @@ def original(tweet):
         if is_retweet(tweet) and not 'errors' in tweet:
             referenced = [ referenced for referenced in tweet.get('data', tweet).get('referenced_tweets', [ ])
                                       if referenced['type'] == 'retweeted' ][0]
-            return [ _tweet for _tweet in tweet['includes']['tweets']
+            return [ _tweet for _tweet in tweet.get('includes', { }).get('tweets', [ ])
                             if _tweet['id'] == referenced['id'] ][0]
         else:
             return tweet['data']
