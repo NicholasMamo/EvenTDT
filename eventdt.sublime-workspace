@@ -75,6 +75,157 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "tools/consume.py",
+			"settings":
+			{
+				"buffer_size": 49717,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
+				[
+					15,
+					1,
+					"paste",
+					null,
+					"AgAAAORGAAAAAAAA70YAAAAAAAAAAAAA70YAAAAAAADvRgAAAAAAAAoAAAB0eXBlPXN0ciwg",
+					"AQAAAAAAAAABAAAA7kYAAAAAAADkRgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					46,
+					1,
+					"insert_snippet",
+					{
+						"contents": "[$0]"
+					},
+					"AwAAABtuAAAAAAAAHW4AAAAAAAAAAAAAcW4AAAAAAABzbgAAAAAAAAAAAADBbgAAAAAAAMNuAAAAAAAAAAAAAA",
+					"AQAAAAAAAAADAAAAG24AAAAAAAAbbgAAAAAAAAAAAAAAAPC/b24AAAAAAABvbgAAAAAAAAAAAAAAAPC/vW4AAAAAAAC9bgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					47,
+					1,
+					"insert",
+					{
+						"characters": "0"
+					},
+					"AwAAAMJuAAAAAAAAw24AAAAAAAAAAAAAcm4AAAAAAABzbgAAAAAAAAAAAAAcbgAAAAAAAB1uAAAAAAAAAAAAAA",
+					"AQAAAAAAAAADAAAAHG4AAAAAAAAcbgAAAAAAAAAAAAAAAPC/cm4AAAAAAABybgAAAAAAAAAAAAAAAPC/wm4AAAAAAADCbgAAAAAAAAAAAAAAAPC/"
+				]
+			]
+		},
+		{
+			"file": "eventdt/queues/consumers/algorithms/fuego_consumer.py",
+			"settings":
+			{
+				"buffer_size": 47423,
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
+			]
+		},
+		{
+			"file": "eventdt/twitter/__init__.py",
+			"settings":
+			{
+				"buffer_size": 19979,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
+				[
+					21,
+					1,
+					"insert",
+					{
+						"characters": " and"
+					},
+					"BAAAAMMcAAAAAAAAxBwAAAAAAAAAAAAAxBwAAAAAAADFHAAAAAAAAAAAAADFHAAAAAAAAMYcAAAAAAAAAAAAAMYcAAAAAAAAxxwAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAwxwAAAAAAADDHAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					22,
+					1,
+					"insert",
+					{
+						"characters": " not"
+					},
+					"BAAAAMccAAAAAAAAyBwAAAAAAAAAAAAAyBwAAAAAAADJHAAAAAAAAAAAAADJHAAAAAAAAMocAAAAAAAAAAAAAMocAAAAAAAAyxwAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAxxwAAAAAAADHHAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					23,
+					1,
+					"insert",
+					{
+						"characters": " '"
+					},
+					"AgAAAMscAAAAAAAAzBwAAAAAAAAAAAAAzBwAAAAAAADNHAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAyxwAAAAAAADLHAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					24,
+					1,
+					"paste",
+					null,
+					"AQAAAM0cAAAAAAAA0xwAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAzRwAAAAAAADNHAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					25,
+					1,
+					"insert",
+					{
+						"characters": "'"
+					},
+					"AQAAANMcAAAAAAAA1BwAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA0xwAAAAAAADTHAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					26,
+					1,
+					"insert",
+					{
+						"characters": " in"
+					},
+					"AwAAANQcAAAAAAAA1RwAAAAAAAAAAAAA1RwAAAAAAADWHAAAAAAAAAAAAADWHAAAAAAAANccAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA1BwAAAAAAADUHAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					27,
+					1,
+					"insert",
+					{
+						"characters": " dat"
+					},
+					"BAAAANccAAAAAAAA2BwAAAAAAAAAAAAA2BwAAAAAAADZHAAAAAAAAAAAAADZHAAAAAAAANocAAAAAAAAAAAAANocAAAAAAAA2xwAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA1xwAAAAAAADXHAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					28,
+					1,
+					"delete_word",
+					{
+						"forward": false
+					},
+					"AQAAANgcAAAAAAAA2BwAAAAAAAADAAAAZGF0",
+					"AQAAAAAAAAABAAAA2xwAAAAAAADbHAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					29,
+					1,
+					"insert",
+					{
+						"characters": "tweet"
+					},
+					"BQAAANgcAAAAAAAA2RwAAAAAAAAAAAAA2RwAAAAAAADaHAAAAAAAAAAAAADaHAAAAAAAANscAAAAAAAAAAAAANscAAAAAAAA3BwAAAAAAAAAAAAA3BwAAAAAAADdHAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA2BwAAAAAAADYHAAAAAAAAAAAAAAAAPC/"
+				]
+			]
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -88,11 +239,15 @@
 		"selected_items":
 		[
 			[
-				"pretti",
-				"Pretty JSON: Format JSON Lines"
+				"prett",
+				"Pretty JSON: Format JSON"
 			],
 			[
-				"prett",
+				"pre",
+				"Pretty JSON: Format JSON"
+			],
+			[
+				"pretti",
 				"Pretty JSON: Format JSON Lines"
 			],
 			[
@@ -364,7 +519,7 @@
 	],
 	"find":
 	{
-		"height": 23.0
+		"height": 44.0
 	},
 	"find_in_files":
 	{
@@ -381,6 +536,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"1566443690134048769",
+			"',",
+			"id",
+			"args['understanding']",
 			"checks_known_as",
 			"known_as",
 			"test_who_checks_known_as",
@@ -504,11 +663,7 @@
 			"with_ner",
 			"twitter",
 			"tweet",
-			"is_verified",
-			"document.is_verified",
-			".is_verified",
-			"twitter.is_verified",
-			"should store whether the original author was verified."
+			"is_verified"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -558,6 +713,108 @@
 		{
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "tools/consume.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 49717,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								28190,
+								28190
+							],
+							[
+								28277,
+								28277
+							],
+							[
+								28358,
+								28358
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 6058.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "eventdt/queues/consumers/algorithms/fuego_consumer.py",
+					"selected": true,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 47423,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								14429,
+								14429
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3054.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "eventdt/twitter/__init__.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 19979,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7389,
+								7389
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2918.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"stack_multiselect": false,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -614,6 +871,18 @@
 		"selected_items":
 		[
 			[
+				"twitterinit",
+				"eventdt/twitter/__init__.py"
+			],
+			[
+				"fuegoc",
+				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
+			],
+			[
+				"onsume",
+				"tools/consume.py"
+			],
+			[
 				"evaltestpackage",
 				"tools/evaluation/tests/test_package.py"
 			],
@@ -650,16 +919,8 @@
 				"eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py"
 			],
 			[
-				"twitterinit",
-				"eventdt/twitter/__init__.py"
-			],
-			[
 				"eldconsu",
 				"eventdt/queues/consumers/algorithms/eld_consumer.py"
-			],
-			[
-				"fuegoc",
-				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
 			],
 			[
 				"testzhao",
@@ -1120,10 +1381,6 @@
 			[
 				"eldconsumer",
 				"eventdt/queues/consumers/algorithms/eld_consumer.py"
-			],
-			[
-				"algorinit",
-				"eventdt/queues/consumers/algorithms/__init__.py"
 			]
 		],
 		"width": 0.0
