@@ -233,6 +233,14 @@
 	],
 	"file_history":
 	[
+		"/home/nicholas/GitHub/EvenTDT/tools/evaluation/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/evaluation/tests/test_package.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/understanding_modeler.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/attributes/extractors/linguistic.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/attributes/extractors/tests/test_linguistic.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/consume.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/tests/test_understanding_modeler.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/attributes/profile.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/eld_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/__init__.py",
@@ -240,7 +248,6 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/zhao_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/tests/test_zhao_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tdt/algorithms/zhao.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/consume.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_consume.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/tests/test_fuego_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tdt/algorithms/tests/test_zhao.py",
@@ -250,12 +257,9 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/objects/exportable.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/algorithms/temporal_no_k_means.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/__init__.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/understanding_modeler.py",
 		"/home/nicholas/GitHub/phd-thesis/visualizations/modern-custom.style",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/attributes/profile.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/vector.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/summary.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/tests/test_understanding_modeler.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tokenizer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tests/test_tokenizer.py",
@@ -315,7 +319,6 @@
 		"/home/nicholas/GitHub/EvenTDT/tools/evaluation/terms.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/ate/stat/corpus/tests/test_rank.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/ate/stat/corpus/rank.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/attributes/extractors/linguistic.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/tokenized/sample-2.json",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/tokenized/sample-1.json",
 		"/home/nicholas/GitHub/EvenTDT/README.md",
@@ -357,14 +360,11 @@
 		"/home/nicholas/DATA/c3-apd/#CanadianGP-2022/temp.json",
 		"/home/nicholas/DATA/c3-apd/#CanadianGP-2022/participants-annotations-extrapolated.json",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/extrapolators/external/wikipedia_attribute_extrapolator.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/resolvers/external/wikipedia_search_resolver.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/filters/local/rank_filter.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/tokenizer.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/extractors/local/entity_extractor.py"
+		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/resolvers/external/wikipedia_search_resolver.py"
 	],
 	"find":
 	{
-		"height": 44.0
+		"height": 23.0
 	},
 	"find_in_files":
 	{
@@ -381,6 +381,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"checks_known_as",
+			"known_as",
+			"test_who_checks_known_as",
+			"known_as",
+			" + list(profile.attributes.get('known_as', [ ]))",
 			"twitter.urls(tweet)",
 			".attributes['_urls']",
 			"periodicity",
@@ -503,12 +508,7 @@
 			"document.is_verified",
 			".is_verified",
 			"twitter.is_verified",
-			"should store whether the original author was verified.",
-			"whether it is a verified.",
-			" whether it is a verified.",
-			"stores whether it is a verified.",
-			"_is_verified",
-			"if not twitter.is_retweet(tweet)"
+			"should store whether the original author was verified."
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -614,6 +614,38 @@
 		"selected_items":
 		[
 			[
+				"evaltestpackage",
+				"tools/evaluation/tests/test_package.py"
+			],
+			[
+				"toolsinit",
+				"tools/evaluation/__init__.py"
+			],
+			[
+				"und",
+				"eventdt/modeling/modelers/understanding_modeler.py"
+			],
+			[
+				"ling",
+				"eventdt/attributes/extractors/linguistic.py"
+			],
+			[
+				"linguist",
+				"eventdt/attributes/extractors/tests/test_linguistic.py"
+			],
+			[
+				"consum",
+				"tools/consume.py"
+			],
+			[
+				"profi",
+				"eventdt/attributes/profile.py"
+			],
+			[
+				"testunder",
+				"eventdt/modeling/modelers/tests/test_understanding_modeler.py"
+			],
+			[
 				"testeld",
 				"eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py"
 			],
@@ -710,10 +742,6 @@
 				"eventdt/modeling/modelers/understanding_modeler.py"
 			],
 			[
-				"profi",
-				"eventdt/attributes/profile.py"
-			],
-			[
 				"smmary",
 				"eventdt/summarization/summary.py"
 			],
@@ -762,20 +790,12 @@
 				"eventdt/nlp/__init__.py"
 			],
 			[
-				"testunder",
-				"eventdt/modeling/modelers/tests/test_understanding_modeler.py"
-			],
-			[
 				"nodeni",
 				"eventdt/summarization/timeline/nodes/__init__.py"
 			],
 			[
 				"model",
 				"tools/model.py"
-			],
-			[
-				"und",
-				"eventdt/modeling/modelers/understanding_modeler.py"
 			],
 			[
 				"understa",
@@ -816,10 +836,6 @@
 			[
 				"modelinini",
 				"eventdt/modeling/__init__.py"
-			],
-			[
-				"toolsinit",
-				"tools/__init__.py"
 			],
 			[
 				"docum",
@@ -1108,22 +1124,6 @@
 			[
 				"algorinit",
 				"eventdt/queues/consumers/algorithms/__init__.py"
-			],
-			[
-				"algorithmsini",
-				"eventdt/queues/consumers/algorithms/__init__.py"
-			],
-			[
-				"algorithmsi",
-				"eventdt/tdt/algorithms/__init__.py"
-			],
-			[
-				"model.",
-				"tools/model.py"
-			],
-			[
-				"firecon",
-				"eventdt/queues/consumers/algorithms/fire_consumer.py"
 			]
 		],
 		"width": 0.0
@@ -1157,7 +1157,7 @@
 	"show_minimap": false,
 	"show_open_files": false,
 	"show_tabs": true,
-	"side_bar_visible": true,
+	"side_bar_visible": false,
 	"side_bar_width": 263.0,
 	"status_bar_visible": true,
 	"template_settings":

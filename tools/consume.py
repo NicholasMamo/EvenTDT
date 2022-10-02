@@ -326,7 +326,7 @@ def setup_args():
                        help='<Required> The event file or a list of event files to consume; can be JSON files or `.tar.gz` archives with `sample.json` or `event.json` files inside.')
     group.add_argument('-c', '--consumer', type=consumer, required=True,
                        help='<Required> The consumer to use: `ELDConsumer`, `FIREConsumer`, `SEERConsumer` (or `FUEGOConsumer`), `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.')
-    group.add_argument('-u', '--understanding', type=str, required=False,
+    group.add_argument('-u', '--understanding', nargs='+', required=False,
                        help='<Optional> The understanding file used to understand the event.')
     group.add_argument('-o', '--output', type=str, required=True,
                        help='<Required> The output file where to save the timeline, defaults to the `.out` directory relative to the event file.')
