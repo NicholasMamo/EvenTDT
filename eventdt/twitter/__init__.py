@@ -250,7 +250,7 @@ def original(tweet):
             tweet = tweet["retweeted_status"]
         return tweet
     else:
-        if is_retweet(tweet):
+        if is_retweet(tweet) and not 'errors' in tweet:
             referenced = [ referenced for referenced in tweet['data']['referenced_tweets']
                                       if referenced['type'] == 'retweeted' ][0]
             return [ _tweet for _tweet in tweet['includes']['tweets']
