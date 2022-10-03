@@ -430,7 +430,7 @@ def main():
     args.filters, pcmd['filters'] = filter, filter
     split = splits(args.splits) if args.splits else [ ]
     args.splits, pcmd['splits'] = split, split
-    pcmd['splits'] = pcmd['splits'] + [ '*' ] if args.with_default_split and pcmd['splits'] else [ ]
+    pcmd['splits'] = pcmd['splits'] + [ [ '*' ] ] if args.with_default_split and pcmd['splits'] else [ ]
 
     """
     Register the queue in the base manager.
