@@ -244,14 +244,15 @@ class ELDConsumer(Consumer):
         Log the consumer's main parameters.
         """
 
-        logger.info(f"Window size:      { self.window_size }")
-        logger.info(f"Tracking:         { self.tracking }")
-        logger.info(f"Freeze period:    { self.clustering.freeze_period }")
-        logger.info(f"Cluster size:     { self.min_size }")
-        logger.info(f"Filtering:        { self.filtering }")
-        logger.info(f"Reporting:        { self.reporting }")
-        logger.info(f"Storage:          { self.storage }")
-        logger.info(f"Scheme:           { str(self.scheme) }")
+        logger.info(f"Window size:          { self.window_size }")
+        logger.info(f"Tracking:             { self.tracking }")
+        logger.info(f"Freeze period:        { self.clustering.freeze_period }")
+        logger.info(f"Cluster size:         { self.min_size }")
+        logger.info(f"Similarity threshold: { self.clustering.threshold }")
+        logger.info(f"Filtering:            { self.filtering }")
+        logger.info(f"Reporting:            { self.reporting }")
+        logger.info(f"Storage:              { self.storage }")
+        logger.info(f"Scheme:               { str(self.scheme) }")
 
     async def understand(self, max_inactivity=-1, *args, **kwargs):
         """
