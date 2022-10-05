@@ -770,7 +770,7 @@ class ELDConsumer(Consumer):
         """
         for cluster in filtered:
             urls = [ len(document.attributes['_urls']) for document in cluster.vectors ]
-            if sum(urls)/cluster.size() > 1:
+            if sum(urls)/cluster.size() > 1 and self.filtering == FilteringLevel.STRICT:
                 filtered.remove(cluster)
 
         """
