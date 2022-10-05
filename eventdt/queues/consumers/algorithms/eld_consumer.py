@@ -765,21 +765,18 @@ class ELDConsumer(Consumer):
         filtered = filter(lambda cluster: cluster.get_intra_similarity() <= self.max_intra_similarity, filtered)
         filtered = list(filtered)
 
-        """
-        Filter clusters that have more than 1 url per tweet on average.
-        """
-        for cluster in filtered:
-            urls = [ len(document.attributes['_urls']) for document in cluster.vectors ]
-            if sum(urls)/cluster.size() > 1 and self.filtering == FilteringLevel.STRICT:
-                filtered.remove(cluster)
+        if self.filtering == FilteringLevel.STRICT:
+            # filter clusters that have more than 1 url per tweet on average
+            for cluster in filtered:
+                urls = [ len(document.attributes['_urls']) for document in cluster.vectors ]
+                if sum(urls)/cluster.size() > 1:
+                    filtered.remove(cluster)
 
-        """
-        Filter clusters that have more than half of tweets being replies.
-        """
-        for cluster in filtered:
-            replies = [ document.text.startswith('@') for document in cluster.vectors ]
-            if sum(replies)/cluster.size() > 0.5:
-                filtered.remove(cluster)
+            # filter clusters that have more than half of tweets being replies
+            for cluster in filtered:
+                replies = [ document.text.startswith('@') for document in cluster.vectors ]
+                if sum(replies)/cluster.size() > 0.5:
+                    filtered.remove(cluster)
 
         return list(filtered)
 
