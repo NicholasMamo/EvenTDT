@@ -422,11 +422,11 @@ class ELDConsumer(Consumer):
                     self._create_checkpoint(last_checkpoint)
 
                 """
-                To avoid backlogs from hogging the system, documents published since before the last time window are not used.
+                To avoid backlogs from hogging the system, the system discards documents published more than one minute ago (whichever is smallest).
                 That is, the implementation skips all of those that are late.
                 """
                 overdue = [ document for document in documents
-                                     if latest_timestamp - document.timestamp >= self.window_size ]
+                                     if latest_timestamp - document.timestamp >= 60 ]
                 skipped += len(overdue)
                 if len(overdue) > 10:
                     logger.warning(f"""{ datetime.fromtimestamp(latest_timestamp - self.window_size).ctime() }: Skipping { len(overdue) } tweets""")
