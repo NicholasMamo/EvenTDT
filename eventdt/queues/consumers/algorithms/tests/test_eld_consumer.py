@@ -2092,10 +2092,26 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
-            documents = [ document for document in documents if not document.text.startswith('@') ]
-            reply_documents = [ document for document in documents if document.text.startswith('@') ]
-            clusters = [ Cluster(documents[:2] + reply_documents[:3]) ]
+            not_replies = [ document for document in documents if not document.text.startswith('@') ]
+            replies = [ document for document in documents if document.text.startswith('@') ]
+            clusters = [ Cluster(not_replies[:2] + replies[:3]) ]
             self.assertEqual([ ], consumer._filter_clusters(clusters, 10))
+
+    def test_filter_clusters_lenient_many_replies(self):
+        """
+        Test that when filtering a list of clusters leniently, clusters with many replies are retained.
+        The proportion of documents added to a cluster is three being replies, and two that aren't.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8, filtering=FilteringLevel.LENIENT)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+            not_replies = [ document for document in documents if not document.text.startswith('@') ]
+            replies = [ document for document in documents if document.text.startswith('@') ]
+            clusters = [ Cluster(not_replies[:2] + replies[:3]) ]
+            self.assertEqual(clusters, consumer._filter_clusters(clusters, 10))
 
     def test_filter_clusters_mix(self):
         """
