@@ -1992,6 +1992,20 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             clusters = [ Cluster(documents[:50]) ]
             self.assertEqual([ ], consumer._filter_clusters(clusters, 10))
 
+    def test_filter_clusters_lenient_many_urls(self):
+        """
+        Test that when filtering a list of clusters lenitly, clusters with many URLs are not filtered out.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8, filtering=FilteringLevel.LENIENT)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            tweets = [ tweet for tweet in tweets if len(tweet['entities']['urls']) == 2 ]
+            documents = consumer._to_documents(tweets)
+            clusters = [ Cluster(documents[:50]) ]
+            self.assertEqual(clusters, consumer._filter_clusters(clusters, 10))
+
     def test_filter_clusters_no_replies(self):
         """
         Test that when filtering a list of clusters, clusters without replies are retained.

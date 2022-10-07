@@ -773,11 +773,11 @@ class ELDConsumer(Consumer):
                 if sum(urls)/cluster.size() > 1:
                     filtered.remove(cluster)
 
-            # filter clusters that have more than half of tweets being replies
-            for cluster in filtered:
-                replies = [ document.text.startswith('@') for document in cluster.vectors ]
-                if sum(replies)/cluster.size() > 0.5:
-                    filtered.remove(cluster)
+        # filter clusters that have more than half of tweets being replies
+        for cluster in filtered:
+            replies = [ document.text.startswith('@') for document in cluster.vectors ]
+            if sum(replies)/cluster.size() > 0.5:
+                filtered.remove(cluster)
 
         return list(filtered)
 
