@@ -763,7 +763,7 @@ class ELDConsumer(Consumer):
         filtered = filter(lambda cluster: cluster.size() >= self.min_size, filtered)
         filtered = filter(lambda cluster: timestamp - cluster.attributes.get('last_checked', 0) > self.cooldown, filtered)
         filtered = filter(lambda cluster: not cluster.attributes.get('bursty', False), filtered)
-        filtered = filter(lambda cluster: cluster.get_intra_similarity() <= self.max_intra_similarity or not self.filtering == FilteringLevel.STRICT, filtered)
+        filtered = filter(lambda cluster: cluster.get_intra_similarity() <= self.max_intra_similarity, filtered)
         filtered = list(filtered)
 
         if self.filtering == FilteringLevel.STRICT:

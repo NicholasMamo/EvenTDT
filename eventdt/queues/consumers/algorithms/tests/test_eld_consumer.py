@@ -1858,7 +1858,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
 
     def test_filter_clusters_lenient_intra_similarity_high(self):
         """
-        Test that when filtering a list of clusters lienently, clusters with a high intra-similarity are retained.
+        Test that when filtering a list of clusters lienently, clusters with a high intra-similarity are not retained.
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8, filtering=FilteringLevel.LENIENT)
@@ -1867,7 +1867,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
             clusters = [ Cluster([ documents[0] ] * 3) ]
-            self.assertEqual(clusters, consumer._filter_clusters(clusters, 10))
+            self.assertEqual([ ], consumer._filter_clusters(clusters, 10))
 
     def test_filter_clusters_not_bursty(self):
         """
