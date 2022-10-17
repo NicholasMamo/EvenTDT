@@ -107,15 +107,11 @@ class MMR(SummarizationAlgorithm):
 
         summary = Summary()
 
-        """
-        Validate the inputs.
-        """
+        # validate the inputs
         if length <= 0:
             raise ValueError(f"Invalid summary length {length}")
 
-        """
-        Compute the query if need be, and construct the similarity matrix.
-        """
+        # compute the query if need be, and construct the similarity matrix
         query = query or self._compute_query(documents)
         matrix = self._compute_similarity_matrix(documents, query)
 
@@ -127,16 +123,20 @@ class MMR(SummarizationAlgorithm):
             #. Adding any of the remaining documents mean that the summary becomes too long.
         """
         while True:
-            """
-            Return if there are no remaining candidates for the summary.
-            """
+            # return if there are no remaining candidates for the summary
             candidates = self._filter_documents(documents, summary, length - len(str(summary)))
+            if not candidates and summary.documents:
+                return summary
+
+            # if the summary is empty and there are no valid candidates, summarize with all documents: a summary must always have at least one document
+            if not candidates and not summary.documents:
+                candidates = documents
+
+            # if there are still no candidates, return the summary
             if not candidates:
                 return summary
 
-            """
-            Otherwise, get the next document for the summary.
-            """
+            # get the next document for the summary.
             document = self._get_next_document(candidates, summary, query, matrix)
             summary.documents.append(document)
 

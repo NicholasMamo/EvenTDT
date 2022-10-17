@@ -32,20 +32,20 @@ class TestMMR(unittest.TestCase):
 
     def test_summarize_small_length(self):
         """
-        Test that when summarizing a set of documents, all of which exceed the length, an empty summary is returned.
+        Test that when summarizing a set of documents, at least one document is returned even if all exceed the maximum length.
         """
 
         """
         Create the test data.
         """
         corpus = [ Document('this is a pipe.', { 'pipe': 1 }),
-                    Document('this is a cigar.', { 'cigar': 1 }),
+                   Document('this is a cigar.', { 'cigar': 1 }),
                    Document('this is a cigar and this is a pipe.', { 'cigar': 1, 'pipe': 1 }), ]
         for document in corpus:
             document.normalize()
 
         algo = MMR()
-        self.assertEqual([ ], algo.summarize(corpus, 10).documents)
+        self.assertEqual(corpus[2:], algo.summarize(corpus, 10).documents)
 
     def test_summarize_exact_length(self):
         """
