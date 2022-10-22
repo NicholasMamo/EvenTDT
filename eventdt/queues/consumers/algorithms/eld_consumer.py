@@ -430,9 +430,8 @@ class ELDConsumer(Consumer):
                                      if latest_timestamp - document.timestamp >= 60 ]
                 skipped += len(overdue)
                 if len(overdue) > 10:
-                    logger.warning(f"""{ datetime.fromtimestamp(latest_timestamp - self.window_size).ctime() }: Skipping { len(overdue) } tweets""")
-                documents = [ document for document in documents
-                                       if latest_timestamp - document.timestamp < self.window_size ]
+                    logger.warning(f"""{ datetime.fromtimestamp(latest_timestamp).ctime() }: Skipping { len(overdue) } tweets""")
+                documents = [ document for document in documents if not document in overdue ]
 
                 """
                 Cluster the documents that remain and filter the clusters.

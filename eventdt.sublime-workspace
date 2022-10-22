@@ -91,6 +91,15 @@
 				"buffer_size": 47423,
 				"line_ending": "Unix"
 			}
+		},
+		{
+			"file": "eventdt/queues/consumers/algorithms/eld_consumer.py",
+			"settings":
+			{
+				"buffer_size": 45328,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
 		}
 	],
 	"build_system": "",
@@ -254,14 +263,16 @@
 	],
 	"file_history":
 	[
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/eld_consumer.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/weighting/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/document_node.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/token_split_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/algorithms/mmr.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/algorithms/tests/test_mmr.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/summary.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/summarize.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fuego_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/split_consumer.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/token_split_consumer.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/eld_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/consume.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/algorithms/temporal_no_k_means.py",
@@ -304,7 +315,6 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/topical_cluster_node.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/cluster_node.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/tests/test_cluster_node.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/document_node.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_summarize.py",
@@ -380,8 +390,7 @@
 		"/home/nicholas/GitHub/EvenTDT/temp/event.json",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/tests/test_eld_participant_detector.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/depict_participant_detector.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/tests/test_depict_participant_detector.py",
-		"/home/nicholas/DATA/c3-apd/#CanadianGP-2022/temp.json"
+		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/tests/test_depict_participant_detector.py"
 	],
 	"find":
 	{
@@ -606,14 +615,13 @@
 						"translation.y": 4468.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 2,
 					"stack_multiselect": false,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
 					"file": "eventdt/queues/consumers/algorithms/fuego_consumer.py",
-					"selected": true,
 					"semi_transient": false,
 					"settings":
 					{
@@ -624,8 +632,8 @@
 						"selection":
 						[
 							[
-								37626,
-								37626
+								25287,
+								25287
 							]
 						],
 						"settings":
@@ -635,7 +643,39 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 10052.0,
+						"translation.y": 6241.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "eventdt/queues/consumers/algorithms/eld_consumer.py",
+					"selected": true,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 45328,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -697,6 +737,22 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"eldcon",
+				"eventdt/queues/consumers/algorithms/eld_consumer.py"
+			],
+			[
+				"docume",
+				"eventdt/summarization/timeline/nodes/document_node.py"
+			],
+			[
+				"weighting/",
+				"eventdt/nlp/weighting/__init__.py"
+			],
+			[
+				"tokensl",
+				"eventdt/queues/consumers/token_split_consumer.py"
+			],
 			[
 				"summary",
 				"eventdt/summarization/summary.py"
@@ -858,10 +914,6 @@
 				"eventdt/tdt/algorithms/zhao.py"
 			],
 			[
-				"eldcon",
-				"eventdt/queues/consumers/algorithms/eld_consumer.py"
-			],
-			[
 				"zhaocon",
 				"eventdt/queues/consumers/algorithms/zhao_consumer.py"
 			],
@@ -988,10 +1040,6 @@
 			[
 				"clusterno",
 				"eventdt/summarization/timeline/nodes/cluster_node.py"
-			],
-			[
-				"docume",
-				"eventdt/summarization/timeline/nodes/document_node.py"
 			],
 			[
 				"topicalcl",
@@ -1199,14 +1247,6 @@
 			],
 			[
 				"vecto",
-				"eventdt/vsm/vector.py"
-			],
-			[
-				"attribu",
-				"eventdt/objects/attributable.py"
-			],
-			[
-				"vec",
 				"eventdt/vsm/vector.py"
 			]
 		],
