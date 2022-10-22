@@ -249,6 +249,7 @@ class ELDConsumer(Consumer):
         logger.info(f"Freeze period:        { self.clustering.freeze_period }")
         logger.info(f"Cluster size:         { self.min_size }")
         logger.info(f"Similarity threshold: { self.clustering.threshold }")
+        logger.info(f"Minimum burst:        { self.min_burst }")
         logger.info(f"Filtering:            { self.filtering }")
         logger.info(f"Reporting:            { self.reporting }")
         logger.info(f"Storage:              { self.storage }")

@@ -96,10 +96,89 @@
 			"file": "eventdt/queues/consumers/algorithms/eld_consumer.py",
 			"settings":
 			{
-				"buffer_size": 45328,
+				"buffer_size": 45237,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
-			}
+			},
+			"undo_stack":
+			[
+				[
+					29,
+					1,
+					"insert",
+					{
+						"characters": "60"
+					},
+					"AwAAAPtbAAAAAAAA/FsAAAAAAAAAAAAA/FsAAAAAAAD8WwAAAAAAABAAAABzZWxmLndpbmRvd19zaXpl/FsAAAAAAAD9WwAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAD7WwAAAAAAAAtcAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					31,
+					1,
+					"insert",
+					{
+						"characters": " if"
+					},
+					"AwAAAG9cAAAAAAAAcFwAAAAAAAAAAAAAcFwAAAAAAABxXAAAAAAAAAAAAABxXAAAAAAAAHJcAAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABvXAAAAAAAAG9cAAAAAAAAAAAAAACYgkA"
+				],
+				[
+					32,
+					1,
+					"insert",
+					{
+						"characters": " not"
+					},
+					"BAAAAHJcAAAAAAAAc1wAAAAAAAAAAAAAc1wAAAAAAAB0XAAAAAAAAAAAAAB0XAAAAAAAAHVcAAAAAAAAAAAAAHVcAAAAAAAAdlwAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAByXAAAAAAAAHJcAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					33,
+					1,
+					"insert",
+					{
+						"characters": " document"
+					},
+					"CQAAAHZcAAAAAAAAd1wAAAAAAAAAAAAAd1wAAAAAAAB4XAAAAAAAAAAAAAB4XAAAAAAAAHlcAAAAAAAAAAAAAHlcAAAAAAAAelwAAAAAAAAAAAAAelwAAAAAAAB7XAAAAAAAAAAAAAB7XAAAAAAAAHxcAAAAAAAAAAAAAHxcAAAAAAAAfVwAAAAAAAAAAAAAfVwAAAAAAAB+XAAAAAAAAAAAAAB+XAAAAAAAAH9cAAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAB2XAAAAAAAAHZcAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					34,
+					1,
+					"insert",
+					{
+						"characters": " in"
+					},
+					"AwAAAH9cAAAAAAAAgFwAAAAAAAAAAAAAgFwAAAAAAACBXAAAAAAAAAAAAACBXAAAAAAAAIJcAAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAB/XAAAAAAAAH9cAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					35,
+					1,
+					"insert",
+					{
+						"characters": " overdue"
+					},
+					"CAAAAIJcAAAAAAAAg1wAAAAAAAAAAAAAg1wAAAAAAACEXAAAAAAAAAAAAACEXAAAAAAAAIVcAAAAAAAAAAAAAIVcAAAAAAAAhlwAAAAAAAAAAAAAhlwAAAAAAACHXAAAAAAAAAAAAACHXAAAAAAAAIhcAAAAAAAAAAAAAIhcAAAAAAAAiVwAAAAAAAAAAAAAiVwAAAAAAACKXAAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACCXAAAAAAAAIJcAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					38,
+					1,
+					"left_delete",
+					null,
+					"AQAAAIpcAAAAAAAAilwAAAAAAABjAAAACiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmIGxhdGVzdF90aW1lc3RhbXAgLSBkb2N1bWVudC50aW1lc3RhbXAgPCBzZWxmLndpbmRvd19zaXpl",
+					"AQAAAAAAAAABAAAAilwAAAAAAADtXAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					48,
+					1,
+					"left_delete",
+					null,
+					"AQAAAPhbAAAAAAAA+FsAAAAAAAAFAAAAIC0gNjA",
+					"AQAAAAAAAAABAAAA/VsAAAAAAAD4WwAAAAAAAAAAAAAAAPC/"
+				]
+			]
 		}
 	],
 	"build_system": "",
@@ -657,15 +736,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 45328,
+						"buffer_size": 45237,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								23687,
+								23687
 							]
 						],
 						"settings":
@@ -675,7 +754,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 5354.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
