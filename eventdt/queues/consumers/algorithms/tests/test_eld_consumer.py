@@ -1393,6 +1393,41 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             documents = consumer._to_documents(tweets)
             self.assertEqual(documents, consumer._to_documents(documents))
 
+    def test_to_documents_documents_without_tweets(self):
+        """
+        Test that when converting a list of documents to documents and the storage level does not store tweets, the tweets are removed.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+
+            consumer = ELDConsumer(Queue(), 60, TF(), storage=StorageLevel.TWEET)
+            documents = consumer._to_documents(tweets)
+
+            consumer = ELDConsumer(Queue(), 60, TF(), storage=StorageLevel.ATTRIBUTES)
+            documents = consumer._to_documents(documents)
+
+            self.assertFalse(any( 'tweet' in document.attributes for document in documents ))
+
+    def test_to_documents_documents_with(self):
+        """
+        Test that when converting a list of documents to documents and the storage level stores tweets, the tweets are retained.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, TF(), storage=StorageLevel.TWEET)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+
+            consumer = ELDConsumer(Queue(), 60, TF(), storage=StorageLevel.TWEET)
+            documents = consumer._to_documents(tweets)
+
+            consumer = ELDConsumer(Queue(), 60, TF(), storage=StorageLevel.TWEET)
+            documents = consumer._to_documents(documents)
+
+            self.assertTrue(all( 'tweet' in document.attributes for document in documents ))
+
     def test_to_documents_documents_with_attributes(self):
         """
         Test that when converting a list of documents to documents, their attributes are updated.

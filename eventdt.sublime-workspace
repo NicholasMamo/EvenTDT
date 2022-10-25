@@ -90,93 +90,294 @@
 			{
 				"buffer_size": 47423,
 				"line_ending": "Unix"
-			}
+			},
+			"undo_stack":
+			[
+			]
 		},
 		{
 			"file": "eventdt/queues/consumers/algorithms/eld_consumer.py",
 			"settings":
 			{
-				"buffer_size": 45237,
+				"buffer_size": 45400,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			},
 			"undo_stack":
 			[
 				[
-					29,
+					30,
 					1,
-					"insert",
+					"run_macro_file",
 					{
-						"characters": "60"
+						"file": "res://Packages/Default/Add Line.sublime-macro"
 					},
-					"AwAAAPtbAAAAAAAA/FsAAAAAAAAAAAAA/FsAAAAAAAD8WwAAAAAAABAAAABzZWxmLndpbmRvd19zaXpl/FsAAAAAAAD9WwAAAAAAAAAAAAA",
-					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAD7WwAAAAAAAAtcAAAAAAAAAAAAAAAA8L8"
+					"AgAAAAN+AAAAAAAABH4AAAAAAAAAAAAABH4AAAAAAAAUfgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAAH4AAAAAAAAAfgAAAAAAAAAAAAAAcHVA"
 				],
 				[
 					31,
 					1,
-					"insert",
-					{
-						"characters": " if"
-					},
-					"AwAAAG9cAAAAAAAAcFwAAAAAAAAAAAAAcFwAAAAAAABxXAAAAAAAAAAAAABxXAAAAAAAAHJcAAAAAAAAAAAAAA",
-					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABvXAAAAAAAAG9cAAAAAAAAAAAAAACYgkA"
+					"unindent",
+					null,
+					"AQAAAAR+AAAAAAAABH4AAAAAAAAEAAAAICAgIA",
+					"AQAAAAAAAAABAAAAFH4AAAAAAAAUfgAAAAAAAAAAAAAAAPC/"
 				],
 				[
 					32,
 					1,
 					"insert",
 					{
-						"characters": " not"
+						"characters": "elif"
 					},
-					"BAAAAHJcAAAAAAAAc1wAAAAAAAAAAAAAc1wAAAAAAAB0XAAAAAAAAAAAAAB0XAAAAAAAAHVcAAAAAAAAAAAAAHVcAAAAAAAAdlwAAAAAAAAAAAAA",
-					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAByXAAAAAAAAHJcAAAAAAAAAAAAAAAA8L8"
+					"BAAAABB+AAAAAAAAEX4AAAAAAAAAAAAAEX4AAAAAAAASfgAAAAAAAAAAAAASfgAAAAAAABN+AAAAAAAAAAAAABN+AAAAAAAAFH4AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAEH4AAAAAAAAQfgAAAAAAAAAAAAAAAPC/"
 				],
 				[
 					33,
 					1,
 					"insert",
 					{
-						"characters": " document"
+						"characters": " self.storage"
 					},
-					"CQAAAHZcAAAAAAAAd1wAAAAAAAAAAAAAd1wAAAAAAAB4XAAAAAAAAAAAAAB4XAAAAAAAAHlcAAAAAAAAAAAAAHlcAAAAAAAAelwAAAAAAAAAAAAAelwAAAAAAAB7XAAAAAAAAAAAAAB7XAAAAAAAAHxcAAAAAAAAAAAAAHxcAAAAAAAAfVwAAAAAAAAAAAAAfVwAAAAAAAB+XAAAAAAAAAAAAAB+XAAAAAAAAH9cAAAAAAAAAAAAAA",
-					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAB2XAAAAAAAAHZcAAAAAAAAAAAAAAAA8L8"
+					"DQAAABR+AAAAAAAAFX4AAAAAAAAAAAAAFX4AAAAAAAAWfgAAAAAAAAAAAAAWfgAAAAAAABd+AAAAAAAAAAAAABd+AAAAAAAAGH4AAAAAAAAAAAAAGH4AAAAAAAAZfgAAAAAAAAAAAAAZfgAAAAAAABp+AAAAAAAAAAAAABp+AAAAAAAAG34AAAAAAAAAAAAAG34AAAAAAAAcfgAAAAAAAAAAAAAcfgAAAAAAAB1+AAAAAAAAAAAAAB1+AAAAAAAAHn4AAAAAAAAAAAAAHn4AAAAAAAAffgAAAAAAAAAAAAAffgAAAAAAACB+AAAAAAAAAAAAACB+AAAAAAAAIX4AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAFH4AAAAAAAAUfgAAAAAAAAAAAAAAAPC/"
 				],
 				[
 					34,
+					1,
+					"insert_completion",
+					{
+						"completion": "StorageLevel",
+						"format": "text",
+						"keep_prefix": false,
+						"must_insert": false,
+						"trigger": "StorageLevel"
+					},
+					"AgAAABp+AAAAAAAAGn4AAAAAAAAHAAAAc3RvcmFnZRp+AAAAAAAAJn4AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAIX4AAAAAAAAhfgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					35,
+					2,
+					"left_delete",
+					null,
+					"AgAAACV+AAAAAAAAJX4AAAAAAAABAAAAbCR+AAAAAAAAJH4AAAAAAAABAAAAZQ",
+					"AQAAAAAAAAABAAAAJn4AAAAAAAAmfgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					36,
+					1,
+					"delete_word",
+					{
+						"forward": false
+					},
+					"AQAAABp+AAAAAAAAGn4AAAAAAAAKAAAAU3RvcmFnZUxldg",
+					"AQAAAAAAAAABAAAAJH4AAAAAAAAkfgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					37,
+					1,
+					"insert",
+					{
+						"characters": "storage"
+					},
+					"BwAAABp+AAAAAAAAG34AAAAAAAAAAAAAG34AAAAAAAAcfgAAAAAAAAAAAAAcfgAAAAAAAB1+AAAAAAAAAAAAAB1+AAAAAAAAHn4AAAAAAAAAAAAAHn4AAAAAAAAffgAAAAAAAAAAAAAffgAAAAAAACB+AAAAAAAAAAAAACB+AAAAAAAAIX4AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAGn4AAAAAAAAafgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					38,
+					1,
+					"insert",
+					{
+						"characters": " =="
+					},
+					"AwAAACF+AAAAAAAAIn4AAAAAAAAAAAAAIn4AAAAAAAAjfgAAAAAAAAAAAAAjfgAAAAAAACR+AAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAIX4AAAAAAAAhfgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					39,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAACR+AAAAAAAAJX4AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAJH4AAAAAAAAkfgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					40,
+					1,
+					"delete_word",
+					{
+						"forward": false
+					},
+					"AQAAACJ+AAAAAAAAIn4AAAAAAAADAAAAPT0g",
+					"AQAAAAAAAAABAAAAJX4AAAAAAAAlfgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					41,
+					1,
+					"left_delete",
+					null,
+					"AQAAACF+AAAAAAAAIX4AAAAAAAABAAAAIA",
+					"AQAAAAAAAAABAAAAIn4AAAAAAAAifgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					42,
+					3,
+					"delete_word",
+					{
+						"forward": false
+					},
+					"AwAAABp+AAAAAAAAGn4AAAAAAAAHAAAAc3RvcmFnZRl+AAAAAAAAGX4AAAAAAAABAAAALhV+AAAAAAAAFX4AAAAAAAAEAAAAc2VsZg",
+					"AQAAAAAAAAABAAAAIX4AAAAAAAAhfgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					43,
+					1,
+					"insert_snippet",
+					{
+						"contents": "'$0'"
+					},
+					"AQAAABV+AAAAAAAAF34AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAFX4AAAAAAAAVfgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					44,
+					1,
+					"insert",
+					{
+						"characters": "tweet"
+					},
+					"BQAAABZ+AAAAAAAAF34AAAAAAAAAAAAAF34AAAAAAAAYfgAAAAAAAAAAAAAYfgAAAAAAABl+AAAAAAAAAAAAABl+AAAAAAAAGn4AAAAAAAAAAAAAGn4AAAAAAAAbfgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAFn4AAAAAAAAWfgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					46,
 					1,
 					"insert",
 					{
 						"characters": " in"
 					},
-					"AwAAAH9cAAAAAAAAgFwAAAAAAAAAAAAAgFwAAAAAAACBXAAAAAAAAAAAAACBXAAAAAAAAIJcAAAAAAAAAAAAAA",
-					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAB/XAAAAAAAAH9cAAAAAAAAAAAAAAAA8L8"
+					"AwAAABx+AAAAAAAAHX4AAAAAAAAAAAAAHX4AAAAAAAAefgAAAAAAAAAAAAAefgAAAAAAAB9+AAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAHH4AAAAAAAAcfgAAAAAAAAAAAAAAAPC/"
 				],
 				[
-					35,
+					47,
 					1,
 					"insert",
 					{
-						"characters": " overdue"
+						"characters": " docum"
 					},
-					"CAAAAIJcAAAAAAAAg1wAAAAAAAAAAAAAg1wAAAAAAACEXAAAAAAAAAAAAACEXAAAAAAAAIVcAAAAAAAAAAAAAIVcAAAAAAAAhlwAAAAAAAAAAAAAhlwAAAAAAACHXAAAAAAAAAAAAACHXAAAAAAAAIhcAAAAAAAAAAAAAIhcAAAAAAAAiVwAAAAAAAAAAAAAiVwAAAAAAACKXAAAAAAAAAAAAAA",
-					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACCXAAAAAAAAIJcAAAAAAAAAAAAAAAA8L8"
-				],
-				[
-					38,
-					1,
-					"left_delete",
-					null,
-					"AQAAAIpcAAAAAAAAilwAAAAAAABjAAAACiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmIGxhdGVzdF90aW1lc3RhbXAgLSBkb2N1bWVudC50aW1lc3RhbXAgPCBzZWxmLndpbmRvd19zaXpl",
-					"AQAAAAAAAAABAAAAilwAAAAAAADtXAAAAAAAAAAAAAAAAPC/"
+					"BgAAAB9+AAAAAAAAIH4AAAAAAAAAAAAAIH4AAAAAAAAhfgAAAAAAAAAAAAAhfgAAAAAAACJ+AAAAAAAAAAAAACJ+AAAAAAAAI34AAAAAAAAAAAAAI34AAAAAAAAkfgAAAAAAAAAAAAAkfgAAAAAAACV+AAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAH34AAAAAAAAffgAAAAAAAAAAAAAAAPC/"
 				],
 				[
 					48,
 					1,
-					"left_delete",
+					"insert_completion",
+					{
+						"completion": "document",
+						"format": "text",
+						"keep_prefix": false,
+						"must_insert": false,
+						"trigger": "document"
+					},
+					"AgAAACB+AAAAAAAAIH4AAAAAAAAFAAAAZG9jdW0gfgAAAAAAACh+AAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAJX4AAAAAAAAlfgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					49,
+					1,
+					"insert",
+					{
+						"characters": ".attr"
+					},
+					"BQAAACh+AAAAAAAAKX4AAAAAAAAAAAAAKX4AAAAAAAAqfgAAAAAAAAAAAAAqfgAAAAAAACt+AAAAAAAAAAAAACt+AAAAAAAALH4AAAAAAAAAAAAALH4AAAAAAAAtfgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAKH4AAAAAAAAofgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					50,
+					1,
+					"insert_completion",
+					{
+						"completion": "attributes",
+						"format": "text",
+						"keep_prefix": false,
+						"must_insert": false,
+						"trigger": "attributes"
+					},
+					"AgAAACl+AAAAAAAAKX4AAAAAAAAEAAAAYXR0cil+AAAAAAAAM34AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAALX4AAAAAAAAtfgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					51,
+					1,
+					"insert",
+					{
+						"characters": ":"
+					},
+					"AQAAADN+AAAAAAAANH4AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAM34AAAAAAAAzfgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					52,
+					1,
+					"insert",
+					{
+						"characters": "\ndel"
+					},
+					"BgAAADR+AAAAAAAANX4AAAAAAAAAAAAANX4AAAAAAABBfgAAAAAAAAAAAABBfgAAAAAAAEV+AAAAAAAAAAAAAEV+AAAAAAAARn4AAAAAAAAAAAAARn4AAAAAAABHfgAAAAAAAAAAAABHfgAAAAAAAEh+AAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAANH4AAAAAAAA0fgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					53,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAAEh+AAAAAAAASX4AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAASH4AAAAAAABIfgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					55,
+					1,
+					"paste",
 					null,
-					"AQAAAPhbAAAAAAAA+FsAAAAAAAAFAAAAIC0gNjA",
-					"AQAAAAAAAAABAAAA/VsAAAAAAAD4WwAAAAAAAAAAAAAAAPC/"
+					"AQAAADV+AAAAAAAAZn4AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAASX4AAAAAAABJfgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					56,
+					1,
+					"run_macro_file",
+					{
+						"file": "res://Packages/Default/Delete Line.sublime-macro"
+					},
+					"AQAAAGZ+AAAAAAAAZn4AAAAAAAAVAAAAICAgICAgICAgICAgICAgIGRlbCAK",
+					"AQAAAAAAAAABAAAAen4AAAAAAAB6fgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					66,
+					1,
+					"toggle_comment",
+					{
+						"block": false
+					},
+					"AgAAAEF+AAAAAAAAQ34AAAAAAAAAAAAAEH4AAAAAAAASfgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAZX4AAAAAAAA0fgAAAAAAAAAAAAAAAHVA"
+				],
+				[
+					81,
+					1,
+					"toggle_comment",
+					{
+						"block": false
+					},
+					"AgAAAEN+AAAAAAAAQ34AAAAAAAACAAAAIyAQfgAAAAAAABB+AAAAAAAAAgAAACMg",
+					"AQAAAAAAAAABAAAAaH4AAAAAAAA1fgAAAAAAAAAAAAAAcHVA"
 				]
 			]
 		}
@@ -342,17 +543,18 @@
 	],
 	"file_history":
 	[
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/eld_consumer.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/weighting/__init__.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/document_node.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/token_split_consumer.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/eld_consumer.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/document.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/document_node.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/split_consumer.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/weighting/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/algorithms/mmr.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/algorithms/tests/test_mmr.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/summary.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/summarize.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fuego_consumer.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/split_consumer.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/consume.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/algorithms/temporal_no_k_means.py",
 		"/home/nicholas/DATA/c7-emm/analyses/timelines/20220905-00-24-volume-25-window-5-burst-7.json",
@@ -376,7 +578,6 @@
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_consume.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tdt/algorithms/tests/test_zhao.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tests/test_document.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/document.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fire_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/objects/exportable.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/__init__.py",
@@ -490,6 +691,12 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"any",
+			"tweets",
+			"any",
+			"checkpoint",
+			"window",
+			"min_burst",
 			"max-ianc",
 			"max_inac",
 			"max_inactivity",
@@ -611,13 +818,7 @@
 			" ",
 			"remove_punc",
 			"of",
-			"', ",
-			"disappearance",
-			"the",
-			"in",
-			"role",
-			"army",
-			"Mexican"
+			"', "
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -711,8 +912,8 @@
 						"selection":
 						[
 							[
-								25287,
-								25287
+								25920,
+								25920
 							]
 						],
 						"settings":
@@ -722,7 +923,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 6241.0,
+						"translation.y": 6465.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -736,15 +937,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 45237,
+						"buffer_size": 45400,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								23687,
-								23687
+								32356,
+								32307
 							]
 						],
 						"settings":
@@ -754,7 +955,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 5354.0,
+						"translation.y": 7774.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -817,12 +1018,32 @@
 		"selected_items":
 		[
 			[
-				"eldcon",
-				"eventdt/queues/consumers/algorithms/eld_consumer.py"
+				"testeldcons",
+				"eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py"
+			],
+			[
+				"tokensplit",
+				"eventdt/queues/consumers/token_split_consumer.py"
+			],
+			[
+				"docu",
+				"eventdt/nlp/document.py"
 			],
 			[
 				"docume",
 				"eventdt/summarization/timeline/nodes/document_node.py"
+			],
+			[
+				"splitcon",
+				"eventdt/queues/consumers/split_consumer.py"
+			],
+			[
+				"tokenspl",
+				"eventdt/queues/consumers/token_split_consumer.py"
+			],
+			[
+				"eldcon",
+				"eventdt/queues/consumers/algorithms/eld_consumer.py"
 			],
 			[
 				"weighting/",
@@ -861,10 +1082,6 @@
 				"eventdt/queues/consumers/split_consumer.py"
 			],
 			[
-				"tokenspl",
-				"eventdt/queues/consumers/token_split_consumer.py"
-			],
-			[
 				"consume",
 				"tools/consume.py"
 			],
@@ -887,10 +1104,6 @@
 			[
 				"consu",
 				"tools/consume.py"
-			],
-			[
-				"splitcon",
-				"eventdt/queues/consumers/split_consumer.py"
 			],
 			[
 				"tokenslp",
@@ -995,10 +1208,6 @@
 			[
 				"zhaocon",
 				"eventdt/queues/consumers/algorithms/zhao_consumer.py"
-			],
-			[
-				"testeldcons",
-				"eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py"
 			],
 			[
 				"testconsume",
@@ -1319,14 +1528,6 @@
 			[
 				"testtopical",
 				"eventdt/summarization/timeline/nodes/tests/test_topical_cluster_node.py"
-			],
-			[
-				"documentno",
-				"eventdt/summarization/timeline/nodes/document_node.py"
-			],
-			[
-				"vecto",
-				"eventdt/vsm/vector.py"
 			]
 		],
 		"width": 0.0

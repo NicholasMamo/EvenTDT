@@ -610,6 +610,8 @@ class ELDConsumer(Consumer):
             document.attributes['author_handle'] = twitter.user_handle(tweet, user_id=author_id)
             if self.storage == StorageLevel.TWEET:
                 document.attributes['tweet'] = tweet
+            elif 'tweet' in document.attributes:
+                del document.attributes['tweet']
             document.normalize()
             documents.append(document)
 
