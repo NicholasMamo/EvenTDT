@@ -25,6 +25,15 @@ The following communication takes place:
   The final version would also have to add a queue of tweets to the communication.
 - Between the :class:`TaskManager` and the :class:`Task`.
   The :class:`TaskManager` instructs the :class:`Task` to stop, and when it does, the :class:`TaskManager` gathers its output.
+
+Of course, the outer code does not have to assign the tasks to the :class:`TaskManager`.
+The :class:`TaskManager` could load them itself (such as by loading the streams from a database).
+The outer code assigns the tasks only to be more interactive.
+
+The main difference, then, lies in the :class:`TaskManager`'s :func:`TaskManager.run_tasks` function.
+Instead of running (using `asyncio.gather`) all tasks at once, it sets them running using `asyncio.ensure_future` and 'tracks' them (in the `ongoing` variable).
+The :class:`TaskManager` only gathers the tasks' outputs (using `asyncio.gather`) when it stops them.
+Here too, the logic to stop tasks can be different; the :class:`TaskManager` could check with the database whether they are still relevant and stop them otherwise.
 """
 
 import asyncio
