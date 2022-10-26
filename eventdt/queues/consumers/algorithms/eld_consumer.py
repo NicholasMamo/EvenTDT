@@ -546,7 +546,7 @@ class ELDConsumer(Consumer):
         if twitter.version(tweet) == 1 and twitter.user_favorites(tweet) == 0:
             return False
 
-        if twitter.user_followers(tweet) / twitter.user_statuses(tweet) < 1e-3:
+        if not twitter.user_statuses(tweet) or twitter.user_followers(tweet) / twitter.user_statuses(tweet) < 1e-3:
             return False
 
         # for reproducibility, the old filters are retained

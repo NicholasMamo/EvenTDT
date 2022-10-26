@@ -665,6 +665,42 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             filtered = consumer._filter_tweets(tweets)
             self.assertTrue(any( twitter.is_quote(tweet) for tweet in filtered ))
 
+    def test_filter_tweets_strict_follower_ratio_no_statuses(self):
+        """
+        Test that when filtering tweets, all users have at least one status.
+        It's possible that a user has no statuses, which is weird.
+        Not sure how that happens, possibly a short delay in updating the user profile.
+        """
+
+        consumer = ELDConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all( not twitter.is_retweet(tweet) and twitter.user_statuses(tweet) or
+                                 twitter.is_retweet(tweet) and twitter.user_statuses(tweet)
+                                 for tweet in tweets ))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_strict_v2_follower_ratio_no_statuses(self):
+        """
+        Test that when filtering tweets, all users have at least one status.
+        It's possible that a user has no statuses, which is weird.
+        Not sure how that happens, possibly a short delay in updating the user profile.
+        """
+
+        consumer = ELDConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all( not twitter.is_retweet(tweet) and twitter.user_statuses(tweet) or
+                                 twitter.is_retweet(tweet) and twitter.user_statuses(tweet, twitter.original(tweet)['author_id'])
+                                 for tweet in tweets ))
+            self.assertGreater(count, len(tweets))
+
     def test_filter_tweets_strict_bio(self):
         """
         Test that when filtering tweets, their authors must have a non-empty biography.
