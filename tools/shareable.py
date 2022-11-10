@@ -174,6 +174,7 @@ def write_timeline(file, output):
                 for document in node.get_all_documents():
                     if document.tweet:
                         document.attributes['tweet'] = { 'id': twitter.id(document.tweet) }
+                    document.attributes = { name: value for name, value in document.attributes.items() if name.lower() in ('tweet', 'id') }
 
         # keep the original structure of the timeline, whether one timeline or a list
         data['timeline'] = timelines if type(data['timeline']) is list else timelines[0]

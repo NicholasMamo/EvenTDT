@@ -234,6 +234,34 @@ class TestShareable(unittest.TestCase):
 
         self.assertEqual(ids, _ids)
 
+    def test_write_timeline_removes_attribues(self):
+        """
+        Test that when making multiple timelines shareable, all attributes are removed except for the tweet IDs.
+        """
+
+        file = 'eventdt/tests/corpora/timelines/#ParmaMilan-streams.json'
+        output = 'tools/tests/.out/shareable.json'
+
+        with open(file, 'r') as infile:
+            timelines = Exportable.decode(json.loads(infile.readline()))['timeline']
+            ids = [ document.id for timeline in timelines for node in timeline.nodes for document in node.get_all_documents() ]
+            for timeline in timelines:
+                for node in timeline.nodes:
+                    for document in node.get_all_documents():
+                        document.attributes['test'] = True
+
+        self.assertTrue(all( document.test for timeline in timelines for node in timeline.nodes for document in node.get_all_documents() ))
+
+        tools.save(output, {})
+        tool.write_timeline(file, output)
+        with open(output, 'r') as outfile:
+            timelines = Exportable.decode(json.loads(outfile.readline()))['timeline']
+            _ids = [ document.id for timeline in timelines for node in timeline.nodes for document in node.get_all_documents() ]
+            self.assertTrue(all( set(document.attributes.keys()) ==  { 'id', 'tweet' }
+                                 for timeline in timelines for node in timeline.nodes for document in node.get_all_documents() ))
+
+        self.assertEqual(ids, _ids)
+
     def test_write_timeline_no_tweets(self):
         """
         Test that when making a timeline shareable, the tweets themselves aren't kept—only the IDs.
