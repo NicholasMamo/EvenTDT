@@ -19,6 +19,18 @@ ACCOUNTS = [
 :vartype ACCOUNTS: list of dict
 """
 
+MASTODON = [
+    {
+            'ACCESS_TOKEN': 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+            'CLIENT_ID': 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+            'CLIENT_SECRET': 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+    },
+]
+"""
+:var MASTODON: The sets of Mastodon API credential.
+:vartype MASTODON: list of dict
+"""
+
 LOG_LEVEL = 1
 """
 :var LOG_LEVEL: The logging level.
