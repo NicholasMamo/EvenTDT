@@ -9,7 +9,7 @@ You can also specify a file where to store the metadata:
 
 .. code-block:: bash
 
-	./tools/concepts.py \\
+	./tools/model.py \\
     --file data/timeline.json \\
     --output data/models.json \\
     --meta data/models.meta.json \\
@@ -20,7 +20,7 @@ In addition to the previously-generated understanding, you can also use NER to e
 
 .. code-block:: bash
 
-    ./tools/concepts.py \\
+    ./tools/model.py \\
     --file data/timeline.json \\
     --output data/models.json \\
     --meta data/models.meta.json \\
@@ -30,6 +30,8 @@ In addition to the previously-generated understanding, you can also use NER to e
     --with-ner
 
 The output is a JSON file with one event model on each line:
+
+.. code-block:: json
 
 	{
 		"who": [ "Verstappen" ],
