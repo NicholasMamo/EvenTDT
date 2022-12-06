@@ -14,7 +14,7 @@ import unicodedata
 from .document import Document
 from .tokenizer import Tokenizer
 
-def entities(text, netype=None):
+def entities(text, netype=None, strict=False):
     """
     Extract the named entities from the given text.
     The function uses NLTK to extract entities.
@@ -25,6 +25,9 @@ def entities(text, netype=None):
                         The function accepts the same types as NLTK, namely _PERSON_, _GPE_, _LOCATION_ or _GSP_, or _ORGANIZATION_.
                         If no type is given, the function returns all named entities irrespective of type.
     :type netype: str or list of str
+    :param strict: A boolean indicating whether to only combine adjacent entities if they have the same type.
+                   If set to ``False``, the function takes a more lenient approach and assumes that adjacent named entities always form one entity, even if they have different types.
+    :param strict: bool
 
     :return: A list of named entities and their types.
     :rtype: list of tuple
@@ -42,7 +45,7 @@ def entities(text, netype=None):
         tokens = nltk.word_tokenize(sentence)
         pos_tags = nltk.pos_tag(tokens)
         chunks = nltk.ne_chunk(pos_tags, binary=False)
-        entities.extend(_combine_adjacent_entities(chunks))
+        entities.extend(_combine_adjacent_entities(chunks, strict=strict))
 
     if not netypes:
         return entities
@@ -50,7 +53,7 @@ def entities(text, netype=None):
     return [ (entity, _type) for entity, _type in entities
                              if _type in netypes ]
 
-def _combine_adjacent_entities(chunks):
+def _combine_adjacent_entities(chunks, strict=False):
     """
     Combine the chunks appearing in the given list.
     The function assumes that the list represents one sentence.
@@ -59,6 +62,9 @@ def _combine_adjacent_entities(chunks):
 
     :param chunks: The list of chunks.
     :type chunks: list of str or nltk.tree.Tree
+    :param strict: A boolean indicating whether to only combine adjacent entities if they have the same type.
+                   If set to ``False``, the function takes a more lenient approach and assumes that adjacent named entities always form one entity, even if they have different types.
+    :param strict: bool
 
     :return: A list of named entities and their types.
     :rtype: list of tuple
@@ -79,7 +85,7 @@ def _combine_adjacent_entities(chunks):
             This means adding the sequence to the list of named entities, and resetting the memory.
             """
             label = chunk.label()
-            if label != netype:
+            if label != netype and strict:
                 named_entities.append((' '.join(entity).strip(), netype))
                 entity, netype = [], None
 

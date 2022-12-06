@@ -168,8 +168,8 @@ class TestPackage(unittest.TestCase):
         text = """San Antonio, officially the City of San Antonio, is the seventh-most populous city in the United States,
                   second largest city in the Southern United States, and the second-most populous city in Texas
                   as well as the 12th most populous city in North America with 1,434,625 residents in 2020."""
-        self.assertTrue(any( netype == 'GPE' for _, netype in nlp.entities(text, netype=['GPE', 'LOCATION']) ))
-        self.assertTrue(any( netype == 'LOCATION' for _, netype in nlp.entities(text, netype=['GPE', 'LOCATION']) ))
+        self.assertTrue(any( netype == 'GPE' for _, netype in nlp.entities(text, netype=['GPE', 'LOCATION'], strict=True) ))
+        self.assertTrue(any( netype == 'LOCATION' for _, netype in nlp.entities(text, netype=['GPE', 'LOCATION'], strict=True) ))
 
     def test_entities_several_types_separate(self):
         """
@@ -196,6 +196,23 @@ class TestPackage(unittest.TestCase):
         text = wikitext.collect('United Kingdom', introduction_only=False)['United Kingdom']
         entities = nlp.entities(text)
         self.assertTrue(all( _type in types for _, _type in entities ))
+
+    def test_entities_adjacent_strict(self):
+        """
+        Test that adjacent entities with the same type that NLTK captures separately are combined.
+        """
+
+        text = """Max Emilian Verstappen (born 30 September 1997) is a Belgian-Dutch racing driver and the 2021 Formula One World Champion."""
+        # NOTE: NLTK splits 'Max' from 'Emilian Verstappen'
+        self.assertTrue(any( 'Max Emilian Verstappen' == entity for entity, _ in nlp.entities(text, strict=True) ))
+
+    def test_entities_adjacent_not_strict(self):
+        """
+        Test that adjacent entities with different types that NLTK captures separately are combined if the mode is not set to strict.
+        """
+
+        text = """Max Verstappen (born 30 September 1997) is a Belgian-Dutch racing driver and the 2021 Formula One World Champion."""
+        self.assertTrue(any( 'Max Verstappen' == entity for entity, _ in nlp.entities(text, strict=False) ))
 
     def test_remove_parentheses_original(self):
         """
