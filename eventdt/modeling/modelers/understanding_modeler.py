@@ -333,6 +333,7 @@ class UnderstandingModeler(EventModeler):
         if not reference: # empty references never match
             return False
 
+        reference = reference.replace('+', '\\+')
         return re.search(rf"\b{ reference }\b", text) is not None
 
     def _split(self, text):

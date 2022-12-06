@@ -1703,6 +1703,15 @@ class TestUnderstandingModeler(unittest.TestCase):
         modeler = UnderstandingModeler()
         self.assertTrue(modeler._matches('Grand Prix', "Max Verstappen wins the Grand Prix!"))
 
+    def test_matches_with_plus(self):
+        """
+        Test that plus signs are escaped when looking for matches.
+        Plus signs are word boundaries, so the search matches nothing, but it doesn't crash either.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertFalse(modeler._matches('C++', "Languages such as C++ are on the decline!"))
+
     def test_split_keeps_mentions(self):
         """
         Test that splitting the text retains mentions.
