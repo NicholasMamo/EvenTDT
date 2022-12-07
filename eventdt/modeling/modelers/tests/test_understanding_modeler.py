@@ -1712,6 +1712,15 @@ class TestUnderstandingModeler(unittest.TestCase):
         modeler = UnderstandingModeler()
         self.assertFalse(modeler._matches('C++', "Languages such as C++ are on the decline!"))
 
+    def test_matches_escapes_asterisks(self):
+        """
+        Test that matching escapes asterisk signs.
+        Asterisks are word boundaries, so the search matches nothing, but it doesn't crash either.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertFalse(modeler._matches('****', "Max Verstappen: What a **** race!"))
+
     def test_split_keeps_mentions(self):
         """
         Test that splitting the text retains mentions.
