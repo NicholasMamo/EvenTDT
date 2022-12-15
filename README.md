@@ -69,4 +69,4 @@ Simply fork the repository and add your contributions there.
 
 If you use in this repository, cite the following thesis:
 
-> Mamo, N. Reading Between Events: Exploring the Role of Machine Understanding in Event Tracking. PhD thesis, Department of Artificial Intelligence, Faculty of Information & Communication Technology, University of Malta, XYZ 2022.
+> Mamo, N. Reading Between Events: Exploring the Role of Machine Understanding in Event Tracking. PhD thesis, Department of Artificial Intelligence, Faculty of Information & Communication Technology, University of Malta, March 2023.
