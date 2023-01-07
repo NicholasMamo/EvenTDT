@@ -273,7 +273,9 @@
 	],
 	"file_history":
 	[
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fuego_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/LICENSE.md",
+		"/home/nicholas/GitHub/EvenTDT/README.md",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/extractors/local/tests/test_twitterner_entity_extractor.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/extractors/local/twitterner_entity_extractor.py",
@@ -352,7 +354,6 @@
 		"/home/nicholas/GitHub/EvenTDT/config/conf.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/collect.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/eld_consumer.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fuego_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/summarize.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/attributes/profile.py",
@@ -399,8 +400,7 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/topical_cluster_node.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/cluster_node.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/tests/test_cluster_node.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/__init__.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_summarize.py"
+		"/home/nicholas/GitHub/EvenTDT/tools/__init__.py"
 	],
 	"find":
 	{
@@ -724,6 +724,18 @@
 		"selected_items":
 		[
 			[
+				"fuego",
+				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
+			],
+			[
+				"licen",
+				"LICENSE.md"
+			],
+			[
+				"readme",
+				"README.md"
+			],
+			[
 				"nlpinit",
 				"eventdt/nlp/__init__.py"
 			],
@@ -918,10 +930,6 @@
 			[
 				"testfuego",
 				"eventdt/queues/consumers/algorithms/tests/test_fuego_consumer.py"
-			],
-			[
-				"fuego",
-				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
 			],
 			[
 				"twitterinit",
@@ -1226,14 +1234,6 @@
 			[
 				"nodesini",
 				"eventdt/summarization/timeline/nodes/__init__.py"
-			],
-			[
-				"node",
-				"eventdt/summarization/timeline/nodes/topical_cluster_node.py"
-			],
-			[
-				"modelinini",
-				"eventdt/modeling/__init__.py"
 			]
 		],
 		"width": 0.0
