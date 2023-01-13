@@ -6,8 +6,19 @@ from abc import ABC, abstractmethod
 import copy
 import importlib
 import json
-from logger import logger
 import re
+import os
+import sys
+
+paths = [
+    os.path.join(os.path.dirname(__file__), '..'),
+]
+
+for path in paths:
+    if path not in sys.path:
+        sys.path.insert(1, path)
+
+from logger import logger
 
 class Exportable(ABC):
     """

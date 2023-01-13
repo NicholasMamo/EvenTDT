@@ -84,21 +84,74 @@
 	"buffers":
 	[
 		{
-			"file": "eventdt/modeling/modelers/understanding_modeler.py",
+			"file": "eventdt/logger/logger.py",
 			"settings":
 			{
-				"buffer_size": 18103,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "eventdt/modeling/modelers/tests/test_understanding_modeler.py",
-			"settings":
-			{
-				"buffer_size": 82324,
+				"buffer_size": 2955,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
-			}
+			},
+			"undo_stack":
+			[
+			]
+		},
+		{
+			"file": "eventdt/objects/exportable.py",
+			"settings":
+			{
+				"buffer_size": 7918,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
+				[
+					13,
+					1,
+					"swap_line_down",
+					null,
+					"AgAAANcAAAAAAAAA8QAAAAAAAAAAAAAAswAAAAAAAACzAAAAAAAAABoAAABmcm9tIGxvZ2dlciBpbXBvcnQgbG9nZ2VyCg",
+					"AQAAAAAAAAABAAAAuAAAAAAAAAC4AAAAAAAAAAAAAAAAgEFA"
+				],
+				[
+					14,
+					2,
+					"run_macro_file",
+					{
+						"file": "res://Packages/Default/Add Line Before.sublime-macro"
+					},
+					"AgAAAL0AAAAAAAAAvgAAAAAAAAAAAAAAvQAAAAAAAAC+AAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAwgAAAAAAAADCAAAAAAAAAAAAAAAAgEFA"
+				],
+				[
+					15,
+					1,
+					"paste",
+					null,
+					"AQAAAL0AAAAAAAAAmwEAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAvQAAAAAAAAC9AAAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					22,
+					1,
+					"insert",
+					{
+						"characters": "K"
+					},
+					"AQAAACkBAAAAAAAAKgEAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAKQEAAAAAAAApAQAAAAAAAAAAAAAA4GVA"
+				],
+				[
+					23,
+					1,
+					"run_macro_file",
+					{
+						"file": "res://Packages/Default/Delete Line.sublime-macro"
+					},
+					"AQAAABABAAAAAAAAEAEAAAAAAAA5AAAAICAgIG9zLnBhdGguam9pbihvcy5wYXRoLktkaXJuYW1lKF9fZmlsZV9fKSwgJy4uJywgJy4uJykK",
+					"AQAAAAAAAAABAAAAKgEAAAAAAAAqAQAAAAAAAAAAAAAAAPC/"
+				]
+			]
 		}
 	],
 	"build_system": "",
@@ -273,14 +326,14 @@
 	],
 	"file_history":
 	[
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fuego_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/LICENSE.md",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/understanding_modeler.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/tests/test_understanding_modeler.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fuego_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/README.md",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/extractors/local/tests/test_twitterner_entity_extractor.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/extractors/local/twitterner_entity_extractor.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/understanding_modeler.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/tests/test_understanding_modeler.py",
 		"/home/nicholas/DATA/c7-emm/analyses/participants/participants-k50-f300-20220904.json",
 		"/home/nicholas/DATA/c7-emm/analyses/participants/participants-k50-f350-20220904.json",
 		"/home/nicholas/DATA/c7-emm/analyses/participants/participants-k50-f250-20220904.json",
@@ -421,6 +474,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"<",
+			"year",
 			"participant",
 			"starmer",
 			"Starmer",
@@ -546,9 +601,7 @@
 			"self.counter",
 			"self.",
 			"remove",
-			"stopped",
-			"tasks",
-			"outputs"
+			"stopped"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -607,19 +660,19 @@
 			[
 				{
 					"buffer": 0,
-					"file": "eventdt/modeling/modelers/understanding_modeler.py",
+					"file": "eventdt/logger/logger.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 18103,
+						"buffer_size": 2955,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								61,
+								283
 							]
 						],
 						"settings":
@@ -638,20 +691,20 @@
 				},
 				{
 					"buffer": 1,
-					"file": "eventdt/modeling/modelers/tests/test_understanding_modeler.py",
+					"file": "eventdt/objects/exportable.py",
 					"selected": true,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 82324,
+						"buffer_size": 7918,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								323,
+								323
 							]
 						],
 						"settings":
@@ -723,6 +776,18 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"exporta",
+				"eventdt/objects/exportable.py"
+			],
+			[
+				"logger",
+				"eventdt/logger/logger.py"
+			],
+			[
+				"license",
+				"LICENSE.md"
+			],
 			[
 				"fuego",
 				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
@@ -1152,10 +1217,6 @@
 				"eventdt/vsm/clustering/algorithms/temporal_no_k_means.py"
 			],
 			[
-				"exporta",
-				"eventdt/objects/exportable.py"
-			],
-			[
 				"consumerini",
 				"eventdt/queues/consumers/__init__.py"
 			],
@@ -1226,14 +1287,6 @@
 			[
 				"clusterno",
 				"eventdt/summarization/timeline/nodes/cluster_node.py"
-			],
-			[
-				"topicalcl",
-				"eventdt/summarization/timeline/nodes/topical_cluster_node.py"
-			],
-			[
-				"nodesini",
-				"eventdt/summarization/timeline/nodes/__init__.py"
 			]
 		],
 		"width": 0.0
