@@ -84,74 +84,44 @@
 	"buffers":
 	[
 		{
-			"file": "eventdt/logger/logger.py",
+			"file": "tools/meta.py",
 			"settings":
 			{
-				"buffer_size": 2955,
+				"buffer_size": 7404,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
-			},
-			"undo_stack":
-			[
-			]
+			}
 		},
 		{
-			"file": "eventdt/objects/exportable.py",
+			"file": "tools/collect_twarc.py",
 			"settings":
 			{
-				"buffer_size": 7918,
+				"buffer_size": 1683,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			},
 			"undo_stack":
 			[
 				[
-					13,
-					1,
-					"swap_line_down",
-					null,
-					"AgAAANcAAAAAAAAA8QAAAAAAAAAAAAAAswAAAAAAAACzAAAAAAAAABoAAABmcm9tIGxvZ2dlciBpbXBvcnQgbG9nZ2VyCg",
-					"AQAAAAAAAAABAAAAuAAAAAAAAAC4AAAAAAAAAAAAAAAAgEFA"
-				],
-				[
-					14,
-					2,
-					"run_macro_file",
-					{
-						"file": "res://Packages/Default/Add Line Before.sublime-macro"
-					},
-					"AgAAAL0AAAAAAAAAvgAAAAAAAAAAAAAAvQAAAAAAAAC+AAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAwgAAAAAAAADCAAAAAAAAAAAAAAAAgEFA"
-				],
-				[
-					15,
-					1,
-					"paste",
-					null,
-					"AQAAAL0AAAAAAAAAmwEAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAvQAAAAAAAAC9AAAAAAAAAAAAAAAAAAAA"
-				],
-				[
-					22,
+					7,
 					1,
 					"insert",
 					{
-						"characters": "K"
+						"characters": "XYZ"
 					},
-					"AQAAACkBAAAAAAAAKgEAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAKQEAAAAAAAApAQAAAAAAAAAAAAAA4GVA"
-				],
-				[
-					23,
-					1,
-					"run_macro_file",
-					{
-						"file": "res://Packages/Default/Delete Line.sublime-macro"
-					},
-					"AQAAABABAAAAAAAAEAEAAAAAAAA5AAAAICAgIG9zLnBhdGguam9pbihvcy5wYXRoLktkaXJuYW1lKF9fZmlsZV9fKSwgJy4uJywgJy4uJykK",
-					"AQAAAAAAAAABAAAAKgEAAAAAAAAqAQAAAAAAAAAAAAAAAPC/"
+					"BAAAAIoAAAAAAAAAiwAAAAAAAAAAAAAAiwAAAAAAAACLAAAAAAAAAHYAAABBQUFBQUFBQUFBQUFBQUFBQUFBQUFBRE1Od0VBQUFBQSUyQmJlRHUyZWhHblAlMkJTNTUlMkZpOHg5RDBJcHZyVSUzRHl6bXNRTzhpbG85QjRINE00WnZnU3B5N2FIcjA1YWxtNjdCdDdqMjdqa1pWdEpPc1NuiwAAAAAAAACMAAAAAAAAAAAAAACMAAAAAAAAAI0AAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAigAAAAAAAAAAAQAAAAAAAAAAAAAAAPC/"
 				]
 			]
+		},
+		{
+			"file": "eventdt/queues/consumers/algorithms/eld_consumer.py",
+			"settings":
+			{
+				"buffer_size": 45436,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
 		}
 	],
 	"build_system": "",
@@ -326,8 +296,13 @@
 	],
 	"file_history":
 	[
-		"/home/nicholas/GitHub/EvenTDT/LICENSE.md",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/understanding_modeler.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/attributes/profile.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/logger/logger.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tokenizer.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/objects/exportable.py",
+		"/run/user/1000/gvfs/sftp:host=vps-storage,user=memonick/data/phd-data/chapter-6/section-6.3/notebooks/tweet-filtering.ipynb",
+		"/home/nicholas/GitHub/EvenTDT/LICENSE.md",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/tests/test_understanding_modeler.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fuego_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/README.md",
@@ -409,7 +384,6 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/eld_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/summarize.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/attributes/profile.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/tests/test_fuego_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/consume.py",
@@ -441,19 +415,15 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tdt/algorithms/tests/test_zhao.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tests/test_document.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fire_consumer.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/objects/exportable.py",
 		"/home/nicholas/GitHub/phd-thesis/visualizations/modern-custom.style",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/vector.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tokenizer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tests/test_tokenizer.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_tokenizer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/tests/test_document_node.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/tests/test_topical_cluster_node.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/topical_cluster_node.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/cluster_node.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/tests/test_cluster_node.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/__init__.py"
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/cluster_node.py"
 	],
 	"find":
 	{
@@ -474,6 +444,13 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"surname",
+			"\\bnot .+?in\\b",
+			"\\bnot .+?in\\n",
+			"\\bnot .+?in",
+			"_pos",
+			"self.pos",
+			"pos",
 			"<",
 			"year",
 			"participant",
@@ -594,14 +571,7 @@
 			"\\t",
 			"former",
 			"sigint_handler",
-			"sigint",
-			"task",
-			"tool",
-			"run",
-			"self.counter",
-			"self.",
-			"remove",
-			"stopped"
+			"sigint"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -660,19 +630,19 @@
 			[
 				{
 					"buffer": 0,
-					"file": "eventdt/logger/logger.py",
+					"file": "tools/meta.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2955,
+						"buffer_size": 7404,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								61,
-								283
+								668,
+								668
 							]
 						],
 						"settings":
@@ -691,20 +661,20 @@
 				},
 				{
 					"buffer": 1,
-					"file": "eventdt/objects/exportable.py",
+					"file": "tools/collect_twarc.py",
 					"selected": true,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7918,
+						"buffer_size": 1683,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								323,
-								323
+								141,
+								141
 							]
 						],
 						"settings":
@@ -718,6 +688,37 @@
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "eventdt/queues/consumers/algorithms/eld_consumer.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 45436,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								23727,
+								23730
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 5617.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
 					"stack_multiselect": false,
 					"type": "text"
 				}
@@ -776,6 +777,26 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"collecttwa",
+				"tools/collect_twarc.py"
+			],
+			[
+				"profile",
+				"eventdt/attributes/profile.py"
+			],
+			[
+				"under",
+				"eventdt/modeling/modelers/understanding_modeler.py"
+			],
+			[
+				"meta",
+				"tools/meta.py"
+			],
+			[
+				"toen",
+				"eventdt/nlp/tokenizer.py"
+			],
 			[
 				"exporta",
 				"eventdt/objects/exportable.py"
@@ -971,10 +992,6 @@
 			[
 				"shareabl",
 				"tools/shareable.py"
-			],
-			[
-				"under",
-				"eventdt/modeling/modelers/understanding_modeler.py"
 			],
 			[
 				"summarize",
@@ -1261,10 +1278,6 @@
 				"eventdt/nlp/tokenizer.py"
 			],
 			[
-				"profile",
-				"eventdt/attributes/profile.py"
-			],
-			[
 				"nodeni",
 				"eventdt/summarization/timeline/nodes/__init__.py"
 			],
@@ -1275,18 +1288,6 @@
 			[
 				"testclusternode",
 				"eventdt/summarization/timeline/nodes/tests/test_cluster_node.py"
-			],
-			[
-				"testtopic",
-				"eventdt/summarization/timeline/nodes/tests/test_topical_cluster_node.py"
-			],
-			[
-				"testdocu",
-				"eventdt/summarization/timeline/nodes/tests/test_document_node.py"
-			],
-			[
-				"clusterno",
-				"eventdt/summarization/timeline/nodes/cluster_node.py"
 			]
 		],
 		"width": 0.0

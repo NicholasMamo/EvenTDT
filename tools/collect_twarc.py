@@ -4,7 +4,7 @@ from twarc import Twarc2, expansions
 import json
 
 # Replace your bearer token below
-client = Twarc2(bearer_token="AAAAAAAAAAAAAAAAAAAAAADMNwEAAAAA%2BbeDu2ehGnP%2BS55%2Fi8x9D0IpvrU%3DyzmsQO8ilo9B4H4M4ZvgSpy7aHr05alm67Bt7j27jkZVtJOsSn")
+client = Twarc2(bearer_token="XYZ")
 
 # NOTE: twarc automatically expands everything. See the `__twarc` key in each collected tweet for the full list of expansions.
 
